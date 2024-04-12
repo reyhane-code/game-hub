@@ -19,8 +19,7 @@ const SearchInput = () => {
         }
       }}
     >
-      {/* TODO : pass ref to textinput */}
-      <TextInput type="text" placeholder="Search games...">
+      <TextInput ref={ref} type="text" placeholder="Search games...">
         {/* use svg later */}
         <BsSearch />
       </TextInput>

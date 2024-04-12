@@ -4,13 +4,19 @@ interface Props {
   children?: ReactNode;
   type: string;
   placeholder: string;
+  ref: RefObject<HTMLInputElement>;
 }
 
-function TextInput({ children = "", type, placeholder }: Props) {
+function TextInput({ ref, children = "", type, placeholder }: Props) {
   return (
     <div>
       <label className="input input-bordered flex items-center gap-2">
-        <input type={type} className="grow" placeholder={placeholder} />
+        <input
+          ref={ref}
+          type={type}
+          className="grow"
+          placeholder={placeholder}
+        />
         {children}
       </label>
     </div>
