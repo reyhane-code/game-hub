@@ -1,5 +1,3 @@
-import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { BsChevronDown } from "react-icons/bs";
 import usePlatform from "../hooks/usePlatform";
 import usePlatforms from "../hooks/usePlatforms";
 import useGameQueryStore from "../store";
@@ -13,22 +11,21 @@ const PlatformSelector = () => {
   if (error) return null;
 
   return (
-    //TODO : daisyui menu menubutton menulist menuitem
-    <Menu>
-      <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+    <details className="dropdown">
+      <summary className="m-1 btn">
         {selectedPlatform?.name || "Platforms"}
-      </MenuButton>
-      <MenuList>
+      </summary>
+      <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
         {data?.results.map((platform) => (
-          <MenuItem
+          <li
             onClick={() => setSelectedPlatformId(platform.id)}
             key={platform.id}
           >
-            {platform.name}
-          </MenuItem>
+            <a>{platform.name}</a>
+          </li>
         ))}
-      </MenuList>
-    </Menu>
+      </ul>
+    </details>
   );
 };
 
