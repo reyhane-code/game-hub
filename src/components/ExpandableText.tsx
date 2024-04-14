@@ -20,9 +20,8 @@ const ExpandableText = ({ children }: Props) => {
       {summary}
       <Button
         size="xs"
-        margin="ml-1"
-        fontWeight="bold"
         color="yellow-400"
+        className="ml-1 font-bold"
         onClick={() => setExpanded(!expanded)}
       >
         {expanded ? "Show Less" : "Read More"}

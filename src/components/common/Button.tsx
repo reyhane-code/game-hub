@@ -5,9 +5,7 @@ interface Props {
   children: ReactNode;
   color: string;
   size?: string;
-  fontWeight?: string;
-  margin?: string;
-  styles?: string;
+  className?: string;
   onClick: () => void;
   link?: string;
 }
@@ -16,9 +14,7 @@ function Button({
   children,
   color,
   size,
-  fontWeight = "bold",
-  margin = "m-0",
-  styles = "",
+  className = "",
   onClick,
   link,
 }: Props) {
@@ -26,16 +22,13 @@ function Button({
     <>
       {!link ? (
         <button
-          className={`btn btn-${color} btn-${size} ${margin} font-${fontWeight} ${styles}`}
+          className={`btn btn-${color} btn-${size} ${className}`}
           onClick={onClick}
         >
           {children}
         </button>
       ) : (
-        <Link
-          to={link}
-          className={`btn btn-${color} btn-${size} ${margin} font-${fontWeight} ${styles}`}
-        >
+        <Link to={link} className={`btn btn-${color} btn-${size} ${className}`}>
           {children}
         </Link>
       )}

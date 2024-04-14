@@ -17,10 +17,7 @@ const GenreList = () => {
 
   return (
     <>
-      <Heading fontSize="2xl" marginTop={9} marginBottom={3}>
-        Genres
-      </Heading>
-      {/* //TODO: use ul/ol and li */}
+      <h2 className="mt-9 mb-3">Genres</h2>
       <ul>
         {data?.results.map((genre) => (
           <li key={genre.id} className="py-5px">
@@ -32,11 +29,12 @@ const GenreList = () => {
                 source={getCroppedImageUrl(genre.image_background)}
               />
               <Button
-                styles="whitespace-normal text-left text-md"
-                fontWeight={genre.id === selectedGenreId ? "bold" : "normal"}
+                className={`whitespace-normal text-left text-md ${
+                  genre.id === selectedGenreId ? "bold" : "normal"
+                } m-1`}
                 onClick={() => setSelectedGenreId(genre.id)}
-                margin="1"
-                color=""
+                color="primary"
+                size="md"
               >
                 {genre.name}
               </Button>
