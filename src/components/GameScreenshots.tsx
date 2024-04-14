@@ -1,24 +1,25 @@
-import { Image, SimpleGrid } from '@chakra-ui/react';
-import React from 'react'
-import useScreenshots from '../hooks/useScreenshots';
+import React from "react";
+import useScreenshots from "../hooks/useScreenshots";
+import Image from "./common/Image";
 
 interface Props {
   gameId: number;
 }
 
 const GameScreenshots = ({ gameId }: Props) => {
-  const {data, isLoading, error } = useScreenshots(gameId);
+  const { data, isLoading, error } = useScreenshots(gameId);
 
   if (isLoading) return null;
-  
+
   if (error) throw error;
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
-      {data?.results.map(file => 
-        <Image key={file.id} src={file.image} />)}
-    </SimpleGrid>
-  )
-}
+    <div className="grid base:grid-col-1 md:grid-cols-2 gap-2">
+      {data?.results.map((file) => (
+        <Image key={file.id} source={file.image} />
+      ))}
+    </div>
+  );
+};
 
-export default GameScreenshots
+export default GameScreenshots;

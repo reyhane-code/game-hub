@@ -1,19 +1,13 @@
 interface Props {
   source: string;
   altText?: string;
-  width: string;
-  height: string;
-  styles?: string;
+  className?: string;
 }
 
-function Image({ source, altText = "", width, height, styles = "" }: Props) {
+function Image({ source, altText = "", className = "" }: Props) {
   return (
     <div>
-      <img
-        src={source}
-        alt={altText}
-        className={`w-${width} h-${height} ${styles}`}
-      />
+      <img src={source} alt={altText} className={className} />
     </div>
   );
 }

@@ -12,12 +12,11 @@ interface Props {
 
 const GameCard = ({ game }: Props) => {
   return (
-    <div className="flex flex-col rounded-sm">
+    <div className="flex flex-col">
       <Image
         source={getCroppedImageUrl(game.background_image)}
         altText=""
-        width="[60px]"
-        height="[60px]"
+        className="w-60 h-50 rounded-sm"
       />
       <div>
         <div className="flex items justify-between mb-3">

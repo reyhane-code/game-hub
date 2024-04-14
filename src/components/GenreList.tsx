@@ -1,4 +1,3 @@
-import { Heading, HStack } from "@chakra-ui/react";
 import useGenres from "../hooks/useGenres";
 import getCroppedImageUrl from "../services/image-url";
 import useGameQueryStore from "../store";
@@ -20,12 +19,10 @@ const GenreList = () => {
       <h2 className="mt-9 mb-3">Genres</h2>
       <ul>
         {data?.results.map((genre) => (
-          <li key={genre.id} className="py-5px">
-            <HStack>
+          <li key={genre.id} className="space-x-1 w-30 py-5px">
+            <div className="flex ">
               <Image
-                width="[20px]"
-                height="[20px]"
-                styles="rounded-xl object-cover"
+                className="rounded-xl object-cover w-25 h-12"
                 source={getCroppedImageUrl(genre.image_background)}
               />
               <Button
@@ -38,7 +35,7 @@ const GenreList = () => {
               >
                 {genre.name}
               </Button>
-            </HStack>
+            </div>
           </li>
         ))}
       </ul>
