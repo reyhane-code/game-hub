@@ -1,5 +1,4 @@
-import { Box, Heading } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 interface Props {
   term: string;
@@ -9,7 +8,7 @@ interface Props {
 const DefinitionItem = ({ term, children }: Props) => {
   return (
     <div className="flex-center my-5">
-      <dt className="text-md text-gray-600">{term}</dt>
+      <dt className="text-lg text-gray-700">{term}: </dt>
       <dd>{children}</dd>
     </div>
   );

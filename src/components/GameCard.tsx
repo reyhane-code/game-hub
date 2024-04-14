@@ -12,24 +12,26 @@ interface Props {
 
 const GameCard = ({ game }: Props) => {
   return (
-    <div className="flex flex-col">
-      <Image
-        source={getCroppedImageUrl(game.background_image)}
-        altText=""
-        className="w-60 h-50 rounded-sm"
-      />
-      <div>
-        <div className="flex items justify-between mb-3">
+    <div className="card w-96 bg-base-100 shadow-xl">
+      <figure>
+        <Image
+          source={getCroppedImageUrl(game.background_image)}
+          altText={game.name}
+        />
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">
+          <Link className="text-xl" to={"/games/" + game.slug}>
+            {game.name}
+          </Link>
+          {/* <Emoji rating={game.rating_top} /> */}
+        </h2>
+        <div className="card-actions justify-end">
           <PlatformIconList
             platforms={game.parent_platforms?.map((p) => p.platform)}
           />
           <CriticScore score={game.metacritic} />
         </div>
-
-        <h2>
-          <Link to={"/games/" + game.slug}>{game.name}</Link>
-          {/* <Emoji rating={game.rating_top} /> */}
-        </h2>
       </div>
     </div>
   );

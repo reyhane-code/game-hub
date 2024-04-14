@@ -31,9 +31,9 @@ const PlatformIconList = ({ platforms = [] }: Props) => {
   };
 
   return (
-    <div className="my-2">
+    <div>
       {platforms.map((platform) => (
-        //TODO: use svg component
+        //TODO: use svg component of daisy (there was no svg component)
         <Icon key={platform.id} as={iconMap[platform.slug]} color="gray.500" />
       ))}
     </div>

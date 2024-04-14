@@ -1,17 +1,17 @@
 import { HStack, Switch, Text, useColorMode } from "@chakra-ui/react";
 
+//we use the themeSwitch component instead
+
 const ColorModeSwitch = () => {
   const { toggleColorMode, colorMode } = useColorMode();
 
   return (
     <HStack>
-      {/*TODO component input type-switch(daisy) */}
       <Switch
         colorScheme="green"
         isChecked={colorMode === "dark"}
         onChange={toggleColorMode}
       />
-      {/* span or p */}
       <Text whiteSpace="nowrap">Dark Mode</Text>
     </HStack>
   );

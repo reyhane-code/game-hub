@@ -1,5 +1,4 @@
-import { Box } from '@chakra-ui/react';
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
@@ -7,16 +6,10 @@ interface Props {
 
 const GameCardContainer = ({ children }: Props) => {
   return (
-    <Box
-      _hover={{
-        transform: 'scale(1.03)',
-        transition: 'transform .15s ease-in'
-      }}
-      borderRadius={10}
-      overflow="hidden"
-    >
+    // TODO: improve the scale
+    <div className="rounded-box overflow-hidden w-[50%] transform hover:scale-110 transition-all duration-200 ease-in">
       {children}
-    </Box>
+    </div>
   );
 };
 

@@ -14,7 +14,7 @@ const GameScreenshots = ({ gameId }: Props) => {
   if (error) throw error;
 
   return (
-    <div className="grid base:grid-col-1 md:grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
       {data?.results.map((file) => (
         <Image key={file.id} source={file.image} />
       ))}

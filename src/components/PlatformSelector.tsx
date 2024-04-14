@@ -16,7 +16,8 @@ const PlatformSelector = () => {
       selectText={selectedPlatform?.name || "Platforms"}
       itemsList={data?.results}
       showField="name"
-      //TODO: ask him
+      //TODO: call setSelectedPlatformId with the if of platform
+      // value.target.value only shows the name of platform
       onValueChange={(value) => {}}
     />
   );

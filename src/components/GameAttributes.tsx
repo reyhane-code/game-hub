@@ -19,12 +19,22 @@ const GameAttributes = ({ game }: Props) => {
       </DefinitionItem>
       <DefinitionItem term="Genres">
         {game.genres.map((genre) => (
-          <span key={genre.id}>{genre.name}</span>
+          <span
+            className="grid h-10 flex-grow card bg-base-300 rounded-box place-items-center p-10px m-10px"
+            key={genre.id}
+          >
+            {genre.name}
+          </span>
         ))}
       </DefinitionItem>
       <DefinitionItem term="Publishers">
         {game.publishers?.map((publisher) => (
-          <span key={publisher.id}>{publisher.name}</span>
+          <span
+            className="grid h-10 flex-grow card bg-base-300 rounded-box place-items-center p-10px m-10px"
+            key={publisher.id}
+          >
+            {publisher.name}
+          </span>
         ))}
       </DefinitionItem>
     </div>

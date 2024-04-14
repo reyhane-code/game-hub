@@ -1,4 +1,3 @@
-import { Heading } from "@chakra-ui/react";
 import useGenre from "../hooks/useGenre";
 import usePlatform from "../hooks/usePlatform";
 import useGameQueryStore from "../store";
@@ -12,10 +11,7 @@ const GameHeading = () => {
 
   const heading = `${platform?.name || ""} ${genre?.name || ""} Games`;
 
-  return (
-    //TODO : use h1-h6 html
-    <h1 className="my-5 text-5xl">{heading}</h1>
-  );
+  return <h1 className="my-5 text-5xl">{heading}</h1>;
 };
 
 export default GameHeading;

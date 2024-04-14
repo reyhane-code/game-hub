@@ -30,7 +30,7 @@ const GenreList = () => {
                   genre.id === selectedGenreId ? "bold" : "normal"
                 } m-1`}
                 onClick={() => setSelectedGenreId(genre.id)}
-                color="primary"
+                color="gray-400"
                 size="md"
               >
                 {genre.name}
