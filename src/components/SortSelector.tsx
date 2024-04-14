@@ -1,6 +1,5 @@
-import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { BsChevronDown } from "react-icons/bs";
 import useGameQueryStore from "../store";
+import Select from "./common/Select";
 
 const SortSelector = () => {
   const sortOrders = [
@@ -17,24 +16,21 @@ const SortSelector = () => {
   const currentSortOrder = sortOrders.find(
     (order) => order.value === sortOrder
   );
+  // const handleClick = (value:string) =>{
+  //   setSortOrder(value)
+  //   const element = document.activeElement
+  //   if(element){
+  //     element?.blur()
+  //   }
+  // }
 
   return (
-    <details className="dropdown">
-      <summary className="m-1 btn">
-        Order by: {currentSortOrder?.label || "Relevance"}
-      </summary>
-      <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-        {sortOrders.map((order) => (
-          <li
-            onClick={() => setSortOrder(order.value)}
-            key={order.value}
-            value={order.value}
-          >
-            <a>{order.label}</a>
-          </li>
-        ))}
-      </ul>
-    </details>
+    <Select
+      selectText={currentSortOrder?.label || "Relevance"}
+      itemsList={sortOrders}
+      onValueChange={(value) => setSortOrder(value.target.value)}
+      showField="label"
+    />
   );
 };
 

@@ -18,7 +18,6 @@ function ThemeSwitch() {
         onClick={toggleTheme}
         readOnly
       />
-      <span>Dark Mode</span>
     </>
   );
 }
