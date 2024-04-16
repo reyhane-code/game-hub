@@ -15,14 +15,14 @@ const GenreList = () => {
     return <span className="loading loading-ring loading-lg"></span>;
 
   return (
-    <>
+    <div className="flex w-full flex-col">
       <h2 className="mt-9 mb-3">Genres</h2>
       <ul>
         {data?.results.map((genre) => (
           <li key={genre.id} className="space-x-1 w-30 py-5px">
             <div className="flex ">
               <Image
-                className="rounded-xl object-cover w-25 h-12"
+                className="rounded-sm w-12 h-12 bg-cover"
                 source={getCroppedImageUrl(genre.image_background)}
               />
               <Button
@@ -31,7 +31,7 @@ const GenreList = () => {
                 } m-1`}
                 onClick={() => setSelectedGenreId(genre.id)}
                 color="gray-400"
-                size="md"
+                size="sm"
               >
                 {genre.name}
               </Button>
@@ -39,7 +39,7 @@ const GenreList = () => {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 };
 

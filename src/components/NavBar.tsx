@@ -6,9 +6,9 @@ import ThemeSwitch from "./ThemeSwitch";
 
 const NavBar = () => {
   return (
-    <div className="flex justify-between sticky left-0 top-0 right-0 p-1 space-x-4">
+    <div className="flex justify-between items-center sticky left-0 top-0 right-0 p-2 shadow-lg space-x-4 bg-base-100">
       <Link to="/">
-        <Image source={logo} altText="logo" className="w-10 h-10" />
+        <Image source={logo} altText="logo" className="w-16 h-16 bg-cover" />
       </Link>
       <SearchInput />
       <ThemeSwitch />

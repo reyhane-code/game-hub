@@ -28,7 +28,7 @@ const GameGrid = () => {
       next={() => fetchNextPage()}
       loader={<span className="loading loading-ring loading-md"></span>}
     >
-      <div className="gird sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-10px">
+      <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6 p-10px">
         {isLoading &&
           skeletons.map((skeleton) => (
             <GameCardContainer key={skeleton}>

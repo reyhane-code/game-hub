@@ -1,4 +1,3 @@
-import { Grid, Show, GridItem } from "@chakra-ui/react";
 import GameGrid from "../components/GameGrid";
 import GameHeading from "../components/GameHeading";
 import GenreList from "../components/GenreList";
@@ -7,36 +6,25 @@ import SortSelector from "../components/SortSelector";
 
 const HomePage = () => {
   return (
-    // TODO: fix the sidebar
-    // (actually I don't get the hell is happening here, so i just removed the box and flex compoenents leaving you the rest to fix.)
-    <Grid
-      templateAreas={{
-        base: `"main"`,
-        lg: `"aside main"`,
-      }}
-      templateColumns={{
-        base: "1fr",
-        lg: "250px 1fr",
-      }}
-    >
-      <Show above="lg">
-        <GridItem area="aside" paddingX={5}>
-          <GenreList />
-        </GridItem>
-      </Show>
-      <GridItem area="main">
-        <div className="pl-2">
-          <GameHeading />
-          <div className="flex mb-5">
-            <div className="mr-5">
-              <PlatformSelector />
-            </div>
-            <SortSelector />
+    <div className="grid grid-cols-12">
+      <div className="hidden lg:flex h-max lg:col-span-3 3xl:col-span-2">
+        <GenreList />
+      </div>
+
+      <div className="col-span-12 lg:col-span-9 3xl:col-span-10 flex flex-col">
+        <GameHeading />
+        <div className="flex w-full mb-5">
+          <div className="mr-5">
+            <PlatformSelector />
           </div>
+          <SortSelector />
         </div>
-        <GameGrid />
-      </GridItem>
-    </Grid>
+        <div className="w-full">
+          <GameGrid />
+        </div>
+      </div>
+
+    </div>
   );
 };
 
