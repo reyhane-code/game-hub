@@ -8,7 +8,7 @@ interface Props {
 
 const GameAttributes = ({ game }: Props) => {
   return (
-    <div className="grid grid-cols-2">
+    <div className="grid grid-cols-2 items-start">
       <DefinitionItem term="Platforms">
         {game.parent_platforms?.map(({ platform }) => (
           <span key={platform.id} className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2" >{platform.name}</span>
