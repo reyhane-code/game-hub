@@ -11,7 +11,7 @@ const GameAttributes = ({ game }: Props) => {
     <div className="grid grid-cols-2">
       <DefinitionItem term="Platforms">
         {game.parent_platforms?.map(({ platform }) => (
-          <span key={platform.id}>{platform.name}</span>
+          <span key={platform.id} className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2" >{platform.name}</span>
         ))}
       </DefinitionItem>
       <DefinitionItem term="Metascore">
@@ -20,7 +20,7 @@ const GameAttributes = ({ game }: Props) => {
       <DefinitionItem term="Genres">
         {game.genres.map((genre) => (
           <span
-            className="grid h-10 flex-grow card bg-base-300 rounded-box place-items-center p-10px m-10px"
+            className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2"
             key={genre.id}
           >
             {genre.name}
@@ -30,7 +30,7 @@ const GameAttributes = ({ game }: Props) => {
       <DefinitionItem term="Publishers">
         {game.publishers?.map((publisher) => (
           <span
-            className="grid h-10 flex-grow card bg-base-300 rounded-box place-items-center p-10px m-10px"
+            className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2"
             key={publisher.id}
           >
             {publisher.name}

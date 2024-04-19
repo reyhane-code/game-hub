@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
 
 function ThemeSwitch() {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState<undefined | string>(undefined);
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    const newTheme = theme === "dark" ? "light" : "dark"
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme)
   };
   // initially set the theme and "listen" for changes to apply them to the HTML tag
   useEffect(() => {
-    document?.querySelector("html")?.setAttribute("data-theme", theme);
+    const savedTheme = localStorage.getItem('theme')
+    const newTheme = savedTheme ? savedTheme : (theme ?? 'light')
+    document?.querySelector("html")?.setAttribute("data-theme", newTheme);
+    if (!theme) {
+      setTheme(newTheme);
+    }
   }, [theme]);
   return (
     <>
       <input
         type="checkbox"
         className="toggle"
-        checked={theme === "light"}
+        checked={!theme || theme === "light"}
         onClick={toggleTheme}
         readOnly
       />
