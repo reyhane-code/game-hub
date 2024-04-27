@@ -6,7 +6,7 @@ interface Props {
   color: string;
   size?: string;
   className?: string;
-  onClick: () => void;
+  onClick?: () => void;
   link?: string;
 }
 
