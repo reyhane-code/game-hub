@@ -1,7 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Image from "./common/Image";
-import logo from "../assets/logo.webp";
 
 function Footer() {
   return (
