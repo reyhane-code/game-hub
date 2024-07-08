@@ -5,6 +5,8 @@ interface GameQuery {
   platformId?: number;
   sortOrder?: string;
   searchText?: string;
+  page ?: number;
+  pageSize?: number; 
 }
 
 interface GameQueryStore {

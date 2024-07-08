@@ -5,9 +5,18 @@ interface Props {
   type: string;
   placeholder: string;
   refVal: RefObject<HTMLInputElement>;
+  name?: string;
+  onChange?: (event: any) => void;
 }
 
-function TextInput({ refVal, children = "", type, placeholder }: Props) {
+function TextInput({
+  refVal,
+  children = "",
+  type,
+  placeholder,
+  name,
+  onChange,
+}: Props) {
   return (
     <div>
       <label className="input input-bordered flex items-center gap-2">
@@ -16,6 +25,8 @@ function TextInput({ refVal, children = "", type, placeholder }: Props) {
           type={type}
           className="grow"
           placeholder={placeholder}
+          name={name}
+          onChange={onChange}
         />
         {children}
       </label>

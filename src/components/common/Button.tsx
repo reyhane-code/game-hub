@@ -8,6 +8,7 @@ interface Props {
   className?: string;
   onClick?: () => void;
   link?: string;
+  disabled?: boolean;
 }
 
 function Button({
@@ -17,6 +18,7 @@ function Button({
   className = "",
   onClick,
   link,
+  disabled = false,
 }: Props) {
   return (
     <>
@@ -24,6 +26,7 @@ function Button({
         <button
           className={`btn btn-${color} btn-${size} ${className}`}
           onClick={onClick}
+          disabled={disabled}
         >
           {children}
         </button>
