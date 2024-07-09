@@ -5,16 +5,17 @@ import APIClient, {
 } from '../services/api-client';
 import useGameQueryStore from '../store';
 import Game from '../entities/Game';
+import { HttpRequest } from '../helpers/http-request-class.helper';
 
-const apiClient = new APIClient<Game>('/games');
 
 const useGames = () => {
   const gameQuery = useGameQueryStore((s) => s.gameQuery);
-
+  // TODO: your response is not same of FetchResponse<Game> 
+  // @ts-ignore
   return useInfiniteQuery<FetchResponse<Game>, Error>({
     queryKey: ['games', gameQuery],
     queryFn: ({ pageParam = 1 }) =>
-      apiClient.getAll({
+      HttpRequest.get('/game/all',{
         params: {
           genres: gameQuery.genreId,
           parent_platforms: gameQuery.platformId,

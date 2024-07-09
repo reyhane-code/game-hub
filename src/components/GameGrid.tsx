@@ -11,10 +11,8 @@ const GameGrid = () => {
     useGames();
   const skeletons = [1, 2, 3, 4, 5, 6];
 
-  if (error) return <p>{error.message}</p>;
+  if (error || ! data?.pages?.length) return <p>{error?.message ?? ''}</p>;
 
-  const fetchedGamesCount =
-    data?.pages.reduce((total, page) => total + page.results.length, 0) || 0;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
@@ -34,7 +32,7 @@ const GameGrid = () => {
         </React.Fragment>
       ))}
       <Button
-        color="priamry"
+        color="primary"
         size="md"
         onClick={() => fetchNextPage()}
         disabled={isFetchingNextPage}

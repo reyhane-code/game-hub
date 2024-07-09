@@ -4,13 +4,13 @@ interface Props {
   children?: ReactNode;
   type: string;
   placeholder: string;
-  refVal: RefObject<HTMLInputElement>;
+  value?: string | number;
   name?: string;
   onChange?: (event: any) => void;
 }
 
 function TextInput({
-  refVal,
+  value,
   children = "",
   type,
   placeholder,
@@ -21,7 +21,7 @@ function TextInput({
     <div>
       <label className="input input-bordered flex items-center gap-2">
         <input
-          ref={refVal}
+          value={value}
           type={type}
           className="grow"
           placeholder={placeholder}

@@ -7,29 +7,31 @@ import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const phoneRef = useRef<HTMLInputElement>(null);
-  const codeRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(1);
   const [phone, setPhone] = useState("");
-  const [code, setcode] = useState();
-  const [vlidationToken, setValidationToken] = useState("");
+  const [code, setCode] = useState("");
+  const [validationToken, setValidationToken] = useState("");
 
   const getValidationToken = async () => {
     const response = await HttpRequest.post("/auth/get-validation-token", {
       phone,
     });
-    console.log(response)
-    setValidationToken(response.data.validationToken);
-    setStep(2);
+    if (response?.data?.validationToken) {
+      setValidationToken(response.data.validationToken);
+      setStep((prevStep) => prevStep + 1); // Update step based on previous state
+    }
   };
 
   const loginOrRegister = async () => {
     const response = await HttpRequest.post("/auth/get-validation-token", {
-      vlidationToken,
+      phone,
+      validationToken,
       code,
     });
-    localStorage.setItem("tokens", response.data);
-    navigate("/");
+    if (response?.data) {
+      localStorage.setItem("tokens", response.data);
+      navigate("/");
+    }
   };
 
   const onSubmit = async (e: any) => {
@@ -51,15 +53,15 @@ function LoginPage() {
         {step == 1 ? (
           <TextInput
             type="string"
-            refVal={phoneRef}
+            value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Enter your phone number"
           />
         ) : (
           <TextInput
             type="string"
-            refVal={codeRef}
-            onChange={(e) => setcode(e.target.value)}
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
             placeholder="Enter the given code"
           />
         )}
