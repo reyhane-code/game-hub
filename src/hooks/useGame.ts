@@ -1,13 +1,18 @@
-import { useQuery } from '@tanstack/react-query';
-import APIClient from '../services/api-client';
-import Game from '../entities/Game';
-
-const apiClient = new APIClient<Game>('/game/all');
+import { useQuery } from "@tanstack/react-query";
+import Game from "../entities/Game";
+import { HttpRequest } from "../helpers/http-request-class.helper";
 
 const useGame = (slug: string) =>
-  useQuery({
-    queryKey: ['game', slug],
-    queryFn: () => apiClient.get(slug),
+  useQuery<Game, Error>({
+    queryKey: ["slug", slug],
+    queryFn: async () => {
+      try {
+        const response = await HttpRequest.get<Game>(`/game/${slug}`);
+        return response.data;
+      } catch (error) {
+        throw new Error("Failed to fetch game data");
+      }
+    },
   });
 
 export default useGame;

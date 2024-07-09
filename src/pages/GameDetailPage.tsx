@@ -9,6 +9,7 @@ const GameDetailPage = () => {
   const { slug } = useParams();
   const { data: game, isLoading, error } = useGame(slug!);
 
+  
   if (isLoading)
     return <span className="loading loading-ring loading-lg"></span>;
 
@@ -18,7 +19,8 @@ const GameDetailPage = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="col-start">
         <h1 className="text-xl">{game.name}</h1>
-        <ExpandableText>{game.description_raw}</ExpandableText>
+  
+        <ExpandableText>{game.description}</ExpandableText>
         <GameAttributes game={game} />
       </div>
       <div>

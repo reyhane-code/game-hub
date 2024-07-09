@@ -1,4 +1,10 @@
-// import type { getTokensType, setTokensType } from "@/types/tokens.type";
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios from "axios";
+import {
+  interceptorRequest,
+  interceptorResponse,
+  interceptorResponseError,
+} from "./axios-interceptor.helper";
 
 interface setTokensType {
   data: {
@@ -13,15 +19,7 @@ interface getTokensType {
   refreshToken: string;
 }
 
-import type { AxiosInstance, AxiosRequestConfig } from "axios";
-import axios from "axios";
-import {
-  interceptorRequest,
-  interceptorResponse,
-  interceptorResponseError,
-} from "./axios-interceptor.helper";
-
-export class HttpRequest {
+export class HttpRequest<T> {
   private static instance: AxiosInstance;
 
   private static getInstance(): AxiosInstance {
@@ -53,11 +51,11 @@ export class HttpRequest {
     return tokens ? JSON.parse(tokens) : undefined;
   }
 
-  public static async get(
+  public static async get<R>(
     url: string,
     axiosConfig?: AxiosRequestConfig | undefined
-  ) {
-    return this.getInstance().get(url, axiosConfig);
+  ): Promise<AxiosResponse<R>> {
+    return this.getInstance().get<R>(url, axiosConfig);
   }
 
   public static async post(
@@ -67,6 +65,7 @@ export class HttpRequest {
   ) {
     return this.getInstance().post(url, data, axiosConfig);
   }
+
   public static async patch(
     url: string,
     data: Record<string, unknown>,
@@ -74,6 +73,7 @@ export class HttpRequest {
   ) {
     return this.getInstance().patch(url, data, axiosConfig);
   }
+
   public static async delete(
     url: string,
     axiosConfig?: AxiosRequestConfig | undefined
