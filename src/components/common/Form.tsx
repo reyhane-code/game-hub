@@ -1,13 +1,11 @@
 import React, { ReactNode } from "react";
-import Button from "./Button";
 
 interface Props {
   method?: HttpMethod;
   action?: string;
   className?: string;
   children: ReactNode;
-  submitText: string;
-  onSubmit : () => void
+  onSubmit: (e: any) => void;
 }
 
 export enum HttpMethod {
@@ -15,7 +13,7 @@ export enum HttpMethod {
   POST = "post",
 }
 
-function Form({ method, action, className, children, submitText, onSubmit }: Props) {
+function Form({ method, action, className, children, onSubmit }: Props) {
   return (
     <div className="flex flex-col p-3 w-[90vw] lg:w-[25vw] m-auto justify-center align-center">
       <form
@@ -25,9 +23,6 @@ function Form({ method, action, className, children, submitText, onSubmit }: Pro
         onSubmit={onSubmit}
       >
         {children}
-        <Button color="outline" size="lg">
-          {submitText}
-        </Button>
       </form>
     </div>
   );

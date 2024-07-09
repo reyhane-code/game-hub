@@ -9,6 +9,7 @@ interface Props {
   onClick?: () => void;
   link?: string;
   disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 function Button({
@@ -19,6 +20,7 @@ function Button({
   onClick,
   link,
   disabled = false,
+  type,
 }: Props) {
   return (
     <>
@@ -27,6 +29,7 @@ function Button({
           className={`btn btn-${color} btn-${size} ${className}`}
           onClick={onClick}
           disabled={disabled}
+          type={type}
         >
           {children}
         </button>

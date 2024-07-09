@@ -1,123 +1,72 @@
 import React, { useRef, useState } from "react";
 import Form from "../components/common/Form";
 import TextInput from "../components/common/TextInput";
-import { HttpMethod } from "../components/common/Form";
+import { HttpRequest } from "../helpers/http-request-class.helper";
 import Button from "../components/common/Button";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-
-interface User {
-  name?: string;
-  email: string;
-  password: string;
-  registerd: boolean;
-}
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-  const addUser = useMutation({
-    mutationFn: async (user: User) => {
-      axios
-        .post("http://127.0.0.1:80/gamehub/index.php", {
-          user,
-        })
-        .then((response) => JSON.stringify(response))
+  const navigate = useNavigate();
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const codeRef = useRef<HTMLInputElement>(null);
+  const [step, setStep] = useState(1);
+  const [phone, setPhone] = useState("");
+  const [code, setcode] = useState();
+  const [vlidationToken, setValidationToken] = useState("");
 
-        .then((data) => {
-          // Handle the data received from the PHP script
+  const getValidationToken = async () => {
+    const response = await HttpRequest.post("/auth/get-validation-token", {
+      phone,
+    });
+    console.log(response)
+    setValidationToken(response.data.validationToken);
+    setStep(2);
+  };
 
-          console.log("data", data);
-        })
-        .catch((e) => console.log("error", e));
-    },
-  });
-  const namRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const [registerForm, setRegister] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const loginOrRegister = async () => {
+    const response = await HttpRequest.post("/auth/get-validation-token", {
+      vlidationToken,
+      code,
+    });
+    localStorage.setItem("tokens", response.data);
+    navigate("/");
+  };
+
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+    if (step == 1) {
+      getValidationToken();
+    } else {
+      loginOrRegister();
+    }
+  };
 
   return (
     <div>
-      {registerForm ? (
-        <div className="flex flex-col items-center">
-          <h2>Sign Up!</h2>
-          <Form
-            onSubmit={() => {
-              addUser.mutate({
-                name,
-                email,
-                password,
-                registerd: false,
-              });
-            }}
-            submitText="Sign Up"
-          >
-            <TextInput
-              type="text"
-              placeholder="Enter your name"
-              refVal={namRef}
-              name="name"
-              onChange={(event) => setName(event.target.value)}
-            ></TextInput>
-
-            <TextInput
-              type="email"
-              placeholder="Email Address"
-              refVal={emailRef}
-              name="email"
-              onChange={(event) => setEmail(event.target.value)}
-            ></TextInput>
-
-            <TextInput
-              type="password"
-              placeholder="Password"
-              refVal={passwordRef}
-              name="password"
-              onChange={(event) => setPassword(event.target.value)}
-            ></TextInput>
-          </Form>
-          <Button color="link" size="md" onClick={() => setRegister(false)}>
-            Already have an account? Login
-          </Button>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center">
-          <h2>Login to your account!</h2>
-          <Form
-            onSubmit={() => {
-              addUser.mutate({
-                email,
-                password,
-                registerd: true,
-              });
-            }}
-            submitText="Login"
-          >
-            <TextInput
-              type="email"
-              placeholder="Email Address"
-              refVal={emailRef}
-              name="email"
-              onChange={(event) => {
-                setEmail(event.target.value);
-              }}
-            ></TextInput>
-
-            <TextInput
-              type="password"
-              placeholder="Password"
-              refVal={passwordRef}
-              name="password"
-              onChange={(event) => setPassword(event.target.value)}
-            ></TextInput>
-          </Form>
-          <Button color="link" size="md" onClick={() => setRegister(true)}>
-            Don't have an account? Sign up now
-          </Button>
-        </div>
-      )}
+      <Form
+        onSubmit={(e) => {
+          onSubmit(e);
+        }}
+      >
+        {step == 1 ? (
+          <TextInput
+            type="string"
+            refVal={phoneRef}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Enter your phone number"
+          />
+        ) : (
+          <TextInput
+            type="string"
+            refVal={codeRef}
+            onChange={(e) => setcode(e.target.value)}
+            placeholder="Enter the given code"
+          />
+        )}
+        <Button color="primary" type="submit">
+          Confirm
+        </Button>
+      </Form>
     </div>
   );
 }
