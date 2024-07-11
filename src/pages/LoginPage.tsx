@@ -23,8 +23,7 @@ function LoginPage() {
   };
 
   const loginOrRegister = async () => {
-    const response = await HttpRequest.post("/auth/get-validation-token", {
-      phone,
+    const response = await HttpRequest.post("/auth/login-or-register", {
       validationToken,
       code,
     });
