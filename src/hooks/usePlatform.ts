@@ -1,8 +1,8 @@
-import usePlatforms from './usePlatforms';
+import Platform from "../entities/Platform";
+import { HttpRequest } from "../helpers/http-request-class.helper";
 
 const usePlatform = (id?: number) => {
-  const { data: platforms } = usePlatforms();
-  return platforms?.results.find((p) => p.id === id);
+  return HttpRequest.get<Platform>(`/platforms/${id}`);
 };
 
 export default usePlatform;

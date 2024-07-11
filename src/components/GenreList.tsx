@@ -23,10 +23,10 @@ const GenreList = () => {
             <div className="flex cursor-pointer"
               onClick={() => setSelectedGenreId(genre.id)}
             >
-              <Image
+              {/* <Image
                 className="rounded-sm w-10 h-10 bg-cover"
                 src={getCroppedImageUrl(genre.image_background)}
-              />
+              /> */}
               <span
                 className={`whitespace-normal text-left text-md p-1 mx-2 text-sm ${genre.id === selectedGenreId ? "font-bold" : "font-Regular"
                   } m-1`}

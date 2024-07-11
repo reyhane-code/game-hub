@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
-interface GameQuery {
+export interface GameQuery {
   genreId?: number;
   platformId?: number;
   sortOrder?: string;
   searchText?: string;
   page ?: number;
-  pageSize?: number; 
+  perPage?: number; 
 }
 
 interface GameQueryStore {

@@ -1,8 +1,8 @@
-import useGenres from './useGenres';
+import Genre from "../entities/Genre";
+import { HttpRequest } from "../helpers/http-request-class.helper";
 
 const useGenre = (id?: number) => {
-  const { data: genres } = useGenres();
-  return genres?.results.find((g) => g.id === id);
+  return HttpRequest.get<Genre>(`/genres/${id}`);
 };
 
 export default useGenre;
