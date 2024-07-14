@@ -46,6 +46,20 @@ interface GamesResponse {
       };
     }
   ];
+  publishers: [
+    {
+      id: number;
+      name: string;
+      createdAt: Date;
+      updatedAt: Date;
+      PublisherGame: {
+        game_id: number;
+        publisher_id: number;
+        createdAt: Date;
+        updatedAt: Date;
+      };
+    }
+  ];
 }
 
 // export const useGames = () => {
