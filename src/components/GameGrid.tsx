@@ -1,27 +1,24 @@
-import React from "react";
+// components/GameGrid.js
+import React, { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import useGames from "../hooks/useGames";
+import { fetchGames } from "../hooks/useGames";
 import GameCard from "./GameCard";
 import GameCardContainer from "./GameCardContainer";
 import GameCardSkeleton from "./GameCardSkeleton";
 import Button from "./common/Button";
 
 const GameGrid = () => {
-  const { data, error, isLoading, fetchNextPage, isFetchingNextPage } =
-    useGames();
-  const skeletons = [1, 2, 3, 4, 5, 6];
 
-  if (error || ! data?.pages?.length) return <p>{error?.message ?? ''}</p>;
-
-
+  // if (error || !data?.pages?.length) {
+    // return <p>{error?.message ?? "An error occurred."}</p>;
+  // }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
-      {isLoading &&
-        skeletons.map((skeleton) => (
-          <GameCardContainer key={skeleton}>
-            <GameCardSkeleton />
-          </GameCardContainer>
-        ))}
+      {/* {isLoading && skeletons.map((skeleton) => (
+        <GameCardContainer key={skeleton}>
+          <GameCardSkeleton />
+        </GameCardContainer>
+      ))}
       {data?.pages.map((page, index) => (
         <React.Fragment key={index}>
           {page.results.map((game) => (
@@ -38,7 +35,7 @@ const GameGrid = () => {
         disabled={isFetchingNextPage}
       >
         {isFetchingNextPage ? "Loading..." : "Load More"}
-      </Button>
+      </Button> */}
     </div>
   );
 };

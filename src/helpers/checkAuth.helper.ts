@@ -1,4 +1,5 @@
+import { HttpRequest } from "./http-request-class.helper";
+
 export const checkAuthentication = () => {
-  const tokens = localStorage.getItem("tokens");
-  return tokens ? true : false;
+  return HttpRequest.getTokens ? true : false;
 };

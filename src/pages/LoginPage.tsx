@@ -28,7 +28,11 @@ function LoginPage() {
       code,
     });
     if (response?.data) {
-      localStorage.setItem("tokens", response.data);
+      const { accessToken, refreshToken } = response.data;
+      HttpRequest.setTokens = {
+        data: { accessToken, refreshToken },
+        key: "tokens",
+      };
       navigate("/");
     }
   };
