@@ -1,13 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import Platform from '../entities/Platform';
-import { HttpRequest } from '../helpers/http-request-class.helper';
+import { useQuery } from "@tanstack/react-query";
+import Platform from "../entities/Platform";
+import { HttpRequest } from "../helpers/http-request-class.helper";
 
+interface PlatformsData {
+  count: number;
+  data: Platform[];
+  page: number;
+  perPage: number;
+  offset: number;
+}
 
 const usePlatforms = () =>
-  useQuery({
-    //@ts-ignore
-    queryKey: ['platforms'],
-    queryFn: HttpRequest.get<Platform[]>('/platforms/all')
-  });
+  useQuery(["platforms"], () => HttpRequest.get<PlatformsData>("/platforms"));
 
 export default usePlatforms;

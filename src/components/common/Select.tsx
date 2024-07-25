@@ -1,3 +1,4 @@
+
 interface Props {
   selectText: string;
   itemsList: any[];
@@ -5,19 +6,19 @@ interface Props {
   onValueChange: (value: any) => void;
 }
 
-function Select({ selectText, itemsList, showField, onValueChange }: Props) {
+const Select: React.FC<Props> = ({ selectText, itemsList, showField, onValueChange }) => {
   return (
     <select
-      onChange={onValueChange}
+      onChange={(e) => onValueChange(e.target.value)}
       className="select w-full max-w-xs"
-      defaultValue={selectText}
+      value={selectText}
     >
-      <option disabled>{selectText}</option>
+      <option disabled value="">{selectText}</option>
       {itemsList.map((item, index) => (
-        <option key={index}>{item[showField]}</option>
+        <option key={index} value={item[showField]}>{item[showField]}</option>
       ))}
     </select>
   );
-}
+};
 
 export default Select;

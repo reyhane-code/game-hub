@@ -1,13 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import Genre from '../entities/Genre';
-import { HttpRequest } from '../helpers/http-request-class.helper';
+import { useQuery } from "@tanstack/react-query";
+import Genre from "../entities/Genre";
+import { HttpRequest } from "../helpers/http-request-class.helper";
 
+interface GenreData {
+  count: number;
+  data: Genre[];
+  page: number;
+  perPage: number;
+  offset: number;
+}
 
 const useGenres = () =>
-  useQuery({
-    //@ts-ignore
-    queryKey: ['genres'],
-    queryFn: HttpRequest.get<Genre[]>('/genres/all')
-  });
+  useQuery(["genres"], () => HttpRequest.get<GenreData>("/genres"));
 
 export default useGenres;

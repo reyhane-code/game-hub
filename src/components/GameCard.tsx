@@ -4,14 +4,18 @@ import getCroppedImageUrl from "../services/image-url";
 import CriticScore from "./CriticScore";
 import Image from "./common/Image";
 import Emoji from "./Emoji";
+import { GamesResponse } from "../hooks/useGames";
 
 interface Props {
-  game: Game;
+  game: GamesResponse;
 }
 
 const GameCard = ({ game }: Props) => {
   return (
-    <Link to={"/games/" + game.slug} className="group card w-full bg-base-300 cursor-pointer">
+    <Link
+      to={"/games/" + game.slug}
+      className="group card w-full bg-base-300 cursor-pointer"
+    >
       <figure>
         <Image
           src={getCroppedImageUrl(game.background_image)}
@@ -25,12 +29,15 @@ const GameCard = ({ game }: Props) => {
           <Emoji rating={game.rating_top} />
         </h2>
         <div className="flex items-center justify-between w-full mt-2.5">
-
           <div className="flex items-center space-x-1">
-            {game.parent_platforms.slice(0, 2)?.map((p) =>
-              <div className="bg-neutral-800 rounded-sm px-2 py-0.5 flex-center" key={p.platform.id}>
-                <span className="text-xs text-neutral-300"> {p.platform.name}</span>
-              </div>)}
+            {game.platforms.slice(0, 2)?.map((p) => (
+              <div
+                className="bg-neutral-800 rounded-sm px-2 py-0.5 flex-center"
+                key={p.id}
+              >
+                <span className="text-xs text-neutral-300"> {p.name}</span>
+              </div>
+            ))}
           </div>
           <CriticScore score={game.metacritic} />
         </div>

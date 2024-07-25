@@ -5,8 +5,7 @@ export interface GameQuery {
   platformId?: number;
   sortOrder?: string;
   searchText?: string;
-  page ?: number;
-  perPage?: number; 
+   
 }
 
 interface GameQueryStore {

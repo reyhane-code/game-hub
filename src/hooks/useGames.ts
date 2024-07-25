@@ -1,5 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { HttpRequest } from "../helpers/http-request-class.helper";
-import useGameQueryStore from "../store";
+import useGameQueryStore, { GameQuery } from "../store";
 
 export interface GamesData {
   count: number;
@@ -9,7 +10,7 @@ export interface GamesData {
   offset: number;
 }
 
-interface GamesResponse {
+export interface GamesResponse {
   id: number;
   name: string;
   slug: string;
@@ -61,34 +62,16 @@ interface GamesResponse {
     }
   ];
 }
-
-// export const useGames = () => {
-//   const gameQuery = useGameQueryStore((s) => s.gameQuery);
-
-//   return useQuery<GamesData, Error>({
-//     //@ts-ignore
-//     queryKey: ["games", gameQuery],
-//     queryFn: () =>
-//       HttpRequest.get("/games/all", {
-//         params: {
-//           genreId: gameQuery.genreId,
-//           parentId: gameQuery.platformId,
-//           order: gameQuery.sortOrder,
-//           search: gameQuery.searchText,
-//           page: 1,
-//           perPage: 10,
-//         },
-//       }).then((res) => res.data),
-//   });
-// };
-
-export const fetchGames = async () => {
-  const gameQuery = useGameQueryStore((s) => s.gameQuery);
+const fetchGames = async (
+  gameQuery: GameQuery,
+  page: number,
+  perPage: number
+) => {
   try {
-    const res = await HttpRequest.get("/games/all", {
+    const res = await HttpRequest.get<GamesData>("/games", {
       params: {
-        page: gameQuery.page,
-        perPage: gameQuery.perPage,
+        page: page,
+        perPage: perPage,
         genreId: gameQuery.genreId,
         platformId: gameQuery.platformId,
         search: gameQuery.searchText,
@@ -97,5 +80,14 @@ export const fetchGames = async () => {
     return res.data;
   } catch (error) {
     console.log("error: ", error);
+    throw error; // Re-throw the error to be caught by the caller
   }
+};
+
+export const useGames = (page: number, perPage: number) => {
+  const gameQuery = useGameQueryStore((s) => s.gameQuery);
+
+  return useQuery<GamesData, Error>(["games", gameQuery, page], () =>
+    fetchGames(gameQuery, page, perPage)
+  );
 };
