@@ -10,38 +10,20 @@ import { HttpRequest } from "../helpers/http-request-class.helper";
 
 const GameGrid = () => {
   const [page, setPage] = useState(1);
-  const [data, setData] = useState<GamesData>();
   const perPage = 10;
   const skeletons = [1, 2, 3, 4, 5, 6];
-  // const { data, error, isLoading } = useGames(page, perPage);
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const response = await HttpRequest.get<GamesData>("/games", {
-          params: {
-            page: page,
-            perPage: perPage,
-          },
-        });
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching games data: ", error);
-      }
-    };
-    fetchGames();
-  }, []);
-  console.log(data);
-  // if (error) {
-  //   return <p>{error?.message ?? "An error occurred."}</p>;
-  // }
+  const { data, error, isLoading } = useGames(page, perPage);
+  if (error) {
+    return <p>{error?.message ?? "An error occurred."}</p>;
+  }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
-      {/* {isLoading &&
+      {isLoading &&
         skeletons.map((skeleton) => (
           <GameCardContainer key={skeleton}>
             <GameCardSkeleton />
           </GameCardContainer>
-        ))} */}
+        ))}
       {data?.data.map((game, index) => (
         <React.Fragment key={index}>
           <GameCardContainer key={game.id}>
@@ -59,7 +41,7 @@ const GameGrid = () => {
       </Button>
       <Button
         color="primary"
-        // disabled={((page - 1) * perPage) === data.count}
+        disabled={(page - 1) * perPage === data?.count}
         onClick={() => setPage(page + 1)}
       >
         Next

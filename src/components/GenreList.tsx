@@ -6,19 +6,18 @@ import Button from "./common/Button";
 import Genre from "../entities/Genre";
 
 const GenreList = () => {
-  const { data, isLoading, error } = useGenres();
+  const { data, error, isLoading } = useGenres();
   const selectedGenreId = useGameQueryStore((s) => s.gameQuery.genreId);
   const setSelectedGenreId = useGameQueryStore((s) => s.setGenreId);
   if (error) return null;
   if (isLoading)
-    return <span className="loading loading-ring loading-lg"></span>;
+    return <span className="loading loading-ring loading-lg">Loading</span>;
 
   return (
     <div className="flex w-full flex-col">
       <h2 className="mt-9 mb-3">Genres</h2>
       <ul>
-        {/* @ts-ignore */}
-        {data?.data.map((genre: Genre) => (
+        {data?.map((genre:Genre) => (
           <li key={genre.id} className="space-x-1 w-30 py-5px mb-4">
             <div
               className="flex cursor-pointer"

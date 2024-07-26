@@ -1,11 +1,10 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface GameQuery {
   genreId?: number;
   platformId?: number;
   sortOrder?: string;
   searchText?: string;
-   
 }
 
 interface GameQueryStore {
@@ -18,20 +17,20 @@ interface GameQueryStore {
 
 const useGameQueryStore = create<GameQueryStore>((set) => ({
   gameQuery: {},
-  setSearchText: (searchText) =>
-    set(() => ({ gameQuery: { searchText } })),
+  setSearchText: (searchText) => set(() => ({ gameQuery: { searchText } })),
   setGenreId: (genreId) =>
     set((store) => ({
-      gameQuery: { ...store.gameQuery, genreId, searchText: undefined },
+      gameQuery: { ...store.gameQuery, genreId },
     })),
-  setPlatformId: (platformId) =>
+  setPlatformId: (platformId) => {
+    console.log("setting", platformId);
     set((store) => ({
       gameQuery: {
         ...store.gameQuery,
         platformId,
-        searchText: undefined,
       },
-    })),
+    }));
+  },
   setSortOrder: (sortOrder) =>
     set((store) => ({
       gameQuery: { ...store.gameQuery, sortOrder },

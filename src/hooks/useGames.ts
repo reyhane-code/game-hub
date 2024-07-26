@@ -68,14 +68,15 @@ const fetchGames = async (
   perPage: number
 ) => {
   try {
+    const params = {
+      page: page,
+      perPage: perPage,
+      genreId: gameQuery.genreId,
+      platformId: gameQuery.platformId,
+      search: gameQuery.searchText,
+    };
     const res = await HttpRequest.get<GamesData>("/games", {
-      params: {
-        page: page,
-        perPage: perPage,
-        genreId: gameQuery.genreId,
-        platformId: gameQuery.platformId,
-        search: gameQuery.searchText,
-      },
+      params,
     });
     return res.data;
   } catch (error) {

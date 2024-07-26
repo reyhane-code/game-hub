@@ -1,17 +1,18 @@
-import useGenre from "../hooks/useGenre";
-import usePlatform from "../hooks/usePlatform";
-import useGameQueryStore from "../store";
+// import useGenre from "../hooks/useGenre";
+// import usePlatform from "../hooks/usePlatform";
+// import useGameQueryStore from "../store";
 
-const GameHeading = async () => {
-  const genreId = useGameQueryStore((s) => s.gameQuery.genreId);
-  const genre = await useGenre(genreId);
+// const GameHeading = () => {
+//   const genreId = useGameQueryStore((s) => s.gameQuery.genreId);
+//   const genre = useGenre(genreId);
+//   console.log(genre);
+//   const platformId = useGameQueryStore((s) => s.gameQuery.platformId);
+//   const platform = usePlatform(platformId);
+//   console.log(platform, "platform");
 
-  const platformId = useGameQueryStore((s) => s.gameQuery.platformId);
-  const platform = await usePlatform(platformId);
+//   const heading = `${platform?.name || ""} ${genre?.name || ""} Games`;
 
-  const heading = `${platform?.name || ""} ${genre?.name || ""} Games`;
+//   return <h1 className="my-5 text-5xl">{heading}</h1>;
+// };
 
-  return <h1 className="my-5 text-5xl">{heading}</h1>;
-};
-
-export default GameHeading;
+// export default GameHeading;
