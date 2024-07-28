@@ -78,6 +78,7 @@ const fetchGames = async (
     const res = await HttpRequest.get<GamesData>("/games", {
       params,
     });
+    console.log(res);
     return res.data;
   } catch (error) {
     console.log("error: ", error);

@@ -1,17 +1,23 @@
-import Game from "../entities/Game";
+import { GamesResponse } from "../hooks/useGames";
 import CriticScore from "./CriticScore";
 import DefinitionItem from "./DefinitionItem";
 
 interface Props {
-  game: Game;
+  game: GamesResponse;
 }
 
 const GameAttributes = ({ game }: Props) => {
+
   return (
     <div className="grid grid-cols-2 items-start">
       <DefinitionItem term="Platforms">
-        {game.parent_platforms?.map(({ platform }) => (
-          <span key={platform.id} className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2" >{platform.name}</span>
+        {game.platforms?.map((platform) => (
+          <span
+            key={platform.id}
+            className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2"
+          >
+            {platform.name}
+          </span>
         ))}
       </DefinitionItem>
       <DefinitionItem term="Metascore">
@@ -37,6 +43,8 @@ const GameAttributes = ({ game }: Props) => {
           </span>
         ))}
       </DefinitionItem>
+
+      
     </div>
   );
 };

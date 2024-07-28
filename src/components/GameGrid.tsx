@@ -5,8 +5,7 @@ import GameCard from "./GameCard";
 import GameCardContainer from "./GameCardContainer";
 import GameCardSkeleton from "./GameCardSkeleton";
 import Button from "./common/Button";
-import { GamesData, useGames } from "../hooks/useGames";
-import { HttpRequest } from "../helpers/http-request-class.helper";
+import { useGames } from "../hooks/useGames";
 
 const GameGrid = () => {
   const [page, setPage] = useState(1);
@@ -14,7 +13,10 @@ const GameGrid = () => {
   const skeletons = [1, 2, 3, 4, 5, 6];
   const { data, error, isLoading } = useGames(page, perPage);
   if (error) {
-    return <p>{error?.message ?? "An error occurred."}</p>;
+    if(!data){
+      //direct to error page 
+    }
+    return <p className="text-2xl">{"An error occurred."}</p>;
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
@@ -31,21 +33,24 @@ const GameGrid = () => {
           </GameCardContainer>
         </React.Fragment>
       ))}
-
-      <Button
-        color="primary"
-        disabled={page === 1}
-        onClick={() => setPage(page - 1)}
-      >
-        Previous
-      </Button>
-      <Button
-        color="primary"
-        disabled={(page - 1) * perPage === data?.count}
-        onClick={() => setPage(page + 1)}
-      >
-        Next
-      </Button>
+      {data?.data && (
+        <>
+          <Button
+            color="primary"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            Previous
+          </Button>
+          <Button
+            color="primary"
+            disabled={page === Math.ceil(data?.count / perPage)}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </Button>
+        </>
+      )}
     </div>
   );
 };

@@ -4,29 +4,32 @@ import GameAttributes from "../components/GameAttributes";
 import GameScreenshots from "../components/GameScreenshots";
 import GameTrailer from "../components/GameTrailer";
 import useGame from "../hooks/useGame";
+import LikeButton from "../components/common/LikeButton";
 
 const GameDetailPage = () => {
   const { slug } = useParams();
-  const { data: game, isLoading, error } = useGame(slug!);
+  const { data, isLoading, error } = useGame(slug!);
 
-  
   if (isLoading)
     return <span className="loading loading-ring loading-lg"></span>;
 
-  if (error || !game) throw error;
+  if (error || !data) throw error;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="col-start">
-        <h1 className="text-xl">{game.name}</h1>
-  
-        <ExpandableText>{game.description}</ExpandableText>
-        <GameAttributes game={game} />
+        <div className="flex justify-between items-center mb-5">
+          <h1 className="text-2xl">{data.name}</h1>
+          <LikeButton id={data.id}></LikeButton>
+        </div>
+
+        <ExpandableText>{data.description}</ExpandableText>
+        <GameAttributes game={data} />
       </div>
-      <div>
-        <GameTrailer gameId={game.id} />
-        <GameScreenshots gameId={game.id} />
-      </div>
+      {/* <div>
+        <GameTrailer gameId={data.id} />
+        <GameScreenshots gameId={data.id} />
+      </div> */}
     </div>
   );
 };
