@@ -19,7 +19,7 @@ const SearchInput = () => {
         }
       }}
     >
-      <TextInput refVal={ref} type="text" placeholder="Search games...">
+      <TextInput type="text" placeholder="Search games...">
         {/* use svg later */}
         <BsSearch />
       </TextInput>

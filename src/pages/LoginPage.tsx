@@ -1,12 +1,11 @@
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import Form from "../components/common/Form";
 import TextInput from "../components/common/TextInput";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import Button from "../components/common/Button";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 function LoginPage() {
-  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
@@ -33,7 +32,7 @@ function LoginPage() {
         data: { accessToken, refreshToken },
         key: "tokens",
       };
-      navigate("/");
+      return <Navigate to="/" />;
     }
   };
 
