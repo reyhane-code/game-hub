@@ -12,7 +12,7 @@ function LoginPage() {
   const [validationToken, setValidationToken] = useState("");
 
   const getValidationToken = async () => {
-    const response = await HttpRequest.post("/auth/get-validation-token", {
+    const response = await HttpRequest.post("/v1/auth/get-validation-token", {
       phone,
     });
     if (response?.data?.validationToken) {
@@ -22,16 +22,21 @@ function LoginPage() {
   };
 
   const loginOrRegister = async () => {
-    const response = await HttpRequest.post("/auth/login-or-register", {
-      validationToken,
-      code,
-    });
-    if (response?.data) {
-      const { accessToken, refreshToken } = response.data;
-      HttpRequest.setTokens = {
-        data: { accessToken, refreshToken },
-        key: "tokens",
-      };
+    try {
+      const response = await HttpRequest.post("v1/auth/login-or-register", {
+        validationToken,
+        code,
+      });
+      if (response?.data) {
+        const { accessToken, refreshToken } = response.data;
+        HttpRequest.setTokens = {
+          data: { accessToken, refreshToken },
+          key: "tokens",
+        };
+      }
+    } catch (error) {
+      console.log("an error occured", error);
+    } finally {
       return <Navigate to="/" />;
     }
   };

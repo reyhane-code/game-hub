@@ -75,7 +75,7 @@ const fetchGames = async (
       platformId: gameQuery.platformId,
       search: gameQuery.searchText,
     };
-    const res = await HttpRequest.get<GamesData>("/games", {
+    const res = await HttpRequest.get<GamesData>("/v1/games", {
       params,
     });
     console.log(res);

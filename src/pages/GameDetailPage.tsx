@@ -5,6 +5,7 @@ import GameScreenshots from "../components/GameScreenshots";
 import GameTrailer from "../components/GameTrailer";
 import useGame from "../hooks/useGame";
 import LikeButton from "../components/common/LikeButton";
+import Layout from "./Layout";
 
 const GameDetailPage = () => {
   const { slug } = useParams();

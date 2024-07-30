@@ -25,7 +25,7 @@ export class HttpRequest<T> {
   private static getInstance(): AxiosInstance {
     if (!this.instance) {
       this.instance = axios.create({
-        baseURL: "http://127.0.0.1:3500/api/v1",
+        baseURL: "http://127.0.0.1:3500/api",
         timeout: 3000,
       });
 

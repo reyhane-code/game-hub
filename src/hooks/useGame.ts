@@ -7,7 +7,7 @@ const useGame = (slug: string) =>
     queryKey: ["slug", slug],
     queryFn: async () => {
       try {
-        const response = await HttpRequest.get<GamesResponse>(`/games/${slug}`);
+        const response = await HttpRequest.get<GamesResponse>(`/v1/games/${slug}`);
         return response.data;
       } catch (error) {
         throw new Error("Failed to fetch game data");

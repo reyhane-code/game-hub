@@ -4,7 +4,7 @@ import { HttpRequest } from "../helpers/http-request-class.helper";
 
 const useGenres = () =>
   useQuery(["genres"], () =>
-    HttpRequest.get<Genre[]>("/genres").then((res) => res.data)
+    HttpRequest.get<Genre[]>("/v1/genres").then((res) => res.data)
   );
 
 export default useGenres;

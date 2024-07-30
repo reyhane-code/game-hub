@@ -12,7 +12,7 @@ interface PlatformsData {
 
 const usePlatforms = () =>
   useQuery(["platforms"], () =>
-    HttpRequest.get<Platform[]>("/platforms").then((res) => res.data)
+    HttpRequest.get<Platform[]>("/v1/platforms").then((res) => res.data)
   );
 
 export default usePlatforms;
