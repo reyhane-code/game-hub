@@ -7,14 +7,12 @@ import Platform from "../entities/Platform";
 const PlatformSelector = () => {
   const { data, error } = usePlatforms();
   const setSelectedPlatformId = useGameQueryStore((s) => s.setPlatformId);
-  const selectedPlatformId = useGameQueryStore((s) => s.gameQuery.platformId);
+  // const selectedPlatformId = useGameQueryStore((s) => s.gameQuery.platformId);
   const [selectedPlatformName, setSelectedPlatformName] = useState("Platforms");
   if (error) return null;
   const handleItemClick = (platform: Platform) => {
-    console.log("before", selectedPlatformId);
     setSelectedPlatformId(platform.id);
     setSelectedPlatformName(platform.name);
-    console.log("after", selectedPlatformId);
   };
 
   return (

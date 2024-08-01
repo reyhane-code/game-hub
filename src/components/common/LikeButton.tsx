@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { HiOutlineHeart, HiHeart } from "react-icons/hi";
 import { HttpRequest } from "../../helpers/http-request-class.helper";
+import useAuthStore from "../../auth.store";
 
 interface Props {
   id: number;
@@ -11,8 +12,8 @@ const LikeButton: React.FC<Props> = ({ id }) => {
   const [modal, setModal] = useState<boolean>(false);
 
   const handleLikeClick = async (id: number) => {
-    const tokens = HttpRequest.getTokens;
-    if (!tokens) {
+    const accessToken = useAuthStore((s) => s.auth.tokens.accessToken);
+    if (!accessToken) {
       setModal(true);
       return;
     }
@@ -21,13 +22,13 @@ const LikeButton: React.FC<Props> = ({ id }) => {
       if (!liked) {
         await HttpRequest.post(`/v1/likes/${id}`, {
           headers: {
-            Authorization: `Bearer ${tokens?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
       } else {
         await HttpRequest.delete(`/v1/likes/${id}`, {
           headers: {
-            Authorization: `Bearer ${tokens?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
       }

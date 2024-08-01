@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { HttpRequest } from "../helpers/http-request-class.helper";
+import useAuthStore from "../auth.store";
 
 const PrivateRoutes = () => {
-  const isAuthenticated = HttpRequest.getTokens;
+  const isAuthenticated = useAuthStore((s) => s.auth.isAuthenticated);
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }

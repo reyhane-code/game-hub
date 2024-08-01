@@ -1,16 +1,24 @@
+import { useQuery } from "@tanstack/react-query";
+import useAuthStore from "../auth.store";
+import Game from "../entities/Game";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 
+interface LikesData {
+  id: number;
+  user_id: number;
+  game_id: number;
+  game: Game;
+}
+
 const useUserLikes = () => {
-  const tokens = HttpRequest.getTokens;
-  try {
-    return HttpRequest.get("/v1/likes/user", {
+  const accessToken = useAuthStore((s) => s.auth.tokens.accessToken);
+  useQuery<LikesData[], Error>(["user/likes"], async () => {
+    return HttpRequest.get<LikesData[]>("/v1/likes/user", {
       headers: {
-        Authorization: `Bearer ${tokens?.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => res.data);
-  } catch (error) {
-    console.log("error ocurred", error);
-  }
+  });
 };
 
 export default useUserLikes;

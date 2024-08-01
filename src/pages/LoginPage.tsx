@@ -4,20 +4,29 @@ import TextInput from "../components/common/TextInput";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import Button from "../components/common/Button";
 import { Navigate } from "react-router-dom";
+import useAuthStore from "../auth.store";
+import Alert from "../components/common/Alert";
 
 function LoginPage() {
   const [step, setStep] = useState(1);
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
   const [validationToken, setValidationToken] = useState("");
+  const setTokens = useAuthStore((s) => s.setTokens);
+  const setIsAuthenticated = useAuthStore((s) => s.setIsAuthenticated);
+  const setIdentity = useAuthStore((s) => s.setIdentity);
 
   const getValidationToken = async () => {
-    const response = await HttpRequest.post("/v1/auth/get-validation-token", {
-      phone,
-    });
-    if (response?.data?.validationToken) {
-      setValidationToken(response.data.validationToken);
-      setStep((prevStep) => prevStep + 1); // Update step based on previous state
+    try {
+      const response = await HttpRequest.post("/v1/auth/get-validation-token", {
+        phone,
+      });
+      if (response?.data?.validationToken) {
+        setValidationToken(response.data.validationToken);
+        setStep((prevStep) => prevStep + 1); // Update step based on previous state
+      }
+    } catch (error) {
+      <Alert text="Can not Login or Register" />;
     }
   };
 
@@ -33,9 +42,12 @@ function LoginPage() {
           data: { accessToken, refreshToken },
           key: "tokens",
         };
+        setTokens({ accessToken, refreshToken });
+        setIsAuthenticated(true);
+        // setIdentity('')
       }
     } catch (error) {
-      console.log("an error occured", error);
+      <Alert text="Can not Login or Register" />;
     } finally {
       return <Navigate to="/" />;
     }

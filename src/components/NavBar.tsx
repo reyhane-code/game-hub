@@ -3,10 +3,10 @@ import logo from "../assets/logo.webp";
 import SearchInput from "./SearchInput";
 import Image from "./common/Image";
 import ThemeSwitch from "./ThemeSwitch";
-import { HttpRequest } from "../helpers/http-request-class.helper";
+import useAuthStore from "../auth.store";
 
 const NavBar = () => {
-  const isAuthenticated = HttpRequest.getTokens;
+  const isAuthenticated = useAuthStore((s) => s.auth.isAuthenticated);
   return (
     <div className="flex justify-between items-center sticky z-20 left-0 top-0 right-0 p-2 shadow-lg space-x-4 bg-base-100">
       <Link to="/">
