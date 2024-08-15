@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import CriticScore from "./CriticScore";
 import Emoji from "./Emoji";
 import { GamesResponse } from "../hooks/useGames";
+import Image from "./common/Image";
 
 interface Props {
   game: GamesResponse;
@@ -13,13 +14,13 @@ const GameCard = ({ game }: Props) => {
       to={"/games/" + game.slug}
       className="group card w-full bg-base-300 cursor-pointer"
     >
-      {/* <figure>
+      <figure>
         <Image
-          src={getCroppedImageUrl(game.background_image)}
+          src={(game.background_image)}
           altText={game.name}
           className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
         />
-      </figure> */}
+      </figure>
       <div className="card-body !p-3">
         <h2 className="card-title text-base lg:text-lg">
           {game.name}

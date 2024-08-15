@@ -66,12 +66,12 @@ export class HttpRequest<T> {
     return this.getInstance().post(url, data, axiosConfig);
   }
 
-  public static async patch(
+  public static async put(
     url: string,
     data: Record<string, unknown>,
     axiosConfig?: AxiosRequestConfig | undefined
   ) {
-    return this.getInstance().patch(url, data, axiosConfig);
+    return this.getInstance().put(url, data, axiosConfig);
   }
 
   public static async delete(

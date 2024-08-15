@@ -3,7 +3,7 @@ import Form from "../components/common/Form";
 import TextInput from "../components/common/TextInput";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import Button from "../components/common/Button";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "../auth.store";
 import Alert from "../components/common/Alert";
 
@@ -12,10 +12,9 @@ function LoginPage() {
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
   const [validationToken, setValidationToken] = useState("");
+  const navigator = useNavigate();
   const setTokens = useAuthStore((s) => s.setTokens);
   const setIsAuthenticated = useAuthStore((s) => s.setIsAuthenticated);
-  const setIdentity = useAuthStore((s) => s.setIdentity);
-
   const getValidationToken = async () => {
     try {
       const response = await HttpRequest.post("/v1/auth/get-validation-token", {
@@ -44,12 +43,11 @@ function LoginPage() {
         };
         setTokens({ accessToken, refreshToken });
         setIsAuthenticated(true);
-        // setIdentity('')
       }
     } catch (error) {
       <Alert text="Can not Login or Register" />;
     } finally {
-      return <Navigate to="/" />;
+      navigator("/");
     }
   };
 
