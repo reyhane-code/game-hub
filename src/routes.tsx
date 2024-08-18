@@ -6,6 +6,8 @@ import Layout from "./pages/Layout";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import PrivateRoutes from "./components/PrivateRoutes";
+import ArticlesPage from "./pages/ArticlesPage";
+import ArticleDetailPage from "./pages/ArticleDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,8 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "games/:slug", element: <GameDetailPage /> },
       { path: "login", element: <LoginPage /> },
+      { path: "articles", element: <ArticlesPage /> },
+      { path: "articles/:id", element: <ArticleDetailPage /> },
     ],
   },
   {

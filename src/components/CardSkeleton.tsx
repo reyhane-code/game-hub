@@ -1,4 +1,4 @@
-const GameCardSkeleton = () => {
+const CardSkeleton = () => {
   return (
     <div className="flex flex-col gap-4 w-52 mb-5">
       <div className="flex gap-4 items-center">
@@ -13,4 +13,4 @@ const GameCardSkeleton = () => {
   );
 };
 
-export default GameCardSkeleton;
+export default CardSkeleton;

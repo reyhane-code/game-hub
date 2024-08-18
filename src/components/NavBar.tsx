@@ -4,19 +4,19 @@ import SearchInput from "./SearchInput";
 import Image from "./common/Image";
 import ThemeSwitch from "./ThemeSwitch";
 import useAuthStore from "../auth.store";
+import { IoHomeOutline } from "react-icons/io5";
 
 const NavBar = () => {
   const isAuthenticated = useAuthStore((s) => s.auth.isAuthenticated);
   return (
     <div className="flex justify-between items-center sticky z-20 left-0 top-0 right-0 p-2 shadow-lg space-x-4 bg-base-100">
       <Link to="/">
-        <Image
-          src={logo}
-          altText="logo"
-          className="w-12 lg:w-16 max-h-16 bg-cover"
-        />
+        <IoHomeOutline className="text-3xl"/>
       </Link>
       <SearchInput />
+      <Link to="/articles" className="btn btn-outline">
+        Articles
+      </Link>
       {isAuthenticated ? (
         <Link to="/profile" className="btn btn-outline">
           Profile
