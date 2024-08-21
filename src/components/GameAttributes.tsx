@@ -1,30 +1,33 @@
-import { GamesResponse } from "../hooks/useGames";
+import { Game } from "../entities/Game";
 import CriticScore from "./CriticScore";
 import DefinitionItem from "./DefinitionItem";
 
 interface Props {
-  game: GamesResponse;
+  game: Game;
 }
 
 const GameAttributes = ({ game }: Props) => {
-
   return (
     <div className="grid grid-cols-2 items-start">
       <DefinitionItem term="Platforms">
-        {game.platforms?.map((platform) => (
-          <span
-            key={platform.id}
-            className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2"
-          >
-            {platform.name}
-          </span>
-        ))}
+        {game?.game?.platforms && game?.game.platforms.length > 0 ? (
+          game?.game.platforms.map((platform) => (
+            <span
+              key={platform.id}
+              className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2"
+            >
+              {platform.name}
+            </span>
+          ))
+        ) : (
+          <span className="text-gray-500">-</span> // Fallback message
+        )}
       </DefinitionItem>
       <DefinitionItem term="Metascore">
-        <CriticScore score={game.metacritic} />
+        <CriticScore score={game?.game.metacritic} />
       </DefinitionItem>
       <DefinitionItem term="Genres">
-        {game.genres.map((genre) => (
+        {game?.game.genres?.map((genre) => (
           <span
             className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2"
             key={genre.id}
@@ -34,7 +37,7 @@ const GameAttributes = ({ game }: Props) => {
         ))}
       </DefinitionItem>
       <DefinitionItem term="Publishers">
-        {game.publishers?.map((publisher) => (
+        {game?.game.publishers?.map((publisher) => (
           <span
             className="flex bg-base-300 rounded-xl p-2 flex-grow mx-2 mb-2"
             key={publisher.id}
@@ -43,8 +46,6 @@ const GameAttributes = ({ game }: Props) => {
           </span>
         ))}
       </DefinitionItem>
-
-      
     </div>
   );
 };

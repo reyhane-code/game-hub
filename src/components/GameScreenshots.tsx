@@ -1,22 +1,22 @@
-import React from "react";
-import useScreenshots from "../hooks/useScreenshots";
 import Image from "./common/Image";
 
 interface Props {
-  gameId: number;
+  screenshots: [
+    {
+      id: number;
+      hash_key: string;
+      createdAt: Date;
+      updatedAt: Date | null;
+      deletedAt: Date | null;
+    }
+  ];
 }
 
-const GameScreenshots = ({ gameId }: Props) => {
-  const { data, isLoading, error } = useScreenshots(gameId);
-
-  if (isLoading) return null;
-
-  if (error) throw error;
-
+const GameScreenshots = ({ screenshots }: Props) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-      {data?.results.map((file) => (
-        <Image key={file.id} src={file.image} />
+      {screenshots?.map((item) => (
+        <Image query={{ hashKey: item.hash_key }} />
       ))}
     </div>
   );

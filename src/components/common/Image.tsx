@@ -1,13 +1,23 @@
+import { IGetFileQuery } from "../../interfaces";
+import { useObjToQueryString } from "../../hooks/useObjToQueryString";
+
 interface Props {
-  src: string;
   altText?: string;
   className?: string;
+  query?: IGetFileQuery;
+  src?: string;
 }
 
-function Image({ src, altText = "", className = "" }: Props) {
+function Image({ query, altText = "", className = "", src }: Props) {
+  let source;
+  if (query) {
+    const queryString = useObjToQueryString(query);
+    source = `http://127.0.0.1:3500/api/v1/files?${queryString}`;
+  } else source = src;
+  console.log(source);
   return (
     <div>
-      <img src={src} alt={altText} className={className} />
+      <img src={source} alt={altText} className={className} />
     </div>
   );
 }

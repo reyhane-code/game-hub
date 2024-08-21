@@ -16,7 +16,8 @@ const GameCard = ({ game }: Props) => {
     >
       <figure>
         <Image
-          src={(game.background_image)}
+          //TODO: check why doesnt work
+          query={{ hashKey: game.background_image }}
           altText={game.name}
           className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
         />

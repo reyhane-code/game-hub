@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { HttpRequest } from "../helpers/http-request-class.helper";
-import useGameQueryStore, { GameQuery } from "../store";
+import useGameQueryStore from "../games.store";
+import { IPaginationQuery } from "../interfaces";
 
 export interface GamesData {
   count: number;
@@ -63,18 +64,18 @@ export interface GamesResponse {
   ];
 }
 const fetchGames = async (
-  gameQuery: GameQuery,
+  gameQuery: IPaginationQuery,
   page: number,
   perPage: number
 ) => {
+  const params = {
+    page: page,
+    perPage: perPage,
+    filter: gameQuery.filter,
+    search: gameQuery.search,
+    sortBy: gameQuery.sortBy,
+  };
   try {
-    const params = {
-      page: page,
-      perPage: perPage,
-      genreId: gameQuery.genreId,
-      platformId: gameQuery.platformId,
-      search: gameQuery.searchText,
-    };
     const res = await HttpRequest.get<GamesData>("/v1/games", {
       params,
     });

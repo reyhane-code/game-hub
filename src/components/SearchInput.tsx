@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import useGameQueryStore from "../store";
+import useGameQueryStore from "../games.store";
 import TextInput from "./common/TextInput";
 
 const SearchInput = () => {

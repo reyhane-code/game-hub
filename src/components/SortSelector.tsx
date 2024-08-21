@@ -1,36 +1,53 @@
-import useGameQueryStore from "../store";
-import Select from "./common/Select";
+import React, { useState } from "react";
+import useGameQueryStore from "../games.store";
 
-const SortSelector = () => {
-  const sortOrders = [
-    { value: "", label: "Relevance" },
-    { value: "-added", label: "Date added" },
-    { value: "name", label: "Name" },
-    { value: "-released", label: "Release date" },
-    { value: "-metacritic", label: "Popularity" },
-    { value: "-rating", label: "Average rating" },
-  ];
+interface Props {
+  sortbyOptions: Sortby[];
+}
 
-  const setSortOrder = useGameQueryStore((s) => s.setSortOrder);
-  const sortOrder = useGameQueryStore((s) => s.gameQuery.sortOrder);
-  const currentSortOrder = sortOrders.find(
-    (order) => order.value === sortOrder
-  );
-  // const handleClick = (value:string) =>{
-  //   setSortOrder(value)
-  //   const element = document.activeElement
-  //   if(element){
-  //     element?.blur()
-  //   }
-  // }
+interface Sortby {
+  value: string;
+  label: string;
+}
+
+const SortSelector = ({ sortbyOptions }: Props) => {
+  const [selectedValue, setSelectedValue] = useState("Sort");
+  const setSortby = useGameQueryStore((state) => state.setSortBy);
+  const sortby = useGameQueryStore((state) => state.gameQuery.sortBy);
+  const currentSortOrder =
+    sortbyOptions.find((order) => order.value === sortby) || sortbyOptions[0];
+
+  const handleValueChange = (item: Sortby) => {
+    setSortby(item.value);
+    setSelectedValue(item.label);
+    const activeElement = document.activeElement;
+    if (activeElement instanceof HTMLElement) {
+      activeElement.blur();
+    }
+  };
 
   return (
-    <Select
-      selectText={currentSortOrder?.label || "Relevance"}
-      itemsList={sortOrders}
-      onValueChange={(value) => setSortOrder(value.target.value)}
-      showField="label"
-    />
+    <>
+      <div className="dropdown z-10">
+        <label tabIndex={0} className="btn m-1">
+          {selectedValue}
+        </label>
+        <ul
+          tabIndex={0}
+          className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52"
+        >
+          {sortbyOptions.map((item, index) => (
+            <li
+              className="cursor-pointer h-10"
+              key={index}
+              onClick={() => handleValueChange(item)}
+            >
+              {item.label}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
 
