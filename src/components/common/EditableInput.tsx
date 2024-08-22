@@ -5,12 +5,16 @@ interface EditableInputProps {
   value: string;
   onChange: (newValue: string) => void;
   label: string;
+  disabled?: boolean;
+  className?: string;
 }
 
 const EditableInput: React.FC<EditableInputProps> = ({
   value,
   onChange,
   label,
+  disabled,
+  className,
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>(value);
@@ -30,7 +34,9 @@ const EditableInput: React.FC<EditableInputProps> = ({
 
   return (
     <div className="w-full mb-4">
-      <label className="block text-lg font-medium text-gray-700 mb-1">{label}:</label>
+      <label className="block text-lg font-medium text-gray-700 mb-1">
+        {label}:
+      </label>
       {isEditing ? (
         <input
           type="text"
@@ -38,7 +44,8 @@ const EditableInput: React.FC<EditableInputProps> = ({
           onChange={handleInputChange}
           onBlur={handleInputBlur} // Save on blur
           autoFocus // Automatically focus the input when editing
-          className="p-2 w-2/3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+          className={`${className} p-2 w-2/3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200`}
+          disabled={disabled}
         />
       ) : (
         <span

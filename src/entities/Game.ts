@@ -1,13 +1,12 @@
-
 export interface Game {
   game: {
     id: number;
     name: string;
     slug: string;
-    description: string;
+    description?: string;
     background_image: string;
-    metacritic: number;
-    rating_top: number;
+    metacritic?: number;
+    rating_top?: number;
     platforms: [
       {
         id: number;
