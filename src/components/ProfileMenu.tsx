@@ -24,7 +24,7 @@ const ProfileMenu = ({ accessToken, onMenuItemSelect }: Props) => {
   const menuItems: MenuItem[] = [
     { label: "User Information", link: "user" },
     { label: "Bookmarks", link: "bookmarks" },
-    { label: "Likes", link: "likes" }
+    { label: "Likes", link: "likes" },
   ];
 
   const handleLogout = async () => {
@@ -50,7 +50,7 @@ const ProfileMenu = ({ accessToken, onMenuItemSelect }: Props) => {
       {menuItems.map((item) => (
         <Button
           key={item.link}
-          className="text-lg m-3 p-5 text-gray-700 flex flex-row items-center space-x-3"
+          className="text-lg my-3 py-3 px-4 pt-2 pb-3 text-gray-700 flex items-center justify-center space-x-3"
           color="primary"
           onClick={() => {
             onMenuItemSelect(item.link); // Call the parent function with the selected link
@@ -61,7 +61,7 @@ const ProfileMenu = ({ accessToken, onMenuItemSelect }: Props) => {
       ))}
       <Button
         color="primary"
-        className="text-red-500 text-lg w-full p-1"
+        className="text-red-600 text-lg w-full p-my-3 py-3 px-4"
         onClick={handleLogout}
       >
         Logout

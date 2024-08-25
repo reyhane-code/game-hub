@@ -1,29 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { HttpRequest } from "../helpers/http-request-class.helper";
-import useGameQueryStore from "../games.store";
 import { IPaginationQuery } from "../interfaces";
+import Article from "../entities/Article";
+import useArticleQueryStore from "../articles.store";
 
-export interface ArticleData {
+export interface ArticlesData {
   count: number;
-  data: ArticleResponse[];
+  data: Article;
   page: number;
   perPage: number;
   offset: number;
   likes: number;
 }
 
-export interface ArticleResponse {
-  id: number;
-  title: string;
-  content: string;
-  user_id: number;
-  image: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
-}
 const fetchArticles = async (
-  gameQuery: IPaginationQuery,
+  articlesQuery: IPaginationQuery,
   page: number,
   perPage: number
 ) => {
@@ -31,8 +22,11 @@ const fetchArticles = async (
     const params = {
       page: page,
       perPage: perPage,
+      filter: articlesQuery.filter,
+      search: articlesQuery.search,
+      sortBy: articlesQuery.sortBy,
     };
-    const res = await HttpRequest.get<ArticleData>("/v1/articles/paginate", {
+    const res = await HttpRequest.get<ArticlesData>("/v1/articles/paginate", {
       params,
     });
     return res.data;
@@ -42,10 +36,10 @@ const fetchArticles = async (
   }
 };
 
-export const useGames = (page: number, perPage: number) => {
-  const gameQuery = useGameQueryStore((s) => s.gameQuery);
+export const useArticles = (page: number, perPage: number) => {
+  const articlesQuery = useArticleQueryStore((s) => s.articleQuery);
 
-  return useQuery<ArticleData, Error>(["articles", gameQuery, page], () =>
-    fetchArticles(gameQuery, page, perPage)
+  return useQuery<ArticlesData, Error>(["articles", articlesQuery, page], () =>
+    fetchArticles(articlesQuery, page, perPage)
   );
 };

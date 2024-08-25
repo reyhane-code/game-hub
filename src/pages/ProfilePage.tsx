@@ -15,8 +15,8 @@ const ProfilePage = () => {
   return (
     <>
       <Layout />
-      <div className="flex w-full">
-        <div className="flex flex-col w-96 max-w-300 me-8 px-6 py-2 space-y-4">
+      <div className="flex w-full px-3 lg:max-w-[100rem] lg:mx-auto">
+        <div className="flex flex-col justify-center items-sterch w-96 max-w-300 me-8 px-6 py-2 space-y-4 shadow-md rounded-lg">
           {accessToken && (
             <ProfileMenu
               accessToken={accessToken}
@@ -24,7 +24,7 @@ const ProfilePage = () => {
             />
           )}
         </div>
-        <div className="w-full grow border-solid border-2 border-gray-200 rounded-sm">
+        <div className="w-full grow border-solid border-2 border-gray-200 rounded-lg">
           {selectedLink === "bookmarks" ? (
             <UserBookmarks />
           ) : selectedLink === "likes" ? (

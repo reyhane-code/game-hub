@@ -44,12 +44,12 @@ const EditableInput: React.FC<EditableInputProps> = ({
           onChange={handleInputChange}
           onBlur={handleInputBlur} // Save on blur
           autoFocus // Automatically focus the input when editing
-          className={`${className} p-2 w-2/3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200`}
+          className={`${className} px-2 py-3 w-2/3 border border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200`}
           disabled={disabled}
         />
       ) : (
         <span
-          className="p-2 w-2/3 border border-gray-300 rounded-md shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 transition duration-200"
+          className="px-2 py-3 w-2/3 border border-gray-300 rounded-sm shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 transition duration-200"
           onClick={handleInputClick}
         >
           <span className="text-gray-800">{inputValue}</span>

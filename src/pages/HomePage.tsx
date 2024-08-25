@@ -3,8 +3,10 @@ import GameGrid from "../components/GameGrid";
 import GenreList from "../components/GenreList";
 import PlatformSelector from "../components/PlatformSelector";
 import SortSelector from "../components/SortSelector";
+import { useGames } from "../hooks/useGames";
 
 const HomePage = () => {
+  const { data, error, isLoading } = useGames(1, 10);
   return (
     <div className="grid grid-cols-12">
       <div className="hidden lg:flex h-max lg:col-span-3 3xl:col-span-2">
@@ -28,7 +30,7 @@ const HomePage = () => {
           />
         </div>
         <div className="w-full">
-          <GameGrid />
+          <GameGrid data={data} error={error} isLoading={isLoading} />
         </div>
       </div>
     </div>

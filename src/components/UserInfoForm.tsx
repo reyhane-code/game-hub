@@ -106,15 +106,15 @@ function UserInfoForm({ accessToken }: Props) {
               onChange={setPassword}
               label="Set Password"
             />
-            <Button color="secondary" className="text-lg m-2 text-blue-500">
+            <Button color="primary" className="text-lg m-2 text-blue-500">
               Save Password
             </Button>
           </>
         )}
         <Button
           type="submit"
-          color="secondary"
-          className="text-lg m-2 text-blue-500"
+          color="primary"
+          className="text-lg m-2 text-blue-500 "
         >
           Save Changes
         </Button>

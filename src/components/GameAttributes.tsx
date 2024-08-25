@@ -23,9 +23,11 @@ const GameAttributes = ({ game }: Props) => {
           <span className="text-gray-500">-</span> // Fallback message
         )}
       </DefinitionItem>
-      <DefinitionItem term="Metascore">
-        <CriticScore score={game?.game.metacritic} />
-      </DefinitionItem>
+      {game?.game?.metacritic && (
+        <DefinitionItem term="Metascore">
+          <CriticScore score={game.game.metacritic} />
+        </DefinitionItem>
+      )}
       <DefinitionItem term="Genres">
         {game?.game.genres?.map((genre) => (
           <span
