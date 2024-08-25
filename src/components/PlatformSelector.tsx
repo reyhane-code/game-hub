@@ -1,12 +1,12 @@
 import { useState } from "react";
 import usePlatforms from "../hooks/usePlatforms";
-import useGameQueryStore from "../games.store";
 import Platform from "../entities/Platform";
 import { FilterOperationEnum } from "../enums";
+import { useGameQueryStore } from "../store";
 
 const PlatformSelector = () => {
   const { data, error } = usePlatforms();
-  const setSelectedPlatformId = useGameQueryStore((s) => s.setFilter);
+  const { setFilter: setSelectedPlatformId } = useGameQueryStore();
   const [selectedPlatformName, setSelectedPlatformName] = useState("Platforms");
   if (error) return null;
   const handleItemClick = (platform: Platform) => {

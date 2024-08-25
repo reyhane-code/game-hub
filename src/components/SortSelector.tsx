@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useGameQueryStore from "../games.store";
+import { useGameQueryStore } from "../store";
 
 interface Props {
   sortbyOptions: Sortby[];
@@ -12,13 +12,13 @@ interface Sortby {
 
 const SortSelector = ({ sortbyOptions }: Props) => {
   const [selectedValue, setSelectedValue] = useState("Sort");
-  const setSortby = useGameQueryStore((state) => state.setSortBy);
-  const sortby = useGameQueryStore((state) => state.gameQuery.sortBy);
+  const { setSortBy, query } = useGameQueryStore();
+  const sortby = query.sortBy;
   const currentSortOrder =
     sortbyOptions.find((order) => order.value === sortby) || sortbyOptions[0];
 
   const handleValueChange = (item: Sortby) => {
-    setSortby(item.value);
+    setSortBy(item.value);
     setSelectedValue(item.label);
     const activeElement = document.activeElement;
     if (activeElement instanceof HTMLElement) {

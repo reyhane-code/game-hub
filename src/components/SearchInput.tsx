@@ -1,13 +1,13 @@
 import { useRef } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import useGameQueryStore from "../games.store";
 import TextInput from "./common/TextInput";
 import { FilterOperationEnum } from "../enums";
+import { useGameQueryStore } from "../store";
 
 const SearchInput = () => {
   const ref = useRef<HTMLInputElement>(null);
-  const setSearchText = useGameQueryStore((s) => s.setSearch);
+  const { setSearch } = useGameQueryStore();
   const navigate = useNavigate();
 
   return (
@@ -15,7 +15,7 @@ const SearchInput = () => {
       onSubmit={(event) => {
         event.preventDefault();
         if (ref.current) {
-          setSearchText({
+          setSearch({
             field: "name",
             operation: FilterOperationEnum.LIKE,
             value: `%${ref.current.value}%`,

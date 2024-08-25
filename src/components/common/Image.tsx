@@ -14,7 +14,6 @@ function Image({ query, altText = "", className = "", src }: Props) {
     const queryString = useObjToQueryString(query);
     source = `http://127.0.0.1:3500/api/v1/files?${queryString}`;
   } else source = src;
-  console.log(source);
   return (
     <div>
       <img src={source} alt={altText} className={className} />

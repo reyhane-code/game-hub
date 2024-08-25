@@ -6,7 +6,7 @@ import SortSelector from "../components/SortSelector";
 import { useGames } from "../hooks/useGames";
 
 const HomePage = () => {
-  const { data, error, isLoading } = useGames(1, 10);
+  const { data, error, isLoading } = useGames();
   return (
     <div className="grid grid-cols-12">
       <div className="hidden lg:flex h-max lg:col-span-3 3xl:col-span-2">

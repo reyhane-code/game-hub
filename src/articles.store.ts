@@ -6,6 +6,8 @@ interface ArticleQueryStore {
   setSearch: (search: ISearchFilterOptions) => void;
   setFilter: (filter: ISearchFilterOptions) => void;
   setSortBy: (sortOrder: string) => void;
+  setPage: (page: number) => void;
+  setPerPage: (perPage: number) => void
 }
 
 const useArticleQueryStore = create<ArticleQueryStore>((set) => ({
@@ -21,9 +23,17 @@ const useArticleQueryStore = create<ArticleQueryStore>((set) => ({
       const newFilterArray = store.articleQuery.filter?.push(filter);
       return { articleQuery: { ...store.articleQuery, newFilterArray } };
     }),
-  setSortBy: (sortBy:string) =>
+  setSortBy: (sortBy: string) =>
     set((store) => ({
       articleQuery: { ...store.articleQuery, sortBy },
+    })),
+  setPage: (page: number) =>
+    set((store) => ({
+      articleQuery: { ...store.articleQuery, page },
+    })),
+  setPerPage: (page: number) =>
+    set((store) => ({
+      articleQuery: { ...store.articleQuery, page },
     })),
 }));
 

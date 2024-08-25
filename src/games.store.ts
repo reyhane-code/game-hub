@@ -6,6 +6,8 @@ interface GameQueryStore {
   setSearch: (search: ISearchFilterOptions) => void;
   setFilter: (filter: ISearchFilterOptions) => void;
   setSortBy: (sortOrder: string) => void;
+  setPage: (page: number) => void;
+  setPerPage: (perPage: number) => void
 }
 
 const useGameQueryStore = create<GameQueryStore>((set) => ({
@@ -25,6 +27,15 @@ const useGameQueryStore = create<GameQueryStore>((set) => ({
     set((store) => ({
       gameQuery: { ...store.gameQuery, sortBy },
     })),
+  setPage: (page: number) =>
+    set((store) => ({
+      gameQuery: { ...store.gameQuery, page },
+    })),
+  setPerPage: (page: number) =>
+    set((store) => ({
+      gameQuery: { ...store.gameQuery, page },
+    })),
 }));
 
 export default useGameQueryStore;
+

@@ -1,18 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { HttpRequest } from "../helpers/http-request-class.helper";
-import useGameQueryStore from "../games.store";
 import { IPaginationQuery } from "../interfaces";
 import { IGetGamesResponse } from "../responses/get-games.respone";
+import { useGameQueryStore } from "../store";
 
 
 const fetchGames = async (
   gameQuery: IPaginationQuery,
-  page: number,
-  perPage: number
 ) => {
   const params = {
-    page: page,
-    perPage: perPage,
+    page: gameQuery.page,
+    perPage: gameQuery.perPage,
     filter: gameQuery.filter,
     search: gameQuery.search,
     sortBy: gameQuery.sortBy,
@@ -29,10 +27,10 @@ const fetchGames = async (
   }
 };
 
-export const useGames = (page: number, perPage: number) => {
-  const gameQuery = useGameQueryStore((s) => s.gameQuery);
+export const useGames = () => {
+  const { query: gameQuery } = useGameQueryStore();
 
-  return useQuery<IGetGamesResponse, Error>(["games", gameQuery, page], () =>
-    fetchGames(gameQuery, page, perPage)
+  return useQuery<IGetGamesResponse, Error>(["games", gameQuery, gameQuery.page], () =>
+    fetchGames(gameQuery)
   );
 };

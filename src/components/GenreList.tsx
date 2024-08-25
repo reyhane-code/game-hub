@@ -1,16 +1,16 @@
 import useGenres from "../hooks/useGenres";
-import useGameQueryStore from "../games.store";
 import Genre from "../entities/Genre";
 import { FilterOperationEnum } from "../enums";
+import { useGameQueryStore } from "../store";
 
 const GenreList = () => {
   const { data, error, isLoading } = useGenres();
-  const filter = useGameQueryStore((s) => s.gameQuery.filter);
-  const setSelectedGenreId = useGameQueryStore((s) => s.setFilter);
+  const { setFilter: setSelectedGenreId, query } = useGameQueryStore();
   if (error) return null;
   if (isLoading)
     return <span className="loading loading-ring loading-lg">Loading</span>;
 
+  console.log(query);
   return (
     <div className="flex w-full flex-col">
       <h2 className="mt-9 mb-3">Genres</h2>
@@ -33,7 +33,7 @@ const GenreList = () => {
             /> */}
               <span
                 className={`whitespace-normal text-left text-md p-1 mx-2 text-sm ${
-                  filter?.some(
+                  query.filter?.some(
                     (item) =>
                       item.value === genre.id && item.field === "genre.id"
                   )
