@@ -33,7 +33,7 @@ const GameGrid = ({ data, error, isLoading }: Props) => {
 
   const renderGameCards = () => (
     data?.items.map((game) => {
-      const gameCount = data.likesCount.find(item => item.game_id === game.id)?.count || 0;
+      const gameCount = data.likes.find(item => item.game_id === game.id)?.count || 0;
       return (
         <CardContainer key={game.id}>
           <GameCard game={game} likes={gameCount} />
@@ -43,10 +43,14 @@ const GameGrid = ({ data, error, isLoading }: Props) => {
   );
 
   return (
+    <>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
       {isLoading ? renderSkeletons() : renderGameCards()}
+    </div>
+    <div className="mx-auto">
       {data?.items && <Pagination setPage={setPage} count={data.pagination.count} page={query.page || 1} perPage={query.perPage || 10} />}
     </div>
+    </>
   );
 };
 

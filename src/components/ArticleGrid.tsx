@@ -1,58 +1,51 @@
-import React, { useState } from "react";
-import GameCard from "./GameCard";
+import React from "react";
 import CardSkeleton from "./CardSkeleton";
-import Button from "./common/Button";
 import CardContainer from "./CardContainer";
-import { ArticlesData } from "../hooks/useArticles";
+import { IGetGamesResponse } from "../responses/get-games.respone";
+import ErrorPage from "../pages/ErrorPage";
+import Pagination from "./common/Pagination";
+import { useArticleQueryStore } from "../store";
+import ArticleCard from "./ArticleCard";
+import { IGetArticlesResponse } from "../responses/get-articles.response";
 
 interface Props {
-  data: ArticlesData;
-  error: Error;
+  data?: IGetArticlesResponse;
+  error: Error | null;
   isLoading: boolean;
 }
+
 const ArticleGrid = ({ data, error, isLoading }: Props) => {
-  const [page, setPage] = useState(1);
-  const perPage = 10;
-  const skeletons = [1, 2, 3, 4, 5, 6];
+  const skeletons = Array.from({ length: 6 }, (_, index) => index + 1);
+  const { setPage, query } = useArticleQueryStore();
+
+
   if (error) {
-    if (!data) {
-      //direct to error page
-    }
-    return <p className="text-2xl">{"An error occurred."}</p>;
+    return data ? <p className="text-2xl">{"An error occurred."}</p> : <ErrorPage />;
   }
+
+  const renderSkeletons = () => (
+    skeletons.map((skeleton) => (
+      <CardContainer key={skeleton}>
+        <CardSkeleton />
+      </CardContainer>
+    ))
+  );
+
+  const renderArticleCards = () => (
+    data?.items.map((article) => {
+      const articleLikeCount = data.likes.find(item => item.article_id === article.id)?.count || 0;
+      return (
+        <CardContainer key={article.id}>
+          <ArticleCard article={article} likes={articleLikeCount} />
+        </CardContainer>
+      );
+    })
+  );
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
-      {isLoading &&
-        skeletons.map((skeleton) => (
-          <CardContainer key={skeleton}>
-            <CardSkeleton />
-          </CardContainer>
-        ))}
-      {/* {data?.data.map((game, index) => (
-        <React.Fragment key={index}>
-          <CardContainer key={game.id}>
-            <GameCard game={game} />
-          </CardContainer>
-        </React.Fragment>
-      ))} */}
-      {data?.data && (
-        <>
-          <Button
-            color="primary"
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
-          >
-            Previous
-          </Button>
-          <Button
-            color="primary"
-            disabled={page === Math.ceil(data?.count / perPage)}
-            onClick={() => setPage(page + 1)}
-          >
-            Next
-          </Button>
-        </>
-      )}
+      {isLoading ? renderSkeletons() : renderArticleCards()}
+      {data?.items && <Pagination setPage={setPage} count={data.pagination.count} page={query.page || 1} perPage={query.perPage || 10} />}
     </div>
   );
 };

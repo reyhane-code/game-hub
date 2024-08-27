@@ -1,12 +1,24 @@
 import { Link } from "react-router-dom";
 import Image from "./common/Image";
-import Article from "../entities/Article";
 import { FaEye } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa6";
+
 interface Props {
-  article: Article;
+  article: {
+    id: number,
+    title: string,
+    content: string,
+    user_id: number,
+    image: string,
+    view: number,
+    createdAt: Date,
+    updatedAt: Date | null,
+    deletedAt: Date | null
+  },
+  likes: number
 }
 
-const ArticleCard = ({ article }: Props) => {
+const ArticleCard = ({ article, likes }: Props) => {
   return (
     <>
       <Link
@@ -23,11 +35,14 @@ const ArticleCard = ({ article }: Props) => {
         <div className="card-body !p-3">
           <h2 className="card-title text-base lg:text-lg">
             {article.title}
-            {/* <Emoji rating={game.rating_top} /> */}
           </h2>
           <h3>
             {article.view}
             <FaEye className="w-8 h-8 text-lg" />
+          </h3>
+          <h3>
+            {likes}
+            <FaHeart className="w-8 h-8 text-lg" />
           </h3>
         </div>
       </Link>

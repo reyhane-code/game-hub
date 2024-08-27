@@ -25,7 +25,6 @@ const GameDetailPage = () => {
           <LikeButton id={data?.game?.id}></LikeButton>
           <span className="text-xl">{data?.likes}</span>
         </div>
-
         <ExpandableText>{data?.game.description}</ExpandableText>
         <GameAttributes game={data} />
       </div>
