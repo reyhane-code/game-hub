@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import CriticScore from "./CriticScore";
 import Emoji from "./Emoji";
 import Image from "./common/Image";
+import { FaHeart } from "react-icons/fa6";
 
 interface Props {
   game: {
@@ -32,9 +33,10 @@ interface Props {
       }
     ];
   };
+  likes: number
 }
 
-const GameCard = ({ game }: Props) => {
+const GameCard = ({ game, likes }: Props) => {
   return (
     <Link
       to={"/games/" + game.slug}
@@ -51,7 +53,6 @@ const GameCard = ({ game }: Props) => {
       <div className="card-body !p-3">
         <h2 className="card-title text-base lg:text-lg">
           {game.name}
-          <Emoji rating={game.rating_top} />
         </h2>
 
         <div className="flex items-center justify-between w-full mt-2.5">
@@ -66,6 +67,7 @@ const GameCard = ({ game }: Props) => {
             ))}
           </div>
           <CriticScore score={game.metacritic} />
+          <FaHeart className="text-xl mx-0"/>{likes}
         </div>
       </div>
     </Link>

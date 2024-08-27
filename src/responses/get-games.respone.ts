@@ -30,5 +30,5 @@ export interface IGetGamesResponse {
             }
         ]
     }],
-    likesCount: number
+    likesCount: [{ game_id: number, count: number }]
 }
