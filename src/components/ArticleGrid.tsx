@@ -12,11 +12,13 @@ interface Props {
   data?: IGetArticlesResponse;
   error: Error | null;
   isLoading: boolean;
+  page: number;
+  setPage: (page: number) => void;
 }
 
-const ArticleGrid = ({ data, error, isLoading }: Props) => {
+const ArticleGrid = ({ data, error, isLoading, page, setPage }: Props) => {
   const skeletons = Array.from({ length: 6 }, (_, index) => index + 1);
-  const { setPage, query } = useArticleQueryStore();
+  const { query } = useArticleQueryStore();
 
 
   if (error) {
@@ -43,10 +45,21 @@ const ArticleGrid = ({ data, error, isLoading }: Props) => {
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
-      {isLoading ? renderSkeletons() : renderArticleCards()}
-      {data?.items && <Pagination setPage={setPage} count={data.pagination.count} page={query.page || 1} perPage={query.perPage || 10} />}
-    </div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
+        {isLoading ? renderSkeletons() : renderArticleCards()}
+      </div>
+      <div className="mx-auto w-max mt-4">
+        {(data && data?.items.length > 0) ? (
+          <Pagination
+            count={data.pagination.count}
+            perPage={10}
+            page={page}
+            setPage={setPage}
+          />
+        ) : <p className="text-2xl">No articles were found!</p>}
+      </div>
+    </>
   );
 };
 

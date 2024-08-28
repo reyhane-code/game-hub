@@ -7,12 +7,13 @@ import { IGetArticlesResponse } from "../responses/get-articles.response";
 
 const fetchArticles = async (
   articlesQuery: IPaginationQuery,
-
+  page: number,
+  perPage: number
 ) => {
   try {
     const params = {
-      page: articlesQuery.page,
-      perPage: articlesQuery.perPage,
+      page,
+      perPage,
       filter: articlesQuery.filter,
       search: articlesQuery.search,
       sortBy: articlesQuery.sortBy,
@@ -27,10 +28,10 @@ const fetchArticles = async (
   }
 };
 
-export const useArticles = () => {
+export const useArticles = (page: number = 1, perPage: number = 10) => {
   const { query: articlesQuery } = useArticleQueryStore();
 
-  return useQuery<IGetArticlesResponse, Error>(["articles", articlesQuery, articlesQuery.page], () =>
-    fetchArticles(articlesQuery)
+  return useQuery<IGetArticlesResponse, Error>(["articles", articlesQuery, page], () =>
+    fetchArticles(articlesQuery, page, perPage)
   );
 };

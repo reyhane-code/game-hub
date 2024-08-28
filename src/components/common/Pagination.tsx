@@ -1,23 +1,27 @@
-// components/Pagination.js
+import { useNavigate } from "react-router-dom"; // Use useHistory for React Router v5
 import Button from "./Button";
 
 interface Props {
-  page: number;
   perPage: number;
   count: number;
-  setPage: (page: number) => void
+  page: number;
+  setPage: (page: number) => void;
 }
 
-
-const Pagination = ({ page, perPage, count, setPage }: Props) => {
+const Pagination = ({ perPage, count, page, setPage }: Props) => {
   const totalPages = Math.ceil(count / perPage);
+  const navigate = useNavigate();
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    navigate(`?page=${newPage}`);
+  };
 
   return (
     <div className="flex justify-between items-center">
       <Button
         color="primary"
         disabled={page === 1}
-        onClick={() => setPage(page - 1)}
+        onClick={() => handlePageChange(page - 1)}
         className="mx-5"
       >
         Previous
@@ -28,7 +32,7 @@ const Pagination = ({ page, perPage, count, setPage }: Props) => {
       <Button
         color="primary"
         disabled={page === totalPages}
-        onClick={() => setPage(page + 1)}
+        onClick={() => handlePageChange(page + 1)}
         className="mx-5"
       >
         Next

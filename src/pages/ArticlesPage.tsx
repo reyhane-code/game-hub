@@ -1,11 +1,9 @@
-import ArticleGrid from "../components/ArticleGrid";
-import { useArticles } from "../hooks/useArticles";
+import ArticlesContainer from "../components/ArticlesContainer";
 
 const ArticlesPage = () => {
-  const { data, error, isLoading } = useArticles()
   return (
     <>
-      <ArticleGrid data={data} error={error} isLoading={isLoading} />
+      <ArticlesContainer />
     </>
   );
 };

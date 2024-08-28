@@ -1,4 +1,3 @@
-// components/GameGrid.js
 import React from "react";
 import GameCard from "./GameCard";
 import CardSkeleton from "./CardSkeleton";
@@ -6,18 +5,17 @@ import CardContainer from "./CardContainer";
 import { IGetGamesResponse } from "../responses/get-games.respone";
 import ErrorPage from "../pages/ErrorPage";
 import Pagination from "./common/Pagination";
-import { useGameQueryStore } from "../store";
 
 interface Props {
   data?: IGetGamesResponse;
   error: Error | null;
   isLoading: boolean;
+  page: number; // Current page
+  setPage: (page: number) => void; // Function to set the page
 }
 
-const GameGrid = ({ data, error, isLoading }: Props) => {
+const GameGrid = ({ data, error, isLoading, page, setPage }: Props) => {
   const skeletons = Array.from({ length: 6 }, (_, index) => index + 1);
-  const { setPage, query } = useGameQueryStore();
-
 
   if (error) {
     return data ? <p className="text-2xl">{"An error occurred."}</p> : <ErrorPage />;
@@ -33,10 +31,10 @@ const GameGrid = ({ data, error, isLoading }: Props) => {
 
   const renderGameCards = () => (
     data?.items.map((game) => {
-      const gameCount = data.likes.find(item => item.game_id === game.id)?.count || 0;
+      const gameLikeCount = data.likes.find(item => item.game_id === game.id)?.count || 0;
       return (
         <CardContainer key={game.id}>
-          <GameCard game={game} likes={gameCount} />
+          <GameCard game={game} likes={gameLikeCount} />
         </CardContainer>
       );
     })
@@ -44,12 +42,19 @@ const GameGrid = ({ data, error, isLoading }: Props) => {
 
   return (
     <>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
-      {isLoading ? renderSkeletons() : renderGameCards()}
-    </div>
-    <div className="mx-auto">
-      {data?.items && <Pagination setPage={setPage} count={data.pagination.count} page={query.page || 1} perPage={query.perPage || 10} />}
-    </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
+        {isLoading ? renderSkeletons() : renderGameCards()}
+      </div>
+      <div className="mx-auto w-max mt-4">
+        {data?.items ? (
+          <Pagination
+            count={data.pagination.count}
+            perPage={10}
+            page={page}
+            setPage={setPage}
+          />
+        ) : <p>No Games were found!</p>}
+      </div>
     </>
   );
 };

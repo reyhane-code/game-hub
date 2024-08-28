@@ -2,19 +2,11 @@ import { Link } from "react-router-dom";
 import Image from "./common/Image";
 import { FaEye } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
+import { ImageFormat } from "../enums";
+import Article from "../entities/Article";
 
 interface Props {
-  article: {
-    id: number,
-    title: string,
-    content: string,
-    user_id: number,
-    image: string,
-    view: number,
-    createdAt: Date,
-    updatedAt: Date | null,
-    deletedAt: Date | null
-  },
+  article: Article,
   likes: number
 }
 
@@ -25,25 +17,33 @@ const ArticleCard = ({ article, likes }: Props) => {
         to={"/articles/" + article.id}
         className="group card w-full bg-base-300 cursor-pointer"
       >
-        <figure>
+        {article.image &&
           <Image
-            src={article.image}
+            query={{ hashKey: article.image, format: ImageFormat.WEBP }}
             altText={article.title}
-            className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
+            className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in  w-full h-[12rem] object-cover"
           />
-        </figure>
+        }
         <div className="card-body !p-3">
-          <h2 className="card-title text-base lg:text-lg">
-            {article.title}
-          </h2>
-          <h3>
-            {article.view}
-            <FaEye className="w-8 h-8 text-lg" />
-          </h3>
-          <h3>
-            {likes}
-            <FaHeart className="w-8 h-8 text-lg" />
-          </h3>
+          <div className="h-full flex flex-col justify-between w-full">
+            <h3 className="card-title text-base lg:text-lg">
+              {article.title}
+            </h3>
+            <div className="flex items-center space-x-3 self-end">
+              <div className="flex items-center space-x-1">
+                <span className="text-sm">
+                  {article.view}
+                </span>
+                <FaEye className="text-md" />
+              </div>
+              <div className="flex items-center space-x-1">
+                <span className="text-sm">
+                  {likes}
+                </span>
+                <FaHeart className="text-md" />
+              </div>
+            </div>
+          </div>
         </div>
       </Link>
     </>

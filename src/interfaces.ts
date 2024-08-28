@@ -1,8 +1,6 @@
 import { FilterOperationEnum, ImageFormat } from "./enums";
 
 export interface IPaginationQuery {
-  perPage?: number;
-  page?: number;
   sortBy?: string;
   filter?: ISearchFilterOptions[];
   search?: ISearchFilterOptions[];

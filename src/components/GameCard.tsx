@@ -3,6 +3,7 @@ import CriticScore from "./CriticScore";
 import Emoji from "./Emoji";
 import Image from "./common/Image";
 import { FaHeart } from "react-icons/fa6";
+import { ImageFormat } from "../enums";
 
 interface Props {
   game: {
@@ -42,14 +43,12 @@ const GameCard = ({ game, likes }: Props) => {
       to={"/games/" + game.slug}
       className="group card w-full bg-base-300 cursor-pointer"
     >
-      {/* <figure>
-        <Image
-          //TODO: check why doesnt work
-          query={{ hashKey: game.background_image }}
-          altText={game.name}
-          className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
-        />
-      </figure> */}
+      <Image
+        //TODO: check why doesnt work
+        query={{ hashKey: game.background_image, format: ImageFormat.WEBP }}
+        altText={game.name}
+        className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
+      />
       <div className="card-body !p-3">
         <h2 className="card-title text-base lg:text-lg">
           {game.name}
@@ -67,7 +66,7 @@ const GameCard = ({ game, likes }: Props) => {
             ))}
           </div>
           <CriticScore score={game.metacritic} />
-          <FaHeart className="text-xl mx-0"/>{likes}
+          <FaHeart className="text-xl mx-0" />{likes}
         </div>
       </div>
     </Link>

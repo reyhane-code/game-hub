@@ -6,8 +6,6 @@ interface QueryStore {
     setSearch: (search: ISearchFilterOptions) => void;
     setFilter: (filter: ISearchFilterOptions) => void;
     setSortBy: (sortOrder: string) => void;
-    setPage: (page: number) => void;
-    setPerPage: (perPage: number) => void;
 }
 
 const createQueryStore = () => {
@@ -34,16 +32,6 @@ const createQueryStore = () => {
         setSortBy: (sortBy) =>
             set((store) => ({
                 query: { ...store.query, sortBy },
-            })),
-
-        setPage: (page: number) =>
-            set((store) => ({
-                query: { ...store.query, page },
-            })),
-
-        setPerPage: (perPage: number) =>
-            set((store) => ({
-                query: { ...store.query, perPage },
             })),
     }));
 };

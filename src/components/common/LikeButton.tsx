@@ -1,83 +1,77 @@
 import React, { useEffect, useState } from "react";
-import { HiOutlineHeart, HiHeart } from "react-icons/hi";
 import { HttpRequest } from "../../helpers/http-request-class.helper";
 import useAuthStore from "../../auth.store";
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 interface Props {
   id: number;
+  entity: string;
+  likes_count: number;
 }
 
-const LikeButton: React.FC<Props> = ({ id }) => {
-  const [liked, setLiked] = useState<boolean>(false);
-  const [modal, setModal] = useState<boolean>(false);
+const LikeButton: React.FC<Props> = ({ id, entity, likes_count }) => {
   const accessToken = useAuthStore((s) => s.auth.tokens.accessToken);
+  const [liked, setLiked] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [likesCount, setLikesCount] = useState<number>(likes_count);
 
-  const toggleLike = () => {
-    if (accessToken === "") {
-      setModal(true);
-    }
-    setLiked(!liked);
-  };
+  useEffect(() => {
+    const fetchLikeStatus = async () => {
+      setLoading(true);
+      try {
+        const response = await HttpRequest.get<boolean>(`/v1/likes/user/liked/${entity}/${id}`);
+        setLiked(response.data);
+      } catch (error) {
+        console.error('Error fetching like status:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const likeOrUnlike = async () => {
-    console.log("in here");
-    if (!accessToken) return;
+    fetchLikeStatus();
+  }, [id, entity]);
 
-    const url = `/v1/likes/${id}`;
+  const handleLikeToggle = async () => {
+    if (loading) return; // Prevent multiple clicks while loading
+
+    setLoading(true);
+    const isLiking = liked === false; // Determine if we are liking or unliking
+    const url = `/v1/likes/${entity}/${id}`;
+    const method = isLiking ? 'post' : 'delete';
 
     try {
-      console.log(liked);
-      const res = liked
-        ? await HttpRequest.delete(url, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-        : await HttpRequest.post(url, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
+      const res = await HttpRequest[method](url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-      console.log(res, "res");
+      if (res.status === 200) {
+        // Update the liked state and likes count based on the action
+        setLiked((prevLiked) => !prevLiked); // Toggle the liked state
+        setLikesCount((prevCount) => (isLiking ? prevCount + 1 : prevCount - 1));
+      } else {
+        console.error('Unexpected response status:', res.status);
+      }
     } catch (error) {
-      console.error("Error occurred", error);
+      console.error('Error liking/disliking:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // useEffect(() => {
-  //   likeOrUnlike();
-  // }, [liked]);
+  if (loading) {
+    return <button disabled>Loading...</button>;
+  }
 
   return (
-    <div>
-      <button
-        className="btn"
-        onClick={async () => {
-          toggleLike();
-          await likeOrUnlike();
-        }}
-      >
-        {liked ? (
-          <HiHeart className="text-3xl" />
-        ) : (
-          <HiOutlineHeart className="text-3xl" />
-        )}
-      </button>
-
-      {modal && (
-        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg"></h3>
-            <p className="py-4">Please login first to like the game!</p>
-            <div className="modal-action">
-              <button className="btn" onClick={() => setModal(false)}>
-                OK
-              </button>
-            </div>
-          </div>
-        </dialog>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      {liked ? (
+        <FaHeart className="text-red-500 text-xl cursor-pointer" onClick={handleLikeToggle} />
+      ) : (
+        <FaRegHeart className="text-xl cursor-pointer" onClick={handleLikeToggle} />
       )}
+      <span style={{ marginLeft: '8px' }}>{likesCount}</span>
     </div>
   );
 };

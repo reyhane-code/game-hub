@@ -15,9 +15,7 @@ function Image({ query, altText = "", className = "", src }: Props) {
     source = `http://127.0.0.1:3500/api/v1/files?${queryString}`;
   } else source = src;
   return (
-    <div>
-      <img src={source} alt={altText} className={className} />
-    </div>
+    <img src={source} alt={altText} className={className} />
   );
 }
 

@@ -7,13 +7,14 @@ import { useGameQueryStore } from "../store";
 
 const fetchGames = async (
   gameQuery: IPaginationQuery,
+  page: number,
+  perPage: number
 ) => {
   const params = {
-    page: gameQuery.page,
-    perPage: gameQuery.perPage,
     filter: gameQuery.filter,
     search: gameQuery.search,
     sortBy: gameQuery.sortBy,
+    page, perPage
   };
   try {
     const res = await HttpRequest.get<IGetGamesResponse>("/v1/games", {
@@ -27,10 +28,10 @@ const fetchGames = async (
   }
 };
 
-export const useGames = () => {
+export const useGames = (page: number, perPage: number = 10) => {
   const { query: gameQuery } = useGameQueryStore();
 
-  return useQuery<IGetGamesResponse, Error>(["games", gameQuery, gameQuery.page], () =>
-    fetchGames(gameQuery)
+  return useQuery<IGetGamesResponse, Error>(["games", gameQuery, page], () =>
+    fetchGames(gameQuery, page, perPage)
   );
 };
