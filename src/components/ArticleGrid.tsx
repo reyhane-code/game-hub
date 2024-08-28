@@ -57,7 +57,7 @@ const ArticleGrid = ({ data, error, isLoading, page, setPage }: Props) => {
             page={page}
             setPage={setPage}
           />
-        ) : <p className="text-2xl">No articles were found!</p>}
+        ) : <p className="text-2xl h-[50vh] flex items-center justify-center">No articles were found!</p>}
       </div>
     </>
   );

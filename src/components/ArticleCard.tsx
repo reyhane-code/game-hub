@@ -21,7 +21,7 @@ const ArticleCard = ({ article, likes }: Props) => {
           <Image
             query={{ hashKey: article.image, format: ImageFormat.WEBP }}
             altText={article.title}
-            className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in  w-full h-[12rem] object-cover"
+            className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
           />
         }
         <div className="card-body !p-3">
