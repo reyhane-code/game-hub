@@ -27,8 +27,7 @@ const ArticleDetailPage = () => {
         } */}
         <div className="flex justify-between items-center mb-5">
           <h1 className="text-2xl">{data?.article.title}</h1>
-          {/* <LikeButton id={data?.article.id}></LikeButton> */}
-          {data?.likes}
+          <LikeButton id={data?.article.id} entity="article" initialLikes={data?.likes}></LikeButton>
         </div>
 
         <ExpandableText>{data?.article.content}</ExpandableText>

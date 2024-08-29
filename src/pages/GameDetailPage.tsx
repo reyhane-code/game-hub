@@ -22,8 +22,7 @@ const GameDetailPage = () => {
       <div className="col-start">
         <div className="flex justify-between items-center mb-5">
           <h1 className="text-2xl">{data?.game.name}</h1>
-          <LikeButton id={data?.game?.id} entity="game"></LikeButton>
-          <span className="text-xl">{data?.likes}</span>
+          <LikeButton id={data?.game?.id} entity="game" initialLikes={data?.likes} ></LikeButton>
         </div>
         <ExpandableText>{data?.game.description}</ExpandableText>
         <GameAttributes game={data} />

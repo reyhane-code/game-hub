@@ -13,6 +13,7 @@ interface Props {
 
 function UserInfoForm({ accessToken }: Props) {
   const { data: user, error, isLoading } = useUser();
+  console.log("user", user)
   const phone = user?.phone;
   const [username, setUsername] = useState(user?.username || "");
   const [firstname, setFirstname] = useState(user?.firstName || "");
@@ -75,19 +76,13 @@ function UserInfoForm({ accessToken }: Props) {
           value={username}
           onChange={setUsername}
           label="Username"
-          className=""
         />
-        <div className="w-full mb-4">
-          <label className="block text-lg font-medium text-gray-700 mb-1">
-            {"Phone"}:
-          </label>
-          <input
-            value={phone}
-            className="p-2 w-2/3 border border-gray-300 rounded-md shadow-sm"
-            disabled={true}
-          />
-        </div>
-
+        {phone && <EditableInput
+          value={phone}
+          onChange={() => console.log()}
+          label="Phone"
+          disabled={true}
+        />}
         <EditableInput value={email} onChange={setEmail} label="Email" />
         <EditableInput
           value={firstname}

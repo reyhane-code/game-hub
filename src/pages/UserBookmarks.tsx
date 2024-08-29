@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useUserBookmarks from "../hooks/useUserBookmarks";
 import Alert from "../components/common/Alert";
+import GameGrid from "../components/GameGrid";
 
 const UserBookmarks = () => {
   const [entity, setEntity] = useState("game");
@@ -29,7 +30,7 @@ const UserBookmarks = () => {
             type="radio"
             name="my_tabs_2"
             role="tab"
-            className="tab"
+            className="tab text-xl"
             aria-label="Games"
             defaultChecked
           />
@@ -37,7 +38,7 @@ const UserBookmarks = () => {
             role="tabpanel"
             className="tab-content bg-base-100 border-base-300 rounded-box p-6"
           >
-            {}
+            <GameGrid data={data} error={error}  />
           </div>
 
           <input

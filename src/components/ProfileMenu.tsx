@@ -4,15 +4,18 @@ import { HttpRequest } from "../helpers/http-request-class.helper";
 import Button from "./common/Button";
 import { useState } from "react";
 import Alert from "./common/Alert";
+import { FaRegUser, FaRegHeart, FaRegBookmark } from "react-icons/fa";
+import { MdLogout } from "react-icons/md";
 
 interface Props {
   accessToken: string;
-  onMenuItemSelect: (link: string) => void; // New prop for handling menu item selection
+  onMenuItemSelect: (link: string) => void;
 }
 
 interface MenuItem {
   label: string;
   link: string;
+  icon: any
 }
 
 const ProfileMenu = ({ accessToken, onMenuItemSelect }: Props) => {
@@ -22,9 +25,9 @@ const ProfileMenu = ({ accessToken, onMenuItemSelect }: Props) => {
   const [error, setError] = useState<string | null>(null);
 
   const menuItems: MenuItem[] = [
-    { label: "User Information", link: "user" },
-    { label: "Bookmarks", link: "bookmarks" },
-    { label: "Likes", link: "likes" },
+    { label: "User Information", link: "user", icon: <FaRegUser className="text-lg" /> },
+    { label: "Bookmarks", link: "bookmarks", icon: <FaRegBookmark className="text-lg" /> },
+    { label: "Likes", link: "likes", icon: <FaRegHeart className="text-lg" /> },
   ];
 
   const handleLogout = async () => {
@@ -50,21 +53,28 @@ const ProfileMenu = ({ accessToken, onMenuItemSelect }: Props) => {
       {menuItems.map((item) => (
         <Button
           key={item.link}
-          className="text-lg my-3 py-3 px-4 pt-2 pb-3 text-gray-700 flex items-center justify-center space-x-3"
+          className="text-lg my-3 py-3 px-4 pt-2 pb-3 flex items-center justify-center space-x-3"
           color="primary"
           onClick={() => {
             onMenuItemSelect(item.link); // Call the parent function with the selected link
           }}
         >
-          {item.label}
+          <div className="w-full flex items-center justify-between">
+            {item.label}{item.icon}
+          </div>
         </Button>
       ))}
       <Button
         color="primary"
-        className="text-red-600 text-lg w-full p-my-3 py-3 px-4"
+        className="text-red-700 text-lg w-full p-my-3 py-3 px-4"
         onClick={handleLogout}
       >
-        Logout
+        <div className="w-full flex items-center justify-between">
+          <span>
+            Logout
+          </span>
+          <MdLogout className="text-lg" />
+        </div>
       </Button>
     </>
   );

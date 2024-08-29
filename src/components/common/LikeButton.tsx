@@ -1,77 +1,106 @@
-import React, { useEffect, useState } from "react";
-import { HttpRequest } from "../../helpers/http-request-class.helper";
-import useAuthStore from "../../auth.store";
+import React, { useEffect, useState } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import Modal from './Modal'
+import useAuthStore from '../../auth.store';
+import { HttpRequest } from '../../helpers/http-request-class.helper';
 
-interface Props {
-  id: number;
+
+interface LikeButtonProps {
+  initialLikes?: number;
   entity: string;
-  likes_count: number;
+  id: number;
 }
 
-const LikeButton: React.FC<Props> = ({ id, entity, likes_count }) => {
+const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id }) => {
   const accessToken = useAuthStore((s) => s.auth.tokens.accessToken);
-  const [liked, setLiked] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [likesCount, setLikesCount] = useState<number>(likes_count);
+  const [likes, setLikes] = useState(initialLikes);
+  const [liked, setLiked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchLikeStatus = async () => {
-      setLoading(true);
+    const checkIfLiked = async () => {
+      if (!accessToken) {
+        setModalOpen(true); // Open the modal if not logged in
+        return;
+      }
+
       try {
-        const response = await HttpRequest.get<boolean>(`/v1/likes/user/liked/${entity}/${id}`);
-        setLiked(response.data);
+        const res = await HttpRequest.get<boolean>(`/v1/likes/user/liked/${entity}/${id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (res) {
+          const data = res.data;
+          setLiked(data);
+          console.log('user liked', liked)
+        }
       } catch (error) {
-        console.error('Error fetching like status:', error);
-      } finally {
-        setLoading(false);
+        console.error('Error checking like status:', error);
       }
     };
 
-    fetchLikeStatus();
-  }, [id, entity]);
+    checkIfLiked();
+  }, [entity, id]);
 
-  const handleLikeToggle = async () => {
-    if (loading) return; // Prevent multiple clicks while loading
+  const handleLike = async () => {
+    if (!accessToken) {
+      setModalOpen(true);
+      return;
+    }
+
+    const isLiking = !liked;
+    const url = `/v1/likes/${entity}/${id}`;
 
     setLoading(true);
-    const isLiking = liked === false; // Determine if we are liking or unliking
-    const url = `/v1/likes/${entity}/${id}`;
-    const method = isLiking ? 'post' : 'delete';
 
     try {
-      const res = await HttpRequest[method](url, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (res.status === 200) {
-        // Update the liked state and likes count based on the action
-        setLiked((prevLiked) => !prevLiked); // Toggle the liked state
-        setLikesCount((prevCount) => (isLiking ? prevCount + 1 : prevCount - 1));
-      } else {
-        console.error('Unexpected response status:', res.status);
+      const res =
+        isLiking ? await HttpRequest.post(url, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        })
+          :
+          await HttpRequest.delete(url, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          });
+      if (!res) {
+        throw new Error('Network response was not ok');
       }
+
+      setLikes(isLiking ? likes + 1 : likes - 1);
+      setLiked(isLiking);
     } catch (error) {
-      console.error('Error liking/disliking:', error);
+      console.error('Error liking/unliking:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return <button disabled>Loading...</button>;
-  }
-
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      {liked ? (
-        <FaHeart className="text-red-500 text-xl cursor-pointer" onClick={handleLikeToggle} />
-      ) : (
-        <FaRegHeart className="text-xl cursor-pointer" onClick={handleLikeToggle} />
-      )}
-      <span style={{ marginLeft: '8px' }}>{likesCount}</span>
+      <button onClick={handleLike} disabled={loading} style={{ cursor: 'pointer', padding: '10px', fontSize: '16px' }}>
+        <div className='w-full felx justify-between items-center'>
+          {loading ? 'Loading...' : liked ? <FaHeart color="red" /> : <FaRegHeart />} {likes}
+        </div>
+      </button>
+      <Modal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        title="Login Required"
+        message="You must be logged in to like this item."
+      />
+
     </div>
   );
 };
