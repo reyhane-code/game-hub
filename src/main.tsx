@@ -4,16 +4,16 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes";
-import Layout from "./components/common/Layout";
+import AppLayout from "./components/layouts/AppLayout";
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Layout>
+      <AppLayout>
         <RouterProvider router={router} />
-      </Layout>
+      </AppLayout>
     </QueryClientProvider>
   </React.StrictMode>
 );
