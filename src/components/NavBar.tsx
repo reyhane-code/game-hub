@@ -3,6 +3,7 @@ import SearchInput from "./SearchInput";
 import ThemeSwitch from "./ThemeSwitch";
 import { IoHomeOutline } from "react-icons/io5";
 import useAuth from "../hooks/useAuth";
+import AuthModal from "./AuthModal";
 
 const NavBar = () => {
   const { isAuthenticated } = useAuth()
@@ -27,6 +28,8 @@ const NavBar = () => {
       )}
 
       <ThemeSwitch />
+      {/* <AuthModal /> */}
+
     </div>
   );
 };
