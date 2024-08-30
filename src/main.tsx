@@ -4,15 +4,34 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes";
+import AuthModal from "./components/AuthModal";
+import useAuth from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
-//TODO : useUser if is Authenticated from(useAuth)/ set token, identity in auth store
-// useEffect(() => { }, [])
+
+const Main = () => {
+  const { setUserIdentityIfLoggedIn } = useAuth();
+
+  useEffect(() => {
+    const initializeUserIdentity = async () => {
+      await setUserIdentityIfLoggedIn();
+    };
+
+    initializeUserIdentity();
+  }, []);
+
+  return (
+    <>
+      <RouterProvider router={router} />
+      <AuthModal />
+    </>
+  );
+};
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      {/* //Login Modal */}
+      <Main />
     </QueryClientProvider>
   </React.StrictMode>
 );

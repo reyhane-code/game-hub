@@ -1,14 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../auth.store";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import Button from "./common/Button";
 import { useState } from "react";
 import Alert from "./common/Alert";
 import { FaRegUser, FaRegHeart, FaRegBookmark } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
+import useAuth from "../hooks/useAuth";
 
 interface Props {
-  accessToken: string;
   onMenuItemSelect: (link: string) => void;
 }
 
@@ -18,12 +17,10 @@ interface MenuItem {
   icon: any
 }
 
-const ProfileMenu = ({ accessToken, onMenuItemSelect }: Props) => {
-  const setIsAuthenticated = useAuthStore((s) => s.setIsAuthenticated);
-  const setTokens = useAuthStore((s) => s.setTokens);
+const ProfileMenu = ({ onMenuItemSelect }: Props) => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
-
+  const { logout } = useAuth()
   const menuItems: MenuItem[] = [
     { label: "User Information", link: "user", icon: <FaRegUser className="text-lg" /> },
     { label: "Bookmarks", link: "bookmarks", icon: <FaRegBookmark className="text-lg" /> },
@@ -32,14 +29,9 @@ const ProfileMenu = ({ accessToken, onMenuItemSelect }: Props) => {
 
   const handleLogout = async () => {
     try {
-      const res = await HttpRequest.delete("/v1/auth/logout", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const res = await HttpRequest.delete("/v1/auth/logout");
       if (res.status === 200) {
-        setIsAuthenticated(false);
-        setTokens({ accessToken: undefined, refreshToken: undefined });
+        logout()
         navigate("/");
       }
     } catch (error) {

@@ -1,17 +1,15 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.webp";
 import SearchInput from "./SearchInput";
-import Image from "./common/Image";
 import ThemeSwitch from "./ThemeSwitch";
-import useAuthStore from "../auth.store";
 import { IoHomeOutline } from "react-icons/io5";
+import useAuth from "../hooks/useAuth";
 
 const NavBar = () => {
-  const isAuthenticated = useAuthStore((s) => s.auth.isAuthenticated);
+  const { isAuthenticated } = useAuth()
   return (
     <div className="flex justify-between items-center sticky z-20 left-0 top-0 right-0 p-2 shadow-lg space-x-4 bg-base-100">
       <Link to="/">
-        <IoHomeOutline className="text-3xl"/>
+        <IoHomeOutline className="text-3xl" />
       </Link>
       <SearchInput />
       <Link to="/articles" className="btn btn-outline">

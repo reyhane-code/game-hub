@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import Modal from './Modal';
-import useAuthStore from '../../auth.store';
 import { HttpRequest } from '../../helpers/http-request-class.helper';
+import useAuth from '../../hooks/useAuth';
 
 interface LikeButtonProps {
   initialLikes?: number;
@@ -11,56 +10,35 @@ interface LikeButtonProps {
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id }) => {
-  const accessToken = useAuthStore((s) => s.auth.tokens.accessToken);
   const [likes, setLikes] = useState(initialLikes);
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const { isAuthenticated, loginIfNeeded } = useAuth();
 
-  useEffect(() => {
-    const checkIfLiked = async () => {
-      //TODO use isAuthenticated instead
-      if (!accessToken) return; 
+  const checkIfLiked = async () => {
+    if (!isAuthenticated) return;
 
-      try {
-        const res = await HttpRequest.get<boolean>(`/v1/likes/user/liked/${entity}/${id}`);
-
-        if (res) {
-          const data = res.data;
-          setLiked(data);
-          console.log('user liked', data); 
-        }
-      } catch (error) {
-        console.error('Error checking like status:', error);
+    try {
+      const res = await HttpRequest.get<boolean>(`/v1/likes/user/liked/${entity}/${id}`);
+      if (res && res.data) {
+        setLiked(res.data);
       }
-    };
-
-    checkIfLiked();
-  }, [entity, id, accessToken]); 
-  const handleLike = async () => {
-    if (!accessToken) {
-      setModalOpen(true);
-      return;
+    } catch (error) {
+      console.error('Error checking like status:', error);
     }
+  };
+  checkIfLiked();
 
+  const likeOrUnlike = async () => {
     const isLiking = !liked;
     const url = `/v1/likes/${entity}/${id}`;
 
     setLoading(true);
 
     try {
-      const res =
-        isLiking
-          ? await HttpRequest.post(url, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-          : await HttpRequest.delete(url, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
+      const res = isLiking
+        ? await HttpRequest.post(url, {}, { headers: { 'Content-Type': 'application/json' } })
+        : await HttpRequest.delete(url, { headers: { 'Content-Type': 'application/json' } });
 
       if (!res) {
         throw new Error('Network response was not ok');
@@ -70,13 +48,18 @@ const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id })
       setLiked(isLiking);
     } catch (error) {
       console.error('Error liking/unliking:', error);
+      // Optionally, you can show an error message to the user here
     } finally {
       setLoading(false);
     }
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
+  const handleLike = async () => {
+    if (isAuthenticated) {
+      await likeOrUnlike();
+    } else {
+      loginIfNeeded(likeOrUnlike);
+    }
   };
 
   return (
@@ -84,17 +67,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id })
       <button onClick={handleLike} disabled={loading} style={{ cursor: 'pointer', padding: '10px', fontSize: '16px' }}>
         <div className='w-full flex justify-between items-center'>
           {loading ? 'Loading...' : liked ? <FaHeart className='text-lg' /> : <FaRegHeart className='text-lg' />}
-          <span className='text-lg mx-2'>
-            {likes}
-          </span>
+          <span className='text-lg mx-2'>{likes}</span>
         </div>
       </button>
-      <Modal
-        isOpen={modalOpen}
-        onClose={closeModal}
-        title="Login Required"
-        message="You must be logged in to like this item."
-      />
     </div>
   );
 };

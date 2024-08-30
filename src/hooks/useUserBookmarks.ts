@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import useAuthStore from "../auth.store";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import { UserBookmarks } from "../entities/Bookmark";
 
@@ -9,8 +8,6 @@ interface BookmarksData {
 }
 
 const useUserBookmarks = (entityType: string) => {
-  const accessToken = useAuthStore((s) => s.auth.tokens.accessToken);
-
   // Return the result of useQuery
   return useQuery<BookmarksData, Error>(
     ["bookmarks/user", entityType],
@@ -18,11 +15,6 @@ const useUserBookmarks = (entityType: string) => {
       try {
         const response = await HttpRequest.get<BookmarksData>(
           `/v1/bookmarks/user/${entityType}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
         );
         return response.data;
       } catch (error) {

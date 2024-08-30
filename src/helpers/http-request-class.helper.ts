@@ -46,6 +46,10 @@ export class HttpRequest<T> {
     );
   }
 
+  public static deleteTokens() {
+    localStorage.removeItem('tokens')
+  }
+
   public static get getTokens(): getTokensType | undefined {
     const tokens = localStorage.getItem("tokens");
     return tokens ? JSON.parse(tokens) : undefined;

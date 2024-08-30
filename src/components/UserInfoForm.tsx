@@ -7,11 +7,7 @@ import Button from "./common/Button";
 import { Form } from "react-router-dom";
 import useAuthStore from "../auth.store";
 
-interface Props {
-  accessToken: string;
-}
-
-function UserInfoForm({ accessToken }: Props) {
+function UserInfoForm() {
   const { data: user, error, isLoading } = useUser();
   console.log("user", user)
   const phone = user?.phone;
@@ -46,11 +42,7 @@ function UserInfoForm({ accessToken }: Props) {
       lastname,
     };
     try {
-      const res = await HttpRequest.put("/v1/user", updateData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const res = await HttpRequest.put("/v1/user", updateData);
       if (res.status == 200) {
         //@ts-ignore
         setIdentity({ id: user.id, ...updateData });
