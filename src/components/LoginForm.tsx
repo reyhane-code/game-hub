@@ -40,6 +40,7 @@ function LoginForm() {
             if (response?.data) {
                 const { accessToken, refreshToken } = response.data;
                 setTokens(accessToken, refreshToken)
+
                 if (typeof loginCallBack == 'function') {
                     loginCallBack()
                 }

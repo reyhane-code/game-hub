@@ -6,6 +6,7 @@ import useAuth from "../hooks/useAuth";
 
 const NavBar = () => {
   const { isAuthenticated } = useAuth()
+  console.log('isAuthenticated', isAuthenticated)
   return (
     <div className="flex justify-between items-center sticky z-20 left-0 top-0 right-0 p-2 shadow-lg space-x-4 bg-base-100">
       <Link to="/">

@@ -6,6 +6,7 @@ import EditableInput from "./common/EditableInput";
 import Button from "./common/Button";
 import { Form } from "react-router-dom";
 import useAuthStore from "../auth.store";
+import User from "../entities/User";
 
 function UserInfoForm() {
   const { data: user, error, isLoading } = useUser();
@@ -33,7 +34,6 @@ function UserInfoForm() {
     );
 
   const handleUpdateUser = async () => {
-    console.log(user, "userr");
     const updateData = {
       phone,
       username,
@@ -41,12 +41,13 @@ function UserInfoForm() {
       firstname,
       lastname,
     };
+
     try {
       const res = await HttpRequest.put("/v1/user", updateData);
       if (res.status == 200) {
-        //@ts-ignore
-        setIdentity({ id: user.id, ...updateData });
+        setIdentity({ id: user.id, ...updateData } as User);
       }
+      console.log('user', res)
     } catch (error) {
       return (
         <div>
