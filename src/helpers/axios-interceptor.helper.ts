@@ -57,6 +57,7 @@ export async function interceptorResponseError(error: AxiosError) {
         !responseRefreshToken?.data?.accessToken ||
         !responseRefreshToken?.data?.refreshToken
       ) {
+        console.log('removing loca;')
         localStorage.removeItem("tokens");
         window.location.href = "/login";
       } else {

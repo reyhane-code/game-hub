@@ -17,5 +17,5 @@ export interface UserBookmarks {
   article_id?: number;
   article?: Article;
   entity_type: string;
-  game?: Game; // Use the Game interface here
+  game?: Game; 
 }

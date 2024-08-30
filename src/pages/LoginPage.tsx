@@ -43,10 +43,13 @@ function LoginPage() {
         };
         setTokens({ accessToken, refreshToken });
         setIsAuthenticated(true);
+        //TODO : check if login callback exists if typeof === func use it as func
+        //TODO : call closeloginDialog
       }
     } catch (error) {
       <Alert text="Can not Login or Register" />;
     } finally {
+      //TODO if login call back did not exist
       navigator("/");
     }
   };
@@ -63,6 +66,7 @@ function LoginPage() {
   return (
     <div>
       <Form
+      className="flex flex-col space-y-6 w-full"
         onSubmit={(e) => {
           onSubmit(e);
         }}

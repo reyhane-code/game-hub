@@ -19,7 +19,7 @@ function Form({ method, action, className, children, onSubmit }: Props) {
       <form
         action={action}
         method={method}
-        className={`${className} mt-5 w-full h-80 p-5 m-auto bg-gray-100 rounded-sm flex flex-col justify-between`}
+        className={`${className} mt-5 w-full p-5 m-auto bg-gray-100 rounded-sm flex flex-col`}
         onSubmit={onSubmit}
       >
         {children}

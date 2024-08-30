@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import Modal from './Modal'
+import Modal from './Modal';
 import useAuthStore from '../../auth.store';
 import { HttpRequest } from '../../helpers/http-request-class.helper';
-
 
 interface LikeButtonProps {
   initialLikes?: number;
@@ -20,22 +19,16 @@ const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id })
 
   useEffect(() => {
     const checkIfLiked = async () => {
-      if (!accessToken) {
-        setModalOpen(true); // Open the modal if not logged in
-        return;
-      }
+      //TODO use isAuthenticated instead
+      if (!accessToken) return; 
 
       try {
-        const res = await HttpRequest.get<boolean>(`/v1/likes/user/liked/${entity}/${id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const res = await HttpRequest.get<boolean>(`/v1/likes/user/liked/${entity}/${id}`);
 
         if (res) {
           const data = res.data;
           setLiked(data);
-          console.log('user liked', liked)
+          console.log('user liked', data); 
         }
       } catch (error) {
         console.error('Error checking like status:', error);
@@ -43,8 +36,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id })
     };
 
     checkIfLiked();
-  }, [entity, id]);
-
+  }, [entity, id, accessToken]); 
   const handleLike = async () => {
     if (!accessToken) {
       setModalOpen(true);
@@ -58,19 +50,18 @@ const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id })
 
     try {
       const res =
-        isLiking ? await HttpRequest.post(url, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        })
-          :
-          await HttpRequest.delete(url, {
+        isLiking
+          ? await HttpRequest.post(url, {
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          })
+          : await HttpRequest.delete(url, {
+            headers: {
               'Content-Type': 'application/json',
             },
           });
+
       if (!res) {
         throw new Error('Network response was not ok');
       }
@@ -87,11 +78,15 @@ const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id })
   const closeModal = () => {
     setModalOpen(false);
   };
+
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <button onClick={handleLike} disabled={loading} style={{ cursor: 'pointer', padding: '10px', fontSize: '16px' }}>
-        <div className='w-full felx justify-between items-center'>
-          {loading ? 'Loading...' : liked ? <FaHeart color="red" /> : <FaRegHeart />} {likes}
+        <div className='w-full flex justify-between items-center'>
+          {loading ? 'Loading...' : liked ? <FaHeart className='text-lg' /> : <FaRegHeart className='text-lg' />}
+          <span className='text-lg mx-2'>
+            {likes}
+          </span>
         </div>
       </button>
       <Modal
@@ -100,7 +95,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({ initialLikes = 0, entity, id })
         title="Login Required"
         message="You must be logged in to like this item."
       />
-
     </div>
   );
 };

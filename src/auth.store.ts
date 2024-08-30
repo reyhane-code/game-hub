@@ -8,30 +8,55 @@ export interface Auth {
 }
 
 interface Tokens {
-  accessToken: string | undefined;
-  refreshToken: string | undefined;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 interface AuthStore {
   auth: Auth;
+  loginDialog: boolean;
+  loginCallBack?: () => void;
   setTokens: (tokens: Tokens) => void;
   setIdentity: (user: User) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
+  openLoginDialog: (callback?: () => void) => void;
+  closeLoginDialog: () => void;
 }
 
 const useAuthStore = create<AuthStore>((set) => ({
   auth: {
-    tokens: { accessToken: "", refreshToken: "" }, // Initialize tokens
-    identity: {} as User, // Initialize identity (you may want to provide a default User object)
-    isAuthenticated: false, // Initialize authentication status
+    tokens: { accessToken: "", refreshToken: "" },
+    identity: {} as User,
+    isAuthenticated: false,
   },
-  setTokens: (tokens) => set((state) => ({ auth: { ...state.auth, tokens } })),
-  setIdentity: (user) =>
-    set((state) => ({ auth: { ...state.auth, identity: user } })),
-  setIsAuthenticated: (isAuthenticated) =>
-    set((state) => ({
-      auth: { ...state.auth, isAuthenticated },
-    })),
+  loginDialog: false,
+  loginCallBack: undefined,
+  setTokens: (tokens) => set((state) => ({
+    ...state,
+    auth: { ...state.auth, tokens },
+  })),
+  setIdentity: (user) => set((state) => ({
+    ...state,
+    auth: { ...state.auth, identity: user },
+  })),
+  setIsAuthenticated: (isAuthenticated) => set((state) => ({
+    ...state,
+    auth: { ...state.auth, isAuthenticated },
+  })),
+  openLoginDialog: (callback) => set((state) => {
+    return {
+      ...state,
+      loginCallBack: typeof callback === "function" ? callback : undefined,
+      loginDialog: true,
+    };
+  }),
+  closeLoginDialog: () => set((state) => {
+    return {
+      ...state,
+      loginCallBack: undefined,
+      loginDialog: false,
+    };
+  }),
 }));
 
 export default useAuthStore;

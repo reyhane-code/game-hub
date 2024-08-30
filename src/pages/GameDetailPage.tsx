@@ -4,6 +4,7 @@ import GameAttributes from "../components/GameAttributes";
 import useGame from "../hooks/useGame";
 import LikeButton from "../components/common/LikeButton";
 import GameScreenshots from "../components/GameScreenshots";
+import BookmarkButton from "../components/common/BookmarkButton";
 
 const GameDetailPage = () => {
   const { slug } = useParams();
@@ -22,7 +23,8 @@ const GameDetailPage = () => {
       <div className="col-start">
         <div className="flex justify-between items-center mb-5">
           <h1 className="text-2xl">{data?.game.name}</h1>
-          <LikeButton id={data?.game?.id} entity="game" initialLikes={data?.likes} ></LikeButton>
+          <LikeButton id={data?.game?.id} entity="game" initialLikes={data?.likes} ></LikeButton> 
+          <BookmarkButton id={data.game.id} entity="game"/>
         </div>
         <ExpandableText>{data?.game.description}</ExpandableText>
         <GameAttributes game={data} />

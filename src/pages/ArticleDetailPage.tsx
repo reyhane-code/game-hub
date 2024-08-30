@@ -3,6 +3,7 @@ import ExpandableText from "../components/ExpandableText";
 import LikeButton from "../components/common/LikeButton";
 import { useArticle } from "../hooks/useArticle";
 import Image from "../components/common/Image";
+import { ImageFormat } from "../enums";
 
 const ArticleDetailPage = () => {
   const { id } = useParams()
@@ -16,15 +17,13 @@ const ArticleDetailPage = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="col-start">
-        {/* {data.article.image &&
-          <figure>
-            <Image
-              query={{ hashKey: data?.article.image }}
-              altText={data.article.title}
-              className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
-            />
-          </figure>
-        } */}
+        {data.article.image &&
+          <Image
+            query={{ hashKey: data?.article.image, format: ImageFormat.WEBP }}
+            altText={data.article.title}
+            className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
+          />
+        }
         <div className="flex justify-between items-center mb-5">
           <h1 className="text-2xl">{data?.article.title}</h1>
           <LikeButton id={data?.article.id} entity="article" initialLikes={data?.likes}></LikeButton>
