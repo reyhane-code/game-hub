@@ -1,5 +1,4 @@
 import React from "react";
-import { IoMdClose } from "react-icons/io";
 
 interface ModalProps {
   isOpen: boolean;
@@ -7,7 +6,7 @@ interface ModalProps {
   title: string;
   message: string;
   id: string;
-  children: React.ReactNode; // Add children prop,
+  children?: React.ReactNode; // Made children optional
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -20,15 +19,28 @@ const Modal: React.FC<ModalProps> = ({
   ...rest
 }) => {
   return (
-    <div className="flex flex-col p-4 relative modal" id={id} {...rest}>
-      <div className="modal-box">
-        <h2>{title}</h2>
-        <p>{message}</p>
-        <button className="absolute top-4 left-4" onClick={onClose}>
-          <IoMdClose className="text-lg" color="red" />
-        </button>
-        {children} {/* Render children here */}
-      </div>
+    <div className="flex flex-col p-4 relative" id={id} {...rest}>
+     
+      {/* Modal dialog */}
+      {isOpen && (
+        <dialog open className="modal">
+          <div className="modal-box">
+            <form method="dialog">
+              {/* Close button */}
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                onClick={onClose}
+              >
+                ✕
+              </button>
+            </form>
+            <h3 className="font-bold text-lg">{title}</h3>
+            <p className="py-4">{message}</p>
+            {children}
+          </div>
+        </dialog>
+      )}
     </div>
   );
 };

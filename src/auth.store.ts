@@ -3,6 +3,12 @@ import User from "./entities/User";
 
 export interface Auth {
   identity: User;
+  tokens: Tokens
+}
+
+export interface Tokens {
+  accessToken?: string,
+  refreshToken?: string
 }
 
 
@@ -13,11 +19,16 @@ interface AuthStore {
   setIdentity: (user: User) => void;
   openLoginDialog: (callback?: () => void) => void;
   closeLoginDialog: () => void;
+  setTokens: (tokens: Tokens) => void
 }
 
 const useAuthStore = create<AuthStore>((set) => ({
   auth: {
     identity: {} as User,
+    tokens: {
+      accessToken: undefined,
+      refreshToken: undefined
+    }
   },
   loginDialog: false,
   loginCallBack: undefined,
@@ -40,6 +51,10 @@ const useAuthStore = create<AuthStore>((set) => ({
       loginDialog: false,
     };
   }),
+  setTokens: (tokens) => set((state) => ({
+    ...state,
+    auth: { ...state.auth, tokens },
+  })),
 }));
 
 export default useAuthStore;

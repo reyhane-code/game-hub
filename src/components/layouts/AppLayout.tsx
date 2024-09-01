@@ -6,15 +6,14 @@ interface LayoutProps {
 }
 
 const AppLayout = ({ children }: LayoutProps) => {
-  const { setUserIdentityIfLoggedIn } = useAuth();
-
+  const { initAuth } = useAuth();
   useEffect(() => {
     const initializeUserIdentity = async () => {
-      await setUserIdentityIfLoggedIn();
+      await initAuth();
     };
 
-    initializeUserIdentity();
-  }, [setUserIdentityIfLoggedIn]);
+    initializeUserIdentity()
+  }, [initAuth]);
 
   return <>{children}</>;
 };
