@@ -3,5 +3,5 @@ export default interface Platform {
   name: string;
   slug: string;
   created_at: number;
-  update_at: number;
+  update_at?: number;
 }

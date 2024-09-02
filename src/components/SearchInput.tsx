@@ -1,31 +1,47 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
 import TextInput from "./common/TextInput";
 import { FilterOperationEnum } from "../enums";
 import { useGameQueryStore } from "../store";
 
 const SearchInput = () => {
-  const ref = useRef<HTMLInputElement>(null);
   const { setSearch } = useGameQueryStore();
-  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      setSearch({
+        field: "name",
+        operation: FilterOperationEnum.LIKE,
+        value: `%${value}%`,
+      });
+    }, 300);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (ref.current) {
-          setSearch({
-            field: "name",
-            operation: FilterOperationEnum.LIKE,
-            value: `%${ref.current.value}%`,
-          });
-          navigate("/");
-        }
-      }}
-    >
-      <TextInput type="text" placeholder="Search games...">
-        {/* use svg later */}
+    <form onSubmit={(event) => event.preventDefault()}>
+      <TextInput
+        type="text"
+        placeholder="Search games..."
+        onChange={handleSearchChange}
+        value={searchTerm}
+      >
         <BsSearch />
       </TextInput>
     </form>
