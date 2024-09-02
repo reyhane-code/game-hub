@@ -1,7 +1,7 @@
 import React from "react";
 import CardSkeleton from "./CardSkeleton";
 import CardContainer from "./CardContainer";
-import { IGetGamesResponse } from "../responses/get-games.respone";
+import { IGetGamesResponse } from "../responses/get-games.response";
 import ErrorPage from "../pages/ErrorPage";
 import Pagination from "./common/Pagination";
 import { useArticleQueryStore } from "../store";
@@ -18,7 +18,7 @@ interface Props {
 
 const ArticleGrid = ({ data, error, isLoading, page, setPage }: Props) => {
   const skeletons = Array.from({ length: 6 }, (_, index) => index + 1);
-  const { query } = useArticleQueryStore();
+
 
 
   if (error) {

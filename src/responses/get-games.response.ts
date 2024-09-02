@@ -10,19 +10,19 @@ export interface IGetGamesResponse {
         background_image: string;
         metacritic: number;
         rating_top: number;
-        platforms?: {
+        platforms: {
             id: number;
             name: string;
             slug: string;
         }[];
-        genres?: {
+        genres: {
             id: number;
             name: string;
         }[];
-        publishers?: {
+        publishers: {
             id: number;
             name: string;
         }[];
     }[];
-    likes?: [{ game_id: number, count: number }]
+    likes: [{ game_id: number, count: number }]
 }

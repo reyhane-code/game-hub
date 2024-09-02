@@ -2,16 +2,16 @@ import React from "react";
 import GameCard from "./GameCard";
 import CardSkeleton from "./CardSkeleton";
 import CardContainer from "./CardContainer";
-import { IGetGamesResponse } from "../responses/get-games.respone";
+import { IGetGamesResponse } from "../responses/get-games.response";
 import ErrorPage from "../pages/ErrorPage";
 import Pagination from "./common/Pagination";
 
 interface Props {
-  data?: IGetGamesResponse;
+  data: IGetGamesResponse;
   error: Error | null;
   isLoading: boolean;
-  page: number; // Current page
-  setPage: (page: number) => void; // Function to set the page
+  page: number;
+  setPage: (page: number) => void;
 }
 
 const GameGrid = ({ data, error, isLoading, page, setPage }: Props) => {
@@ -31,7 +31,7 @@ const GameGrid = ({ data, error, isLoading, page, setPage }: Props) => {
 
   const renderGameCards = () => (
     data?.items.map((game) => {
-      const gameLikeCount = data.likes.find(item => item.game_id === game.id)?.count || 0;
+      const gameLikeCount = data.likes?.find(item => item.game_id === game.id)?.count
       return (
         <CardContainer key={game.id}>
           <GameCard game={game} likes={gameLikeCount} />
@@ -46,7 +46,7 @@ const GameGrid = ({ data, error, isLoading, page, setPage }: Props) => {
         {isLoading ? renderSkeletons() : renderGameCards()}
       </div>
       <div className="mx-auto w-max mt-4">
-        {data?.items ? (
+        {(data && data?.items.length > 0) ? (
           <Pagination
             count={data.pagination.count}
             perPage={10}

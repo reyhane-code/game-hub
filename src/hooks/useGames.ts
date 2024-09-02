@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import { IPaginationQuery } from "../interfaces";
-import { IGetGamesResponse } from "../responses/get-games.respone";
+import { IGetGamesResponse } from "../responses/get-games.response";
 import { useGameQueryStore } from "../store";
 
 

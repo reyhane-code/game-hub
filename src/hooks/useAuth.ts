@@ -5,6 +5,7 @@ import { HttpRequest } from "../helpers/http-request-class.helper";
 
 export default function useAuth() {
     const setTokensToStore = useAuthStore(s => s.setTokens)
+    const storedTokens = useAuthStore(s => s.auth.tokens)
     const isAuthenticated = HttpRequest.getTokens?.accessToken ?? false;
 
     const setIdentity = useAuthStore((s) => s.setIdentity);

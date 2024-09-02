@@ -14,27 +14,21 @@ interface Props {
     background_image: string;
     metacritic: number;
     rating_top: number;
-    platforms?: [
-      {
-        id: number;
-        name: string;
-        slug: string;
-      }
-    ];
-    genres?: [
-      {
-        id: number;
-        name: string;
-      }
-    ];
-    publishers?: [
-      {
-        id: number;
-        name: string;
-      }
-    ];
-  };
-  likes: number
+    platforms: {
+      id: number;
+      name: string;
+      slug: string;
+    }[];
+    genres: {
+      id: number;
+      name: string;
+    }[];
+    publishers: {
+      id: number;
+      name: string;
+    }[];
+  }
+  likes?: number
 }
 
 const GameCard = ({ game, likes }: Props) => {
@@ -67,11 +61,15 @@ const GameCard = ({ game, likes }: Props) => {
             </div>
             <CriticScore score={game.metacritic} />
             <div className="flex items-center space-x-1">
-                <span className="text-sm">
-                  {likes}
-                </span>
-                <FaHeart className="text-md" />
-              </div>
+              {likes &&
+                <>
+                  <span className="text-sm">
+                    {likes}
+                  </span>
+                  <FaHeart className="text-md" />
+                </>
+              }
+            </div>
           </div>
         </div>
 

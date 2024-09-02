@@ -7,7 +7,7 @@ import Article from "../entities/Article";
 
 interface Props {
   article: Article,
-  likes: number
+  likes?: number
 }
 
 const ArticleCard = ({ article, likes }: Props) => {
@@ -37,10 +37,15 @@ const ArticleCard = ({ article, likes }: Props) => {
                 <FaEye className="text-md" />
               </div>
               <div className="flex items-center space-x-1">
-                <span className="text-sm">
-                  {likes}
-                </span>
-                <FaHeart className="text-md" />
+                {likes &&
+                  <>
+                    <span className="text-sm">
+                      {likes}
+                    </span>
+                    <FaHeart className="text-md" />
+                  </>
+
+                }
               </div>
             </div>
           </div>
