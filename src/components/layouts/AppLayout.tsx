@@ -7,12 +7,15 @@ interface LayoutProps {
 
 const AppLayout = ({ children }: LayoutProps) => {
   const { initAuth } = useAuth();
-  useEffect(() => {
-    const initializeUserIdentity = async () => {
-      await initAuth();
-    };
 
-    initializeUserIdentity()
+  useEffect(() => {
+    const controller = new AbortController(); // Create an AbortController
+
+    initAuth(controller.signal);
+
+    return () => {
+      controller.abort(); // Cleanup function to abort the fetch request
+    };
   }, [initAuth]);
 
   return <>{children}</>;

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 import { HttpRequest } from '../../helpers/http-request-class.helper';
 import useAuth from '../../hooks/useAuth';
+import { GenericAbortSignal } from 'axios';
 
 interface BookmarkButtonProps {
     entity: string;
@@ -13,11 +14,11 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ entity, id }) => {
     const [loading, setLoading] = useState(false);
     const { isAuthenticated, loginIfNeeded } = useAuth()
 
-    const checkIfBookmarked = async () => {
+    const checkIfBookmarked = async (signal?: GenericAbortSignal) => {
         if (!isAuthenticated) return;
 
         try {
-            const res = await HttpRequest.get<boolean>(`/v1/bookmarks/user/bookmarked/${entity}/${id}`);
+            const res = await HttpRequest.get<boolean>(`/v1/bookmarks/user/bookmarked/${entity}/${id}`, { signal });
 
             if (res) {
                 const data = res.data;
@@ -28,7 +29,16 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ entity, id }) => {
         }
     };
 
-    checkIfBookmarked();
+    useEffect(()=>{
+        const controller = new AbortController(); // Create an AbortController
+
+        checkIfBookmarked(controller.signal);
+    
+        return () => {
+          controller.abort(); // Cleanup function to abort the fetch request
+        };
+    })
+
 
     const bookmarkOrRemoveBookmark = async () => {
         if (!isAuthenticated) {
