@@ -3,7 +3,7 @@ export default interface Article {
   title: string;
   content: string;
   user_id: number;
-  image?: string;
+  image: string;
   view: number;
   created_at: Date;
   updated_at: Date;

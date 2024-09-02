@@ -38,9 +38,9 @@ const GameCard = ({ game, likes }: Props) => {
       className="group card w-full bg-base-300 cursor-pointer"
     >
       <Image
-        //TODO: check why doesnt work
         query={{ hashKey: game.background_image, format: ImageFormat.WEBP }}
         altText={game.name}
+        defaultSrc="https://uploadkon.ir/uploads/93eb02_24images.png"
         className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
       />
       <div className="card-body !p-3">

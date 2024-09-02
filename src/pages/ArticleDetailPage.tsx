@@ -21,6 +21,7 @@ const ArticleDetailPage = () => {
           <Image
             query={{ hashKey: data?.article.image, format: ImageFormat.WEBP }}
             altText={data.article.title}
+            defaultSrc="https://uploadkon.ir/uploads/93eb02_24images.png"
             className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
           />
         }

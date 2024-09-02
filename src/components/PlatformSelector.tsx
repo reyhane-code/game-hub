@@ -5,25 +5,22 @@ import { FilterOperationEnum } from "../enums";
 import { useGameQueryStore } from "../store";
 
 const PlatformSelector = () => {
-  const { data = [], error } = usePlatforms(); // Default to an empty array if data is undefined
+  const { data = [], error } = usePlatforms();
   const { setFilter: setSelectedPlatformId } = useGameQueryStore();
-  const [selectedPlatformName, setSelectedPlatformName] = useState("Select a platform"); // Default option
+  const [selectedPlatformName, setSelectedPlatformName] = useState("Select a platform");
 
   if (error) return null;
 
-  // Create a new platform object and add it to the data array
   const platformsWithDefaultOption = [
-    { id: -1, name: "Select a platform", slug: 'select-a-platform', created_at: Date.now() }, // Default option with a specific ID
+    { id: -1, name: "Select a platform", slug: 'select-a-platform', created_at: new Date() },
     ...data,
   ];
 
   const handleItemClick = (platform: Platform) => {
     if (platform.id === -1) {
-      // Set the filter to a specific value indicating no selection
       setSelectedPlatformId();
       setSelectedPlatformName(platform.name);
     } else {
-      // Set the selected platform ID for other platforms
       setSelectedPlatformId({
         field: "platform.id",
         operation: FilterOperationEnum.EQ,

@@ -21,7 +21,7 @@ const createQueryStore = () => {
 
                     return { query: { ...store.query, search: updatedSearches } };
                 }
-                return { query: { ...store.query, search: [] } }
+                return { query: { ...store.query } }
             }),
 
         setFilter: (filter?: ISearchFilterOptions) =>
@@ -34,7 +34,7 @@ const createQueryStore = () => {
                     return { query: { ...store.query, filter: updatedFilters } };
 
                 }
-                return { query: { ...store.query, filter: [] } }
+                return { query: { ...store.query } }
             }),
 
         setSortBy: (sortBy) =>

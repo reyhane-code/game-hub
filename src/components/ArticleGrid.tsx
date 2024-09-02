@@ -1,15 +1,12 @@
-import React from "react";
 import CardSkeleton from "./CardSkeleton";
 import CardContainer from "./CardContainer";
-import { IGetGamesResponse } from "../responses/get-games.response";
 import ErrorPage from "../pages/ErrorPage";
 import Pagination from "./common/Pagination";
-import { useArticleQueryStore } from "../store";
 import ArticleCard from "./ArticleCard";
 import { IGetArticlesResponse } from "../responses/get-articles.response";
 
 interface Props {
-  data?: IGetArticlesResponse;
+  data: IGetArticlesResponse;
   error: Error | null;
   isLoading: boolean;
   page: number;
