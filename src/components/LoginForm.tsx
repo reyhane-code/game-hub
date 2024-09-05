@@ -1,93 +1,71 @@
-import {  useState } from "react";
-import { Form, useNavigate } from "react-router-dom";
-import useAuthStore from "../auth.store";
-import { HttpRequest } from "../helpers/http-request-class.helper";
-import Alert from "./common/Alert";
+import React from "react";
 import TextInput from "./common/TextInput";
 import Button from "./common/Button";
+import { HttpRequest } from "../helpers/http-request-class.helper";
+import AppForm from "./common/AppForm";
 import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
-  const [step, setStep] = useState(1);
-  const [phone, setPhone] = useState("");
-  const [code, setCode] = useState("");
-  const [validationToken, setValidationToken] = useState("");
-  const navigator = useNavigate();
-  const loginCallBack = useAuthStore((s) => s.loginCallBack);
-  const closeLoginDialog = useAuthStore((s) => s.closeLoginDialog);
+  const [step, setStep] = React.useState(1);
+  const [validationToken, setValidationToken] = React.useState("");
   const { setTokens } = useAuth();
-  const getValidationToken = async () => {
-    try {
-      const response = await HttpRequest.post("/v1/auth/get-validation-token", {
-        phone,
-      });
-      if (response?.data?.validationToken) {
-        setValidationToken(response.data.validationToken);
-        setStep((prevStep) => prevStep + 1); // Update step based on previous state
-      }
-    } catch (error) {
-      <Alert text="Can not Login or Register" />;
+  const navigate = useNavigate();
+
+  const getValidationToken = async (data: any) => {
+    const response = await HttpRequest.post("/v1/auth/get-validation-token", {
+      phone: data.phone,
+    });
+    if (response?.data?.validationToken) {
+      setValidationToken(response.data.validationToken);
+      setStep((prevStep) => prevStep + 1); // Update step based on previous state
     }
   };
 
-  const loginOrRegister = async () => {
-    try {
-      const response = await HttpRequest.post("v1/auth/login-or-register", {
-        validationToken,
-        code,
-      });
-      if (response?.data) {
-        const { accessToken, refreshToken } = response.data;
-        setTokens(accessToken, refreshToken);
-
-        if (typeof loginCallBack == "function") {
-          loginCallBack();
-        }
-        closeLoginDialog();
-      }
-    } catch (error) {
-      <Alert text="Can not Login or Register" />;
-    } finally {
-      if (!loginCallBack) navigator("/");
+  const loginOrRegister = async (data: any) => {
+    const response = await HttpRequest.post("/v1/auth/login-or-register", {
+      validationToken,
+      code: data.code,
+    });
+    if (response?.data) {
+      const { accessToken, refreshToken } = response.data;
+      setTokens(accessToken, refreshToken);
+      navigate("/");
     }
   };
 
-  const onSubmit = async (e: any) => {
-    e.preventDefault();
+  const onSubmit = async (data: any) => {
     if (step == 1) {
-      getValidationToken();
+      getValidationToken(data);
     } else {
-      loginOrRegister();
+      loginOrRegister(data);
     }
   };
 
   return (
-    <div className="w-1/2 flex justify-center items-center mx-auto my-5">
-      <Form
-        className="flex flex-col space-y-6 w-full"
-        onSubmit={(e) => {
-          onSubmit(e);
-        }}
-      >
+    <div
+      className="w-1/2 flex justify-center items-center mx-auto my-5"
+      key={step}
+    >
+      {step}
+      <AppForm onSubmit={onSubmit}>
         {step == 1 ? (
           <TextInput
-            type="string"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            name="phone"
+            type="text"
             placeholder="Enter your phone number"
           />
         ) : (
           <TextInput
-            type="string"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
+            name="code"
+            type="text"
             placeholder="Enter the given code"
           />
         )}
         <Button color="primary" type="submit">
           Confirm
         </Button>
-      </Form>
+      </AppForm>
     </div>
   );
 };

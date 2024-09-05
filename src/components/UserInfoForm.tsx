@@ -4,96 +4,78 @@ import { HttpRequest } from "../helpers/http-request-class.helper";
 import Alert from "./common/Alert";
 import EditableInput from "./common/EditableInput";
 import Button from "./common/Button";
-import { Form } from "react-router-dom";
 import useAuthStore from "../auth.store";
 import User from "../entities/User";
+import AppForm from "./common/AppForm";
+import { ObjectSchema } from "yup";
+import * as yup from "yup";
+
+// const validationSchema: ObjectSchema<any> = yup.object().shape({
+//   username: yup.string().required("Username is required"),
+//   email: yup.string().email("Invalid email").required("Email is required"),
+//   firstName: yup.string().required("First name is required"),
+//   lastName: yup.string().required("Last name is required"),
+// });
 
 function UserInfoForm() {
   const { data: user, error, isLoading } = useUser();
-  console.log("user", user)
   const phone = user?.phone;
-  const [username, setUsername] = useState(user?.username || "");
-  const [firstname, setFirstname] = useState(user?.firstName || "");
-  const [lastname, setLastname] = useState(user?.lastName || "");
-  const [password, setPassword] = useState(user?.password || "");
-  const [email, setEmail] = useState(user?.email || "");
   const setIdentity = useAuthStore((s) => s.setIdentity);
+  const [updateError, setUpdateError] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   if (error) {
-    return (
-      <div>
-        <Alert text="An error ocurred!" />
-      </div>
-    );
+    return <Alert text="An error occurred!" />;
   }
-  if (isLoading)
-    return (
-      <div>
-        <h2 className="loading loading-ring loading-lg text-4xl">Loading</h2>
-      </div>
-    );
 
-  const handleUpdateUser = async () => {
+  if (isLoading) {
+    return <h2 className="loading loading-ring loading-lg text-4xl">Loading</h2>;
+  }
+
+  const handleUpdateUser = async (data: any) => {
     const updateData = {
       phone,
-      username,
-      email,
-      firstname,
-      lastname,
+      username: data.username,
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
     };
 
+    setIsUpdating(true);
     try {
       const res = await HttpRequest.put("/v1/user", updateData);
-      if (res.status == 200) {
+      if (res.status === 200) {
         setIdentity({ id: user.id, ...updateData } as User);
       }
-      console.log('user', res)
     } catch (error) {
-      return (
-        <div>
-          <Alert text="Can not update data!" />
-        </div>
-      );
+      setUpdateError("Cannot update data!");
+    } finally {
+      setIsUpdating(false);
     }
   };
+
   return (
     <>
-      <Form
-        className="m-2 w-full grid grid-cols-1 lg:grid-cols-3 gap-4 px-8 py-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleUpdateUser();
+      {updateError && <Alert text={updateError} />}
+      <AppForm
+        onSubmit={handleUpdateUser}
+        initialValues={{
+          username: user?.username || "",
+          email: user?.email || "",
+          firstName: user?.firstName || "",
+          lastName: user?.lastName || "",
         }}
       >
-        <EditableInput
-          value={username}
-          onChange={setUsername}
-          label="Username"
-        />
-        {phone && <EditableInput
-          value={phone}
-          onChange={() => console.log()}
-          label="Phone"
-          disabled={true}
-        />}
-        <EditableInput value={email} onChange={setEmail} label="Email" />
-        <EditableInput
-          value={firstname}
-          onChange={setFirstname}
-          label="First Name"
-        />
-        <EditableInput
-          value={lastname}
-          onChange={setLastname}
-          label="Last Name"
-        />
+        <EditableInput name="username" label="Username" />
+        {phone && (
+          <EditableInput name="phone" label="Phone" disabled={true} />
+        )}
+        <EditableInput name="email" label="Email" />
+        <EditableInput name="firstName" label="First Name" />
+        <EditableInput name="lastName" label="Last Name" />
         {!user?.password && (
           <>
-            <EditableInput
-              value={password}
-              onChange={setPassword}
-              label="Set Password"
-            />
+            <EditableInput name="password" label="Set Password" />
             <Button color="primary" className="text-lg m-2 text-blue-500">
               Save Password
             </Button>
@@ -102,11 +84,12 @@ function UserInfoForm() {
         <Button
           type="submit"
           color="primary"
-          className="text-lg m-2 text-blue-500 "
+          className="text-lg m-2 text-blue-500"
+          disabled={isUpdating} // Disable button while updating
         >
-          Save Changes
+          {isUpdating ? "Saving..." : "Save Changes"}
         </Button>
-      </Form>
+      </AppForm>
     </>
   );
 }
