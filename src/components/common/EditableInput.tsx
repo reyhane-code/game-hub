@@ -7,6 +7,8 @@ interface EditableInputProps {
   label: string;
   disabled?: boolean;
   className?: string;
+  onChange?: (value: string) => void; // Add onChange prop
+  value?: string; // Add value prop
 }
 
 const EditableInput: React.FC<EditableInputProps> = ({
@@ -14,14 +16,17 @@ const EditableInput: React.FC<EditableInputProps> = ({
   label,
   disabled,
   className,
+  onChange,
+  value,
 }) => {
-  const { control } = useFormContext() ?? {}; // Access form context
+  const { control } = useFormContext(); // Access form context
   const {
     field,
     fieldState: { error },
   } = useController({
     name,
     control,
+    defaultValue: value || '', // Set default value if provided
   });
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -32,6 +37,9 @@ const EditableInput: React.FC<EditableInputProps> = ({
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     field.onChange(event.target.value); // Update react-hook-form state
+    if (onChange) {
+      onChange(event.target.value); // Call custom onChange if provided
+    }
   };
 
   const handleInputBlur = () => {
@@ -44,12 +52,12 @@ const EditableInput: React.FC<EditableInputProps> = ({
       <label className="block text-lg font-medium mb-1 mx-1">{label}:</label>
       {disabled ? (
         <div className="px-2 py-3 w-full min-h-11 border border-gray-300 rounded-sm shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 transition duration-200">
-          <span>{field?.value ?? ''}</span>
+          <span>{field.value ?? ''}</span>
         </div>
       ) : isEditing ? (
         <input
           type="text"
-          value={field.value ?? undefined}
+          value={value !== undefined ? value : field.value ?? ''} // Use value prop if provided
           onChange={handleInputChange}
           onBlur={handleInputBlur}
           autoFocus
@@ -61,7 +69,7 @@ const EditableInput: React.FC<EditableInputProps> = ({
           className="px-2 py-3 w-full min-h-11 border border-gray-300 rounded-sm shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 transition duration-200"
           onClick={handleInputClick}
         >
-          <span>{field.value ?? ''}</span>
+          <span>{field.value !== undefined ? field.value : 'No value set'}</span> {/* Check for value */}
           <FaPen className="text-gray-500 hover:text-blue-500 transition duration-200" />
         </span>
       )}
@@ -72,7 +80,6 @@ const EditableInput: React.FC<EditableInputProps> = ({
           </span>
         )}
       </div>
-      {/* Display validation error */}
     </div>
   );
 };

@@ -1,17 +1,29 @@
-import React, { ReactNode } from "react";
-import { ControllerRenderProps, FieldError, FieldValues, useController, useFormContext } from "react-hook-form";
+import { ReactNode } from "react";
+import { useController, useFormContext } from "react-hook-form";
 
 interface Props {
   children?: ReactNode;
   type: string;
   placeholder: string;
   label?: string | number;
+  value?: string | number;
+  onChange?: (value: string) => void;
   name: string;
 }
 
-function TextInput({ type, placeholder, name, label, children }: Props) {
+function TextInput({
+  type,
+  placeholder,
+  name,
+  label,
+  children,
+  value,
+  onChange,
+}: Props) {
   // Access form context at the top level
   const { control, register } = useFormContext() || { control: null }; // Provide a fallback
+
+  if (!value) value = "";
 
   // If control is not available, render a regular input
   if (!control || !register) {
@@ -23,7 +35,12 @@ function TextInput({ type, placeholder, name, label, children }: Props) {
             type={type}
             className="grow w-full"
             placeholder={placeholder}
-            defaultValue="" // Set default value to avoid uncontrolled warning
+            value={value}
+            onChange={(e) => {
+              if (onChange) {
+                onChange(e.target.value); // Call custom onChange if provided
+              }
+            }}
           />
           {children}
         </label>
@@ -38,6 +55,7 @@ function TextInput({ type, placeholder, name, label, children }: Props) {
   } = useController({
     name,
     control,
+    defaultValue: value,
   });
 
   return (
@@ -48,7 +66,13 @@ function TextInput({ type, placeholder, name, label, children }: Props) {
           type={type}
           className="grow w-full"
           placeholder={placeholder}
-          {...field} // Spread field properties to handle value and onChange
+          {...field}
+          onChange={(e) => {
+            field.onChange(e); // Call react-hook-form's onChange
+            if (onChange) {
+              onChange(e.target.value); // Call custom onChange if provided
+            }
+          }}
         />
         {children}
       </label>

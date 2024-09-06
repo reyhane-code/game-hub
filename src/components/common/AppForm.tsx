@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ObjectSchema } from "yup";
 
 interface AppFormProps {
-  validationSchema?: ObjectSchema<any>;
+  validationSchema?: ObjectSchema<any> | any;
   initialValues?: Record<string, any>;
   children?: React.ReactNode;
   onSubmit: (data: any) => Promise<void>;
@@ -31,21 +31,27 @@ const AppForm: React.FC<AppFormProps> = ({
     try {
       await onSubmit(data);
     } catch (error: any) {
-      const response = error?.response;
-      const data = response?.data?.data;
-      if (response && data) {
-        Object.values(data).forEach((err: any) => {
-          Object.entries(err).forEach(([field, message]: any) => {
-            setError(field, {
-              type: "server",
-              message: message ?? "خطایی رخ داده مقدار ورودی را بررسی کنید",
+      try{
+        console.log('error', error)
+        const response = error?.response;
+        const data = response?.data?.data;
+        if (response && data) {
+          Object.values(data).forEach((err: any) => {
+            Object.entries(err).forEach(([field, message]: any) => {
+              setError(field, {
+                type: "server",
+                message: message ?? "خطایی رخ داده مقدار ورودی را بررسی کنید",
+              });
             });
           });
-        });
+        }
+        if (typeof onError === "function") {
+          onError(error);
+        }
+      } catch(err: any){
+        console.log('err on handel errors AppFrom')
       }
-      if (typeof onError === "function") {
-        onError(error);
-      }
+      
     } finally {
       if (typeof doFinally === "function") {
         doFinally(data);
