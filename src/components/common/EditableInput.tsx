@@ -1,12 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { FaPen } from "react-icons/fa6";
-import {
-  ControllerRenderProps,
-  FieldError,
-  FieldValues,
-  useController,
-  useFormContext,
-} from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 
 interface EditableInputProps {
   name: string; // Added name prop for react-hook-form
@@ -21,21 +15,14 @@ const EditableInput: React.FC<EditableInputProps> = ({
   disabled,
   className,
 }) => {
-  const { control } = useMemo(() => useFormContext() ?? {}, [useFormContext]); // Access form context
-
-  let field: ControllerRenderProps<FieldValues, string> | undefined;
-  let error: FieldError | undefined
-  if (control) {
-    const {
-      field: fieldData,
-      fieldState: { error: errorData },
-    } = useController({
-      name,
-      control,
-    });
-    field = fieldData;
-    error = errorData;
-  }
+  const { control } = useFormContext() ?? {}; // Access form context
+  const {
+    field,
+    fieldState: { error },
+  } = useController({
+    name,
+    control,
+  });
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -44,12 +31,12 @@ const EditableInput: React.FC<EditableInputProps> = ({
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (field) field.onChange(event.target.value); // Update react-hook-form state
+    field.onChange(event.target.value); // Update react-hook-form state
   };
 
   const handleInputBlur = () => {
     setIsEditing(false);
-    if (field) field.onBlur(); // Trigger blur event for validation
+    field.onBlur(); // Trigger blur event for validation
   };
 
   return (
@@ -57,12 +44,12 @@ const EditableInput: React.FC<EditableInputProps> = ({
       <label className="block text-lg font-medium mb-1 mx-1">{label}:</label>
       {disabled ? (
         <div className="px-2 py-3 w-full min-h-11 border border-gray-300 rounded-sm shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 transition duration-200">
-          <span>{field?.value ?? ""}</span>
+          <span>{field?.value ?? ''}</span>
         </div>
       ) : isEditing ? (
         <input
           type="text"
-          value={field?.value ?? undefined}
+          value={field.value ?? undefined}
           onChange={handleInputChange}
           onBlur={handleInputBlur}
           autoFocus
@@ -74,7 +61,7 @@ const EditableInput: React.FC<EditableInputProps> = ({
           className="px-2 py-3 w-full min-h-11 border border-gray-300 rounded-sm shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-100 transition duration-200"
           onClick={handleInputClick}
         >
-          <span>{field?.value ?? ""}</span>
+          <span>{field.value ?? ''}</span>
           <FaPen className="text-gray-500 hover:text-blue-500 transition duration-200" />
         </span>
       )}

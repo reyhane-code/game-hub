@@ -36,12 +36,6 @@ const AppForm: React.FC<AppFormProps> = ({
       if (response && data) {
         Object.values(data).forEach((err: any) => {
           Object.entries(err).forEach(([field, message]: any) => {
-            console.log(
-              "Setting error for field:",
-              field,
-              "with message:",
-              message
-            );
             setError(field, {
               type: "server",
               message: message ?? "خطایی رخ داده مقدار ورودی را بررسی کنید",

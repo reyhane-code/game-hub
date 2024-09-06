@@ -5,6 +5,7 @@ import { HttpRequest } from "../helpers/http-request-class.helper";
 import AppForm from "./common/AppForm";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import EditableInput from "./common/EditableInput";
 
 export const LoginForm = () => {
   const [step, setStep] = useState(1);
@@ -49,17 +50,9 @@ export const LoginForm = () => {
     >
       <AppForm onSubmit={onSubmit}>
         {step == 1 ? (
-          <TextInput
-            name="phone"
-            type="text"
-            placeholder="Enter your phone number"
-          />
+          <EditableInput name="phone" label="Phone" />
         ) : (
-          <TextInput
-            name="code"
-            type="text"
-            placeholder="Enter the given code"
-          />
+          <EditableInput name="code" label="Code" />
         )}
         <Button color="primary" type="submit">
           Confirm
