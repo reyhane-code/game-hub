@@ -9,7 +9,6 @@ const AuthModal = () => {
   const [isOpen, setIsOpen] = useState(loginDialog);
 
   useEffect(() => {
-    console.log("auth modal", loginDialog);
     setIsOpen(loginDialog);
   }, [loginDialog]);
 

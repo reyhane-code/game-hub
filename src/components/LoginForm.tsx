@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import TextInput from "./common/TextInput";
 import Button from "./common/Button";
 import { HttpRequest } from "../helpers/http-request-class.helper";
@@ -7,8 +7,8 @@ import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
-  const [step, setStep] = React.useState(1);
-  const [validationToken, setValidationToken] = React.useState("");
+  const [step, setStep] = useState(1);
+  const [validationToken, setValidationToken] = useState("");
   const { setTokens } = useAuth();
   const navigate = useNavigate();
 
@@ -47,7 +47,6 @@ export const LoginForm = () => {
       className="w-1/2 flex justify-center items-center mx-auto my-5"
       key={step}
     >
-      {step}
       <AppForm onSubmit={onSubmit}>
         {step == 1 ? (
           <TextInput

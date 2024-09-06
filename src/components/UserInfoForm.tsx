@@ -10,12 +10,7 @@ import AppForm from "./common/AppForm";
 import { ObjectSchema } from "yup";
 import * as yup from "yup";
 
-// const validationSchema: ObjectSchema<any> = yup.object().shape({
-//   username: yup.string().required("Username is required"),
-//   email: yup.string().email("Invalid email").required("Email is required"),
-//   firstName: yup.string().required("First name is required"),
-//   lastName: yup.string().required("Last name is required"),
-// });
+
 
 function UserInfoForm() {
   const { data: user, error, isLoading } = useUser();
@@ -29,7 +24,9 @@ function UserInfoForm() {
   }
 
   if (isLoading) {
-    return <h2 className="loading loading-ring loading-lg text-4xl">Loading</h2>;
+    return (
+      <h2 className="loading loading-ring loading-lg text-4xl">Loading</h2>
+    );
   }
 
   const handleUpdateUser = async (data: any) => {
@@ -42,23 +39,31 @@ function UserInfoForm() {
     };
 
     setIsUpdating(true);
-    try {
-      const res = await HttpRequest.put("/v1/user", updateData);
-      if (res.status === 200) {
-        setIdentity({ id: user.id, ...updateData } as User);
-      }
-    } catch (error) {
-      setUpdateError("Cannot update data!");
-    } finally {
-      setIsUpdating(false);
+    const res = await HttpRequest.put("/v1/user", updateData);
+    if (res.status === 200) {
+      setIdentity({ id: user.id, ...updateData } as User);
     }
   };
 
+  const onError= (e: any)=>{
+    console.log('on error infoForm', e)
+  }
+
+  const validationSchema: ObjectSchema<any> = yup.object().shape({
+    username: yup.string().required("Username is required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
+    firstName: yup.string().required("First name is required"),
+    lastName: yup.string().required("Last name is required"),
+  });
+
   return (
-    <>
+    <div className="flex w-2/3 py-4 px-6">
       {updateError && <Alert text={updateError} />}
       <AppForm
         onSubmit={handleUpdateUser}
+        onError={onError}
+        doFinally={()=> setIsUpdating(false)}
+        validationSchema={validationSchema}
         initialValues={{
           username: user?.username || "",
           email: user?.email || "",
@@ -67,9 +72,7 @@ function UserInfoForm() {
         }}
       >
         <EditableInput name="username" label="Username" />
-        {phone && (
-          <EditableInput name="phone" label="Phone" disabled={true} />
-        )}
+        {phone && <EditableInput name="phone" label="Phone" disabled={true} />}
         <EditableInput name="email" label="Email" />
         <EditableInput name="firstName" label="First Name" />
         <EditableInput name="lastName" label="Last Name" />
@@ -90,7 +93,7 @@ function UserInfoForm() {
           {isUpdating ? "Saving..." : "Save Changes"}
         </Button>
       </AppForm>
-    </>
+    </div>
   );
 }
 

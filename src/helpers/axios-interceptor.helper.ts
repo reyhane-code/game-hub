@@ -57,7 +57,6 @@ export async function interceptorResponseError(error: AxiosError) {
         !responseRefreshToken?.data?.accessToken ||
         !responseRefreshToken?.data?.refreshToken
       ) {
-        console.log('removing loca;')
         localStorage.removeItem("tokens");
         window.location.href = "/login";
       } else {
@@ -77,13 +76,11 @@ export async function interceptorResponseError(error: AxiosError) {
       console.log("Error refreshing token:", error);
       localStorage.removeItem("tokens");
       window.location.href = "/login";
+      return;
     }
   }
-  if (status == 422) {
-    // return error.response?.data.serverError.fields;
-  }
 
-  console.log("Error:", error);
+  throw error;
 }
 
 export function interceptorRequest(config: InternalAxiosRequestConfig) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ObjectSchema } from "yup";
@@ -8,6 +8,8 @@ interface AppFormProps {
   initialValues?: Record<string, any>;
   children?: React.ReactNode;
   onSubmit: (data: any) => Promise<void>;
+  onError?: (error: any) => any;
+  doFinally?: (data: any) => any;
 }
 
 const AppForm: React.FC<AppFormProps> = ({
@@ -15,6 +17,8 @@ const AppForm: React.FC<AppFormProps> = ({
   initialValues,
   children,
   onSubmit,
+  onError,
+  doFinally,
 }) => {
   const methods = useForm({
     resolver: validationSchema ? yupResolver(validationSchema) : undefined,
@@ -27,12 +31,30 @@ const AppForm: React.FC<AppFormProps> = ({
     try {
       await onSubmit(data);
     } catch (error: any) {
-      if (error.response && error.response.data.errors) {
-        Object.entries(error.response.data.errors).forEach(
-          ([field, message]: any) => {
-            setError(field, { type: "server", message: message ?? "error" });
-          }
-        );
+      const response = error?.response;
+      const data = response?.data?.data;
+      if (response && data) {
+        Object.values(data).forEach((err: any) => {
+          Object.entries(err).forEach(([field, message]: any) => {
+            console.log(
+              "Setting error for field:",
+              field,
+              "with message:",
+              message
+            );
+            setError(field, {
+              type: "server",
+              message: message ?? "خطایی رخ داده مقدار ورودی را بررسی کنید",
+            });
+          });
+        });
+      }
+      if (typeof onError === "function") {
+        onError(error);
+      }
+    } finally {
+      if (typeof doFinally === "function") {
+        doFinally(data);
       }
     }
   };
@@ -40,7 +62,9 @@ const AppForm: React.FC<AppFormProps> = ({
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        {children}
+        <Suspense fallback={<div>Loading...</div>}>
+          {children}
+        </Suspense>
       </form>
     </FormProvider>
   );
