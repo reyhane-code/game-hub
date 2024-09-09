@@ -1,49 +1,56 @@
-import { useEffect, useRef, useState } from "react";
-import { BsSearch } from "react-icons/bs";
+import { useEffect, useState, useCallback } from "react";
+import { CiSearch } from "react-icons/ci";
 import TextInput from "./common/TextInput";
-import { FilterOperationEnum } from "../enums";
-import { useGameQueryStore } from "../store";
+import { useLocation, useNavigate } from "react-router-dom";
+import debounce from "lodash/debounce";
 
 const SearchInput = () => {
-  const { setSearch } = useGameQueryStore();
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      const params = new URLSearchParams(location.search);
+      if (value) {
+        params.set("search", value);
+      } else {
+        params.delete("search");
+      }
+      navigate(`?${params.toString()}`);
+    }, 300),
+    [location.search, navigate]
+  );
+
+  const handleSearchChange = (value: string) => {
     setSearchTerm(value);
-
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
-
-    debounceTimeoutRef.current = setTimeout(() => {
-      setSearch({
-        field: "name",
-        operation: FilterOperationEnum.LIKE,
-        value: `%${value}%`,
-      });
-    }, 300);
+    debouncedSearch(value);
   };
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const searchValue = params.get("search") || "";
+    setSearchTerm(searchValue);
+
     return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
+      debouncedSearch.cancel();
     };
-  }, []);
+  }, [location.search, debouncedSearch]);
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>
-      <TextInput
-        type="text"
-        placeholder="Search games..."
-        onChange={handleSearchChange}
-        value={searchTerm}
-      >
-        <BsSearch />
-      </TextInput>
+      <div className="flex items-center p-2">
+        <TextInput
+          type="text"
+          placeholder="Search..."
+          onChange={(value: string) => handleSearchChange(value)}
+          value={searchTerm}
+          name="search"
+        >
+          <CiSearch className="text-3xl text-gray-600" />
+        </TextInput>
+      </div>
+
     </form>
   );
 };

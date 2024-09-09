@@ -3,12 +3,14 @@ import GameGrid from "./GameGrid";
 import { useLocation } from "react-router-dom";
 import { useGames } from "../hooks/useGames";
 
+
 const GamesContainer = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
+    const search = queryParams.get('search');
     const initialPage = parseInt(queryParams.get('page') || '1', 10);
     const [page, setPage] = useState<number>(initialPage);
-    const { data, error, isLoading } = useGames(page);
+    const { data, error, isLoading } = useGames(page, 10, search!);
 
     useEffect(() => {
         setPage(initialPage);

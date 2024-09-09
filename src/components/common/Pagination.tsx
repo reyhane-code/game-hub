@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"; // Use useHistory for React Router v5
+import { useNavigate } from "react-router-dom"; 
 import Button from "./Button";
 
 interface Props {

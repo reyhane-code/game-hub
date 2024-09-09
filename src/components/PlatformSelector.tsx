@@ -5,7 +5,7 @@ import { FilterOperationEnum } from "../enums";
 import { useGameQueryStore } from "../store";
 
 const PlatformSelector = () => {
-  const { data = [], error } = usePlatforms();
+  const { data = { items: [] }, error } = usePlatforms();
   const { setFilter: setSelectedPlatformId } = useGameQueryStore();
   const [selectedPlatformName, setSelectedPlatformName] = useState("Select a platform");
 
@@ -13,7 +13,7 @@ const PlatformSelector = () => {
 
   const platformsWithDefaultOption = [
     { id: -1, name: "Select a platform", slug: 'select-a-platform', created_at: new Date() },
-    ...data,
+    ...data.items,
   ];
 
   const handleItemClick = (platform: Platform) => {

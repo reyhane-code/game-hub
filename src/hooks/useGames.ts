@@ -1,18 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import { HttpRequest } from "../helpers/http-request-class.helper";
-import { IPaginationQuery } from "../interfaces";
+import { IPaginationQuery, ISearchFilterOptions } from "../interfaces";
 import { IGetGamesResponse } from "../responses/get-games.response";
 import { useGameQueryStore } from "../store";
+import { FilterOperationEnum } from "../enums";
 
 
 const fetchGames = async (
   gameQuery: IPaginationQuery,
   page: number,
-  perPage: number
+  perPage: number,
+  search?: string
 ) => {
+  const searchParam: ISearchFilterOptions[] =
+    (search && search.length > 1)
+      ? [{
+        field: "name",
+        operation: FilterOperationEnum.ILIKE,
+        value: `%${search}%`
+      }]
+      : gameQuery.search!;
   const params = {
     filter: gameQuery.filter,
-    search: gameQuery.search,
+    search: searchParam,
     sortBy: gameQuery.sortBy,
     page, perPage
   };
@@ -28,10 +38,10 @@ const fetchGames = async (
   }
 };
 
-export const useGames = (page: number, perPage: number = 10) => {
+export const useGames = (page: number, perPage: number = 10, search?: string) => {
   const { query: gameQuery } = useGameQueryStore();
 
-  return useQuery<IGetGamesResponse, Error>(["games", gameQuery, page], () =>
-    fetchGames(gameQuery, page, perPage)
+  return useQuery<IGetGamesResponse, Error>(["games", gameQuery, page, search], () =>
+    fetchGames(gameQuery, page, perPage, search)
   );
 };

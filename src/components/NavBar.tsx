@@ -11,7 +11,9 @@ const NavBar = () => {
       <Link to="/">
         <IoHomeOutline className="text-3xl" />
       </Link>
+      <div className="w-full transform translate-x-0">
       <SearchInput />
+      </div>
       <Link to="/articles" className="btn btn-outline">
         Articles
       </Link>

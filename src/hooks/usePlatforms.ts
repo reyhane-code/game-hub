@@ -3,16 +3,12 @@ import Platform from "../entities/Platform";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 
 interface PlatformsData {
-  count: number;
-  data: Platform[];
-  page: number;
-  perPage: number;
-  offset: number;
+  items: Platform[]
 }
 
 const usePlatforms = () =>
   useQuery(["platforms"], () =>
-    HttpRequest.get<Platform[]>("/v1/platforms").then((res) => res.data)
+    HttpRequest.get<PlatformsData>("/v1/platforms").then((res) => res.data)
   );
 
 export default usePlatforms;

@@ -33,7 +33,7 @@ const ArticleCard = ({ article, likes }: Props) => {
               <FaEye className="text-md" />
             </div>
             <div className="flex items-center space-x-1">
-              {likes !== undefined && ( // Check if likes is defined
+              {likes !== undefined && (
                 <>
                   <span className="text-sm">{likes}</span>
                   <FaHeart className="text-md" />

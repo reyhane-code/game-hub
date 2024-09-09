@@ -1,12 +1,12 @@
+import { useLocation } from "react-router-dom";
 import GamesContainer from "../components/GameContainer";
-import GameGrid from "../components/GameGrid";
 // import GameHeading from "../components/GameHeading";
 import GenreList from "../components/GenreList";
 import PlatformSelector from "../components/PlatformSelector";
 import SortSelector from "../components/SortSelector";
-import { useGames } from "../hooks/useGames";
 
 const HomePage = () => {
+
   return (
     <div className="grid grid-cols-12">
       <div className="hidden lg:flex h-max lg:col-span-3 3xl:col-span-2">

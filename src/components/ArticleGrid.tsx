@@ -4,6 +4,7 @@ import ErrorPage from "../pages/ErrorPage";
 import Pagination from "./common/Pagination";
 import ArticleCard from "./ArticleCard";
 import { IGetArticlesResponse } from "../responses/get-articles.response";
+import EmptyList from "./common/EmptyList";
 
 interface Props {
   data: IGetArticlesResponse;
@@ -47,14 +48,15 @@ const ArticleGrid = ({ data, error, isLoading, page, setPage }: Props) => {
         {isLoading ? renderSkeletons() : renderArticleCards()}
       </div>
       <div className="mx-auto w-max mt-4">
-        {(data && data?.items.length > 0) ? (
+        {(!data || data.items.length < 1) && <EmptyList itemType="articles" />}
+        {(data && data?.items.length > data.pagination.perPage) && (
           <Pagination
             count={data.pagination.count}
             perPage={10}
             page={page}
             setPage={setPage}
           />
-        ) : <p className="text-2xl h-[50vh] flex items-center justify-center">No articles were found!</p>}
+        )}
       </div>
     </>
   );

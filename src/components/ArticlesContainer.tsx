@@ -6,9 +6,10 @@ import ArticleGrid from "./ArticleGrid";
 const ArticlesContainer = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
+    const search = queryParams.get('search');
     const initialPage = parseInt(queryParams.get('page') || '1', 10);
     const [page, setPage] = useState<number>(initialPage);
-    const { data, error, isLoading } = useArticles(page);
+    const { data, error, isLoading } = useArticles(page, 10, search!);
 
     useEffect(() => {
         setPage(initialPage);

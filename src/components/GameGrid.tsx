@@ -5,6 +5,7 @@ import CardContainer from "./CardContainer";
 import { IGetGamesResponse } from "../responses/get-games.response";
 import ErrorPage from "../pages/ErrorPage";
 import Pagination from "./common/Pagination";
+import EmptyList from "./common/EmptyList";
 
 interface Props {
   data: IGetGamesResponse;
@@ -46,14 +47,15 @@ const GameGrid = ({ data, error, isLoading, page, setPage }: Props) => {
         {isLoading ? renderSkeletons() : renderGameCards()}
       </div>
       <div className="mx-auto w-max mt-4">
-        {(data && data?.items.length > 0) ? (
+        {(!data || data.items.length < 1) && <EmptyList itemType="articles" />}
+        {(data && data?.items.length > data.pagination.perPage) && (
           <Pagination
             count={data.pagination.count}
             perPage={10}
             page={page}
             setPage={setPage}
           />
-        ) : <p className="text-2xl h-[50vh] flex items-center justify-center ">No Games were found!</p>}
+        )}
       </div>
     </>
   );
