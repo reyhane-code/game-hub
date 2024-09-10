@@ -6,7 +6,8 @@ interface ModalProps {
   title: string;
   message: string;
   id: string;
-  children?: React.ReactNode; // Made children optional
+  children?: React.ReactNode;
+  className?: string
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -16,11 +17,12 @@ const Modal: React.FC<ModalProps> = ({
   message,
   children,
   id,
+  className,
   ...rest
 }) => {
   return (
-    <div className="flex flex-col p-4 relative" id={id} {...rest}>
-     
+    <div className={`flex flex-col p-4 relative ${className}`} id={id} {...rest}>
+
       {/* Modal dialog */}
       {isOpen && (
         <dialog open className="modal">

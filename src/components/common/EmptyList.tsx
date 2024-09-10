@@ -3,8 +3,8 @@ interface Props {
 }
 
 const EmptyList = ({ itemType }: Props) => {
-    return <div>
-        <p className="text-2xl h-[50vh] flex items-center justify-center">{`NO ${itemType} were found!`}</p>
+    return <div className="w-full flex items-center justify-center h-[50vh]">
+        <p className="text-2xl">{`No ${itemType} were found!`}</p>
     </div>
 }
 

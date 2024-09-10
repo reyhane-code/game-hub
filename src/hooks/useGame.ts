@@ -8,7 +8,6 @@ const useGame = (slug: string) =>
     queryFn: async () => {
       try {
         const response = await HttpRequest.get<Game>(`/v1/games/${slug}`);
-        console.log(response.data);
         return response.data;
       } catch (error) {
         throw new Error("Failed to fetch game data");

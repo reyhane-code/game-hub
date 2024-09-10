@@ -60,5 +60,5 @@ export interface Game {
       }
     ];
   };
-  likes: number;
+  likes?: number;
 }

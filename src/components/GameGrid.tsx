@@ -47,8 +47,8 @@ const GameGrid = ({ data, error, isLoading, page, setPage }: Props) => {
         {isLoading ? renderSkeletons() : renderGameCards()}
       </div>
       <div className="mx-auto w-max mt-4">
-        {(!data || data.items.length < 1) && <EmptyList itemType="articles" />}
-        {(data && data?.items.length > data.pagination.perPage) && (
+        {(!data || data.items.length < 1) && <EmptyList itemType="games" />}
+        {(data && data?.items.length >= 1) && (
           <Pagination
             count={data.pagination.count}
             perPage={10}
