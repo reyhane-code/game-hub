@@ -1,49 +1,69 @@
+import { useState } from "react";
 import useGenres from "../hooks/useGenres";
 import Genre from "../entities/Genre";
 import { FilterOperationEnum } from "../enums";
-import { useGameQueryStore } from "../store";
+import { ISearchFilterOptions } from "../interfaces";
 
-const GenreList = () => {
+interface Props {
+  addItem: (item: ISearchFilterOptions, type: 'filter' | 'search') => void;
+  removeItemsByField: (fieldName: string, type: 'filter' | 'search') => void
+}
+
+const GenreList = ({ addItem, removeItemsByField }: Props) => {
   const { data, error, isLoading } = useGenres();
-  const { setFilter: setSelectedGenreId, query } = useGameQueryStore();
-  if (error) return null;
-  if (isLoading)
-    return <span className="loading loading-ring loading-lg">Loading</span>;
+  const [selectedGenreName, setSelectedGenreName] = useState("All Genres");
 
-  console.log(query);
+  if (error) return null;
+  if (isLoading) return <span className="loading loading-ring loading-lg">Loading</span>;
+
+
+  const genresWithDefaultOption = [
+    { id: -1, name: "All Genres", created_at: new Date() },
+    ...data,
+  ];
+
+  const handleGenreChange = (genre: Genre) => {
+    const isAllGenres = genre.id === -1;
+
+    // Remove existing genre filters
+    removeItemsByField('genre.id', 'filter');
+
+    // Update selected genre name
+    setSelectedGenreName(genre.name);
+
+    // If the selected genre is not "All genres", add the new filter
+    if (!isAllGenres) {
+      const newItem = {
+        field: "genre.id",
+        operation: FilterOperationEnum.EQ,
+        value: genre.id,
+      };
+      addItem(newItem, 'filter');
+    }
+
+    // Blur the active element
+    const activeElement = document.activeElement;
+    if (activeElement instanceof HTMLElement) {
+      activeElement.blur();
+    }
+  };
+
+
   return (
-    <div className="flex w-full flex-col">
-      <h2 className="mt-9 mb-3">Genres</h2>
-      <ul>
-        {data?.map((genre: Genre) => (
-          <li key={genre.id} className="space-x-1 w-30 py-5px mb-4">
-            <div
-              className="flex cursor-pointer"
-              onClick={() =>
-                setSelectedGenreId({
-                  field: "genre.id",
-                  operation: FilterOperationEnum.EQ,
-                  value: genre.id,
-                })
-              }
+    <div className="dropdown z-10">
+      <label tabIndex={0} className="btn m-1">
+        {selectedGenreName}
+      </label>
+      <ul
+        tabIndex={0}
+        className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52"
+      >
+        {genresWithDefaultOption?.map((genre: Genre) => (
+          <li key={genre.id} className="cursor-pointer h-10" onClick={() => handleGenreChange(genre)}>
+            <span
             >
-              {/* <Image
-                className="rounded-sm w-10 h-10 bg-cover"
-                src={getCroppedImageUrl(genre.image_background)}
-            /> */}
-              <span
-                className={`whitespace-normal text-left text-md p-1 mx-2 text-sm ${
-                  query.filter?.some(
-                    (item) =>
-                      item.value === genre.id && item.field === "genre.id"
-                  )
-                    ? "font-bold"
-                    : "font-Regular"
-                } m-1`}
-              >
-                {genre.name}
-              </span>
-            </div>
+              {genre.name}
+            </span>
           </li>
         ))}
       </ul>

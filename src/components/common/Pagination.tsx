@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 
 interface Props {
@@ -11,9 +11,10 @@ interface Props {
 const Pagination = ({ perPage, count, page, setPage }: Props) => {
   const totalPages = Math.ceil(count / perPage);
   const navigate = useNavigate();
+
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    navigate(`?page=${newPage}`);
+    setPage(newPage); // Update the page state in the parent component
+    navigate(`?page=${newPage}&perPage=${perPage}`); // Update the URL with the new page and current perPage
   };
 
   return (

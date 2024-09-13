@@ -1,28 +1,21 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useArticles } from "../hooks/useArticles";
+import useApi from "../hooks/useApi";
+import { IGetArticlesResponse } from "../responses/get-articles.response";
 import ArticleGrid from "./ArticleGrid";
+import EmptyList from "./common/EmptyList";
 
 const ArticlesContainer = () => {
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const search = queryParams.get('search');
-    const initialPage = parseInt(queryParams.get('page') || '1', 10);
-    const [page, setPage] = useState<number>(initialPage);
-    const { data, error, isLoading } = useArticles(page, 10, search!);
+    const { data, error, isLoading, params, setPage } = useApi<IGetArticlesResponse, Error>('/v1/articles/paginate');
 
-    useEffect(() => {
-        setPage(initialPage);
-    }, [initialPage]);
 
     return (
         <>
             {isLoading && <span>Loading...</span>}
             {error && <span>An error occurred: {error.message}</span>}
             {data ? (
-                <ArticleGrid data={data} error={error} isLoading={isLoading} page={page} setPage={setPage} />
+                <ArticleGrid data={data} error={error} isLoading={isLoading} page={params.page || 1} setPage={setPage} perPage={params.perPage || 10} />
             ) : (
-                <span>No items were found!</span>
+                <EmptyList itemType="articles" />
+
             )}
         </>
     );

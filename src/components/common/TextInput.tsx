@@ -9,6 +9,8 @@ interface Props {
   value?: string | number;
   onChange?: (value: string) => void;
   name: string;
+  leftSlot?: ReactNode
+  rightSlot?: ReactNode
 }
 
 function TextInput({
@@ -19,21 +21,24 @@ function TextInput({
   children,
   value,
   onChange,
+  leftSlot,
+  rightSlot
 }: Props) {
-  // Access form context at the top level
   const { control, register } = useFormContext() || { control: null }; // Provide a fallback
 
   if (!value) value = "";
 
-  // If control is not available, render a regular input
   if (!control || !register) {
     return (
-      <div className="flex flex-col w-full h-max grow">
-        <label className="input input-bordered flex flex-col items-center w-full">
-          <span className="text-sm mx-1">{label}</span>
+      <div className="flex flex-col w-full h-max">
+        <label className="text-sm mx-1">
+          {label}
+        </label>
+        <div className="px-4 border border-gray-300 rounded-md flex items-center w-full min-h-10">
+          {leftSlot}
           <input
             type={type}
-            className="grow w-full"
+            className="grow focus:!outline-none active:!outline-none "
             placeholder={placeholder}
             value={value}
             onChange={(e) => {
@@ -42,8 +47,8 @@ function TextInput({
               }
             }}
           />
-          {children}
-        </label>
+          {rightSlot}
+        </div>
       </div>
     );
   }

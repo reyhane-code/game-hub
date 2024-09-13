@@ -1,32 +1,42 @@
-import { useState, useEffect } from "react";
 import GameGrid from "./GameGrid";
-import { useLocation } from "react-router-dom";
-import { useGames } from "../hooks/useGames";
-
+import useApi from "../hooks/useApi";
+import { IGetGamesResponse } from "../responses/get-games.response";
+import EmptyList from "./common/EmptyList";
+import PlatformSelector from "./PlatformSelector";
+import GenreList from "./GenreList";
+import SortSelector from "./SortSelector";
 
 const GamesContainer = () => {
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const search = queryParams.get('search');
-    const initialPage = parseInt(queryParams.get('page') || '1', 10);
-    const [page, setPage] = useState<number>(initialPage);
-    const { data, error, isLoading } = useGames(page, 10, search!);
-
-    useEffect(() => {
-        setPage(initialPage);
-    }, [initialPage]);
+    const { data, error, isLoading, params, setPage, addItem, removeItemsByField } = useApi<IGetGamesResponse, Error>('/v1/games');
 
     return (
         <>
             {isLoading && <span>Loading...</span>}
             {error && <span>An error occurred: {error.message}</span>}
+            <div>
+                <GenreList addItem={addItem} removeItemsByField={removeItemsByField} />
+                <PlatformSelector addItem={addItem} removeItemsByField={removeItemsByField} />
+                <SortSelector
+                    sortbyOptions={[
+                        { value: "", label: "Relevance" },
+                        { value: "-added", label: "Date added" },
+                        { value: "name", label: "Name" },
+                        { value: "-released", label: "Release date" },
+                        { value: "-metacritic", label: "Popularity" },
+                        { value: "-rating", label: "Average rating" },
+                    ]}
+                />
+            </div>
+
             {data ? (
-                <GameGrid data={data} error={error} isLoading={isLoading} page={page} setPage={setPage} />
+                <GameGrid data={data} error={error} isLoading={isLoading} page={params.page || 1} setPage={setPage} perPage={params.perPage || 10} />
             ) : (
-                <span>No items were found!</span>
+                <EmptyList itemType="games" />
             )}
         </>
     );
 };
 
 export default GamesContainer;
+
+

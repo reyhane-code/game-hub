@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import Article from "../entities/Article";
-import { Game } from "../entities/Game";
 
 interface SearchResult {
     items: {

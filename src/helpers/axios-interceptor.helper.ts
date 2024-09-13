@@ -7,7 +7,7 @@ import axios from "axios";
 import { HttpRequest } from "./http-request-class.helper";
 
 export function interceptorResponse(response: AxiosResponse) {
-  console.log(response);
+  // console.log(response);
   return response;
 }
 

@@ -11,10 +11,11 @@ interface Props {
   error: Error | null;
   isLoading: boolean;
   page: number;
+  perPage: number;
   setPage: (page: number) => void;
 }
 
-const ArticleGrid = ({ data, error, isLoading, page, setPage }: Props) => {
+const ArticleGrid = ({ data, error, isLoading, page, setPage, perPage }: Props) => {
   const skeletons = Array.from({ length: 6 }, (_, index) => index + 1);
 
 
@@ -49,10 +50,10 @@ const ArticleGrid = ({ data, error, isLoading, page, setPage }: Props) => {
       </div>
       <div className="mx-auto w-max mt-4">
         {(!data || data.items.length < 1) && <EmptyList itemType="articles" />}
-        {(data && data?.items.length > data.pagination.perPage) && (
+        {(data && data?.items.length >= 1) && (
           <Pagination
             count={data.pagination.count}
-            perPage={10}
+            perPage={perPage}
             page={page}
             setPage={setPage}
           />

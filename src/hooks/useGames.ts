@@ -1,47 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
-import { HttpRequest } from "../helpers/http-request-class.helper";
-import { IPaginationQuery, ISearchFilterOptions } from "../interfaces";
-import { IGetGamesResponse } from "../responses/get-games.response";
-import { useGameQueryStore } from "../store";
-import { FilterOperationEnum } from "../enums";
+import { useLocation } from 'react-router-dom';
+import useApi from './useApi';
+import { ISearchFilterOptions } from '../interfaces';
 
+const useGames = () => {
+  // const { search } = useLocation(); // Get the current URL's search params
+  // const queryParams = new URLSearchParams(search);
 
-const fetchGames = async (
-  gameQuery: IPaginationQuery,
-  page: number,
-  perPage: number,
-  search?: string
-) => {
-  const searchParam: ISearchFilterOptions[] =
-    (search && search.length > 1)
-      ? [{
-        field: "name",
-        operation: FilterOperationEnum.ILIKE,
-        value: `%${search}%`
-      }]
-      : gameQuery.search!;
-  const params = {
-    filter: gameQuery.filter,
-    search: searchParam,
-    sortBy: gameQuery.sortBy,
-    page, perPage
-  };
-  try {
-    const res = await HttpRequest.get<IGetGamesResponse>("/v1/games", {
-      params,
-    });
-    console.log(res);
-    return res.data;
-  } catch (error) {
-    console.log("error: ", error);
-    throw error; // Re-throw the error to be caught by the caller
-  }
+  // // Extract search, filter, and sort parameters from the URL
+  // const searchTerm = queryParams.get('search') ? JSON.parse(queryParams.get('search')!) : [];
+  // const filter: ISearchFilterOptions[] = queryParams.get('filter') ? JSON.parse(queryParams.get('filter')!) : [];
+  // const sortBy = queryParams.get('sortBy') || '';
+
+  // // Construct the API endpoint and parameters
+  // const params = {
+  //   search,
+  //   filter,
+  //   sortBy,
+  // };
+
+  // // Use the useApi hook to fetch games
+  const { data, error, isLoading } = useApi('/v1/games');
+
+  return { data, error, isLoading };
 };
 
-export const useGames = (page: number, perPage: number = 10, search?: string) => {
-  const { query: gameQuery } = useGameQueryStore();
-
-  return useQuery<IGetGamesResponse, Error>(["games", gameQuery, page, search], () =>
-    fetchGames(gameQuery, page, perPage, search)
-  );
-};
+export default useGames;

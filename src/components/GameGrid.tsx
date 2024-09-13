@@ -12,10 +12,11 @@ interface Props {
   error: Error | null;
   isLoading: boolean;
   page: number;
+  perPage: number;
   setPage: (page: number) => void;
 }
 
-const GameGrid = ({ data, error, isLoading, page, setPage }: Props) => {
+const GameGrid = ({ data, error, isLoading, page, setPage, perPage }: Props) => {
   const skeletons = Array.from({ length: 6 }, (_, index) => index + 1);
 
   if (error) {
@@ -51,7 +52,7 @@ const GameGrid = ({ data, error, isLoading, page, setPage }: Props) => {
         {(data && data?.items.length >= 1) && (
           <Pagination
             count={data.pagination.count}
-            perPage={10}
+            perPage={perPage}
             page={page}
             setPage={setPage}
           />

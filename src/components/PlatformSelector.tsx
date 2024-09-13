@@ -2,33 +2,44 @@ import { useState } from "react";
 import usePlatforms from "../hooks/usePlatforms";
 import Platform from "../entities/Platform";
 import { FilterOperationEnum } from "../enums";
-import { useGameQueryStore } from "../store";
+import { ISearchFilterOptions } from "../interfaces";
 
-const PlatformSelector = () => {
+interface Props {
+  addItem: (item: ISearchFilterOptions, type: 'filter' | 'search') => void;
+  removeItemsByField: (fieldName: string, type: 'filter' | 'search') => void
+}
+
+const PlatformSelector = ({ addItem, removeItemsByField }: Props) => {
   const { data = { items: [] }, error } = usePlatforms();
-  const { setFilter: setSelectedPlatformId } = useGameQueryStore();
-  const [selectedPlatformName, setSelectedPlatformName] = useState("Select a platform");
+  const [selectedPlatformName, setSelectedPlatformName] = useState("All Platforms");
 
   if (error) return null;
 
   const platformsWithDefaultOption = [
-    { id: -1, name: "Select a platform", slug: 'select-a-platform', created_at: new Date() },
+    { id: -1, name: "All Platforms", slug: 'all-platforms', created_at: new Date() },
     ...data.items,
   ];
 
-  const handleItemClick = (platform: Platform) => {
-    if (platform.id === -1) {
-      setSelectedPlatformId();
-      setSelectedPlatformName(platform.name);
-    } else {
-      setSelectedPlatformId({
+  const handlePlatformChange = (platform: Platform) => {
+    const isAllPlatforms = platform.id === -1;
+
+    // Remove existing platform filters
+    removeItemsByField('platform.id', 'filter');
+
+    // Update selected platform name
+    setSelectedPlatformName(platform.name);
+
+    // If the selected platform is not "All Platforms", add the new filter
+    if (!isAllPlatforms) {
+      const newItem = {
         field: "platform.id",
         operation: FilterOperationEnum.EQ,
         value: platform.id,
-      });
-      setSelectedPlatformName(platform.name);
+      };
+      addItem(newItem, 'filter');
     }
 
+    // Blur the active element
     const activeElement = document.activeElement;
     if (activeElement instanceof HTMLElement) {
       activeElement.blur();
@@ -48,7 +59,7 @@ const PlatformSelector = () => {
           <li
             className="cursor-pointer h-10"
             key={platform.id}
-            onClick={() => handleItemClick(platform)}
+            onClick={() => handlePlatformChange(platform)}
           >
             {platform.name}
           </li>
