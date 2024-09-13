@@ -5,16 +5,13 @@ import PlatformSelector from "../components/PlatformSelector";
 import SortSelector from "../components/SortSelector";
 
 const HomePage = () => {
-
   return (
     <div className="grid grid-cols-12">
       <div className="col-span-12 lg:col-span-12 flex flex-col">
         {/* <GameHeading /> */}
-        <div className="flex w-full mb-5">
-          <div className="mr-5 flex space-between">
-            <GenreList />
-            <PlatformSelector />
-          </div>
+        <div className="flex w-full mb-5 gap-x-3">
+          <GenreList />
+          <PlatformSelector />
           <SortSelector
             sortbyOptions={[
               { value: "", label: "Relevance" },
