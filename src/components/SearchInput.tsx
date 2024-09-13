@@ -6,19 +6,18 @@ import debounce from "lodash/debounce";
 import useSearch from "../hooks/useSearch"; // Ensure this hook fetches data based on the search term
 import Button from "./common/Button";
 import Modal from "./common/Modal";
-import { ISearchFilterOptions } from "../interfaces";
 import { FilterOperationEnum } from "../enums";
+import useApi from "../hooks/useApi";
 
-interface Props {
-  addItem: (item: ISearchFilterOptions, type: 'filter' | 'search') => void;
-  removeItemsByField: (fieldName: string, type: 'filter' | 'search') => void
-}
-const SearchInput = ({ addItem, removeItemsByField }: Props) => {
+
+const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { data, error, isLoading } = useSearch(searchTerm);
   const navigate = useNavigate();
   const location = useLocation();
+  const { addItem, removeItemsByField } = useApi<any, Error>('');
+
 
   // Debounced search function
   const debouncedSearch = useCallback(
@@ -27,11 +26,11 @@ const SearchInput = ({ addItem, removeItemsByField }: Props) => {
         field: 'name',
         operation: FilterOperationEnum.ILIKE,
         value
-      }, 'search')
-      // navigate(`?${params.toString()}`);
+      }, 'search');
     }, 300),
-    [location.search, navigate]
+    [addItem]
   );
+
 
   // Handle search input change
   const handleSearchChange = (value: string) => {

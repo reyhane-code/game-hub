@@ -2,16 +2,14 @@ import { useState } from "react";
 import useGenres from "../hooks/useGenres";
 import Genre from "../entities/Genre";
 import { FilterOperationEnum } from "../enums";
-import { ISearchFilterOptions } from "../interfaces";
+import { IGetGamesResponse } from "../responses/get-games.response";
+import useApi from "../hooks/useApi";
 
-interface Props {
-  addItem: (item: ISearchFilterOptions, type: 'filter' | 'search') => void;
-  removeItemsByField: (fieldName: string, type: 'filter' | 'search') => void
-}
 
-const GenreList = ({ addItem, removeItemsByField }: Props) => {
+const GenreList = () => {
   const { data, error, isLoading } = useGenres();
   const [selectedGenreName, setSelectedGenreName] = useState("All Genres");
+  const { addItem, removeItemsByField } = useApi<IGetGamesResponse, Error>('');
 
   if (error) return null;
   if (isLoading) return <span className="loading loading-ring loading-lg">Loading</span>;

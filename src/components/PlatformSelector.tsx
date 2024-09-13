@@ -2,16 +2,14 @@ import { useState } from "react";
 import usePlatforms from "../hooks/usePlatforms";
 import Platform from "../entities/Platform";
 import { FilterOperationEnum } from "../enums";
-import { ISearchFilterOptions } from "../interfaces";
+import useApi from "../hooks/useApi";
+import { IGetGamesResponse } from "../responses/get-games.response";
 
-interface Props {
-  addItem: (item: ISearchFilterOptions, type: 'filter' | 'search') => void;
-  removeItemsByField: (fieldName: string, type: 'filter' | 'search') => void
-}
 
-const PlatformSelector = ({ addItem, removeItemsByField }: Props) => {
+const PlatformSelector = () => {
   const { data = { items: [] }, error } = usePlatforms();
   const [selectedPlatformName, setSelectedPlatformName] = useState("All Platforms");
+  const { addItem, removeItemsByField } = useApi<IGetGamesResponse, Error>('');
 
   if (error) return null;
 

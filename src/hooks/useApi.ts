@@ -79,15 +79,13 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
   };
 
 
+  //TODO: fix
   const removeItemsByField = (fieldName: string, type: 'filter' | 'search') => {
     const existingItems = query[type] || [];
     // Filter out the entire item that matches the field name
     const filteredItems = existingItems.filter(item => item.field !== fieldName);
-
-    // Only update the query if there are changes
-    if (filteredItems.length < existingItems.length) {
-      setQuery({ [type]: filteredItems });
-    }
+    console.log('filtered items', filteredItems)
+    setQuery({ [type]: filteredItems.length ? filteredItems : undefined });
   };
 
   const setSortBy = (sortBy: string) => {
