@@ -9,7 +9,7 @@ import { IGetGamesResponse } from "../responses/get-games.response";
 const PlatformSelector = () => {
   const { data = { items: [] }, error } = usePlatforms();
   const [selectedPlatformName, setSelectedPlatformName] = useState("All Platforms");
-  const { addItem, removeItemsByField } = useApi<IGetGamesResponse, Error>('');
+  const { removeItemsByField, replaceItemByField } = useApi<IGetGamesResponse, Error>('');
 
   if (error) return null;
 
@@ -34,7 +34,7 @@ const PlatformSelector = () => {
         operation: FilterOperationEnum.EQ,
         value: platform.id,
       };
-      addItem(newItem, 'filter');
+      replaceItemByField('platform.id', newItem, 'filter');
     }
 
     // Blur the active element

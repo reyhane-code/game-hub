@@ -4,7 +4,7 @@ import { IGetGamesResponse } from "../responses/get-games.response";
 import EmptyList from "./common/EmptyList";
 
 const GamesContainer = () => {
-    const { data, error, isLoading, params, setPage, addItem, removeItemsByField } = useApi<IGetGamesResponse, Error>('/v1/games');
+    const { data, error, isLoading, params, setPage} = useApi<IGetGamesResponse, Error>('/v1/games');
 
     return (
         <>

@@ -9,7 +9,7 @@ import useApi from "../hooks/useApi";
 const GenreList = () => {
   const { data, error, isLoading } = useGenres();
   const [selectedGenreName, setSelectedGenreName] = useState("All Genres");
-  const { addItem, removeItemsByField } = useApi<IGetGamesResponse, Error>('');
+  const { replaceItemByField, removeItemsByField } = useApi<IGetGamesResponse, Error>('');
 
   if (error) return null;
   if (isLoading) return <span className="loading loading-ring loading-lg">Loading</span>;
@@ -36,7 +36,7 @@ const GenreList = () => {
         operation: FilterOperationEnum.EQ,
         value: genre.id,
       };
-      addItem(newItem, 'filter');
+      replaceItemByField('genre.id', newItem, 'filter');
     }
 
     // Blur the active element

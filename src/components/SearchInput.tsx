@@ -1,122 +1,108 @@
-import { useEffect, useState, useCallback } from "react";
-import { CiSearch } from "react-icons/ci";
+import React, { useState, useEffect, useRef } from "react";
 import TextInput from "./common/TextInput";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import debounce from "lodash/debounce";
-import useSearch from "../hooks/useSearch"; // Ensure this hook fetches data based on the search term
+import { CiSearch } from "react-icons/ci";
+import { debounce } from 'lodash';
+import useSearch from "../hooks/useSearch";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./common/Button";
 import Modal from "./common/Modal";
-import { FilterOperationEnum } from "../enums";
 import useApi from "../hooks/useApi";
-
+import { FilterOperationEnum } from "../enums";
 
 const SearchInput = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, error, isLoading } = useSearch(searchTerm);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { addItem, removeItemsByField } = useApi<any, Error>('');
+  const { addItem } = useApi<any, Error>(''); // Ensure the correct type is used
 
+  const handleSearchDebounce = useRef(
+    debounce((value) => {
+      setSearchTerm(value);
+    }, 300)
+  ).current;
 
-  // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce((value: string) => {
-      addItem({
-        field: 'name',
-        operation: FilterOperationEnum.ILIKE,
-        value
-      }, 'search');
-    }, 300),
-    [addItem]
-  );
-
-
-  // Handle search input change
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    debouncedSearch(value);
-    setIsModalOpen(!!value); // Open modal if there's a search term
-  };
-
-  // Handle showing all results
-  const handleShowAll = (page: string) => {
-    setIsModalOpen(false);
-    if (page === 'games') {
-      navigate(`/games?search=${encodeURIComponent(searchTerm)}`);
-    } else if (page === 'articles') {
-      navigate(`/articles?search=${encodeURIComponent(searchTerm)}`);
-    }
-  };
-
-  // Effect to handle URL search params
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const searchValue = params.get("search") || "";
     setSearchTerm(searchValue);
 
     return () => {
-      debouncedSearch.cancel();
+      handleSearchDebounce.cancel();
     };
-  }, [location.search, debouncedSearch]);
+  }, [location.search, handleSearchDebounce]);
+  const handleInputChange = (value: string) => {
+    setSearchTerm(value);
+    handleSearchDebounce(value);
+    setIsModalOpen(true);
+  };
+
+  const handleShowAll = (page: string) => {
+    setIsModalOpen(false); // Close modal when showing all
+    const encodedSearchTerm = encodeURIComponent(searchTerm);
+    if (page === 'games') {
+      addItem({ field: 'name', operation: FilterOperationEnum.ILIKE, value: encodedSearchTerm }, 'search');
+      navigate('/');
+    } else if (page === 'articles') {
+      addItem({ field: 'title', operation: FilterOperationEnum.ILIKE, value: encodedSearchTerm }, 'search');
+      navigate('/articles');
+    }
+  };
 
   return (
-    <form onSubmit={(event) => event.preventDefault()}>
-      <div className="flex items-center p-2">
+    <div>
+      <form onSubmit={(e) => e.preventDefault()}>
         <TextInput
           type="text"
           placeholder="Search..."
-          onChange={handleSearchChange}
-          value={searchTerm}
           name="search"
+          value={searchTerm}
+          onChange={handleInputChange}
           rightSlot={<CiSearch className="text-3xl text-gray-600" />}
         />
-
-      </div>
-
+      </form>
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Search Results"
-        message="Here are the top results for your search:"
+        message=""
         id="search-results-modal"
       >
-        {isLoading && <p>Loading...</p>}
-        {error && <p>Error loading search results.</p>}
-
-        {data?.items.games && data.items.games.length > 0 ? (
-          <div>
-            <h3>Games</h3>
-            <ul>
-              {data.items.games.slice(0, 3).map(game => (
-                <li key={game.id}>
-                  <Link to={`/games/${game.slug}`}>{game.name}</Link>
-                </li>
-              ))}
-            </ul>
-            <Button color="primary" onClick={() => handleShowAll('games')}>Show All</Button>
-          </div>
+        {error && <p>Error loading search results: {error.message}</p>}
+        {(!data?.items.articles?.length && !data?.items.games?.length) ? (
+          <p>No results were found!</p>
         ) : (
-          <p>No games found.</p>
-        )}
-
-        {data?.items.articles && data.items.articles.length > 0 ? (
-          <div>
-            <h3>Articles</h3>
-            <ul>
-              {data.items.articles.slice(0, 3).map(article => (
-                <li key={article.id}>
-                  <Link to={`/articles/${article.id}`}>{article.title}</Link>
-                </li>
-              ))}
-            </ul>
-            <Button color="primary" onClick={() => handleShowAll('articles')}>Show All</Button>
-          </div>
-        ) : (
-          <p>No articles found.</p>
+          <>
+            {data?.items.games?.length > 0 && (
+              <div>
+                <h3>Games</h3>
+                <ul className="bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                  {data.items.games.slice(0, 3).map(game => (
+                    <li key={game.id}>
+                      <Link to={`/games/${game.slug}`}>{game.name}</Link>
+                    </li>
+                  ))}
+                </ul>
+                <Button color="primary" onClick={() => handleShowAll('games')}>Show All</Button>
+              </div>
+            )}
+            {data?.items.articles?.length > 0 && (
+              <div>
+                <h3>Articles</h3>
+                <ul className="bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                  {data.items.articles.slice(0, 3).map(article => (
+                    <li key={article.id}>
+                      <Link to={`/articles/${article.id}`}>{article.title}</Link>
+                    </li>
+                  ))}
+                </ul>
+                <Button color="primary" onClick={() => handleShowAll('articles')}>Show All</Button>
+              </div>
+            )}
+          </>
         )}
       </Modal>
-    </form>
+    </div>
   );
 };
 

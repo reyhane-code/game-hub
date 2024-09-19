@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import qs from "qs";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import { IPaginationQuery, ISearchFilterOptions } from "../interfaces";
-import { useMemo } from "react";
 
 const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
   const { search } = useLocation();
@@ -83,7 +82,7 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
 
   const addItem = (item: ISearchFilterOptions, type: "filter" | "search") => {
     setTimeout(() => {
-      const existingItems: ()=> any[] = ()=> (query[type] as any[]) || [];
+      const existingItems: () => any[] = () => (query[type] as any[]) || [];
       console.log("addItem", query, item, existingItems());
       const itemExists = existingItems().some(
         (existingItem) =>
@@ -114,6 +113,26 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
     });
   };
 
+  const replaceItemByField = (fieldName: string, newItem: ISearchFilterOptions, type: "filter" | "search") => {
+    const existingItems = query[type] || [];
+
+    // Check if the item to be replaced exists
+    const itemIndex = existingItems.findIndex(item => item.field === fieldName);
+
+    if (itemIndex !== -1) {
+      // Create a new array with the item replaced
+      const updatedItems = [...existingItems];
+      updatedItems[itemIndex] = newItem; // Replace the item at the found index
+
+      setQuery({
+        [type]: updatedItems.length ? updatedItems : undefined,
+      });
+    } else {
+      addItem(newItem, type)
+    }
+  };
+
+
   const setSortBy = (sortBy: string) => {
     setQuery({ sortBy });
   };
@@ -140,6 +159,7 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
     isLoading,
     addItem,
     removeItemsByField,
+    replaceItemByField,
     setSortBy,
     setPage,
     setPerPage,
