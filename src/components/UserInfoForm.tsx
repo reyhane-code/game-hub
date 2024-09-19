@@ -18,6 +18,7 @@ function UserInfoForm() {
   const setIdentity = useAuthStore((s) => s.setIdentity);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   if (error) {
     return <Alert text="An error occurred!" />;
@@ -31,11 +32,10 @@ function UserInfoForm() {
 
   const handleUpdateUser = async (data: any) => {
     const updateData = {
-      phone,
       username: data.username,
       email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
+      first_name: data.firstName,
+      last_name: data.lastName,
     };
 
     setIsUpdating(true);
@@ -45,15 +45,15 @@ function UserInfoForm() {
     }
   };
 
-  const onError= (e: any)=>{
+  const onError = (e: any) => {
     console.log('on error infoForm', e)
   }
 
   const validationSchema: ObjectSchema<any> = yup.object().shape({
     username: yup.string().required("Username is required"),
     email: yup.string().email("Invalid email").required("Email is required"),
-    firstName: yup.string().required("First name is required"),
-    lastName: yup.string().required("Last name is required"),
+    // firstName: yup.string().required("First name is required"),
+    // lastName: yup.string().required("Last name is required"),
   });
 
   return (
@@ -62,28 +62,21 @@ function UserInfoForm() {
       <AppForm
         onSubmit={handleUpdateUser}
         onError={onError}
-        doFinally={()=> setIsUpdating(false)}
+        doFinally={() => setIsUpdating(false)}
         validationSchema={validationSchema}
         initialValues={{
+          phone: phone,
           username: user?.username || "",
           email: user?.email || "",
-          firstName: user?.firstName || "",
-          lastName: user?.lastName || "",
+          firstName: user?.first_name || "",
+          lastName: user?.last_name || "",
         }}
       >
         <EditableInput name="username" label="Username" />
-        {phone && <EditableInput name="phone" label="Phone" disabled={true} />}
+        {<EditableInput name="phone" label="Phone" disabled={true} />}
         <EditableInput name="email" label="Email" />
         <EditableInput name="firstName" label="First Name" />
         <EditableInput name="lastName" label="Last Name" />
-        {!user?.password && (
-          <>
-            <EditableInput name="password" label="Set Password" />
-            <Button color="primary" className="text-lg m-2 text-blue-500">
-              Save Password
-            </Button>
-          </>
-        )}
         <Button
           type="submit"
           color="primary"
@@ -92,6 +85,23 @@ function UserInfoForm() {
         >
           {isUpdating ? "Saving..." : "Save Changes"}
         </Button>
+
+        {user.hasPassword &&
+          <div>
+            <EditableInput name="password" label="" />
+
+            <Button color="primary" className="text-lg m-2 text-blue-500" onClick={() => setIsChangingPassword(true)}>
+              Change Password
+            </Button>
+          </div>
+
+        }
+
+        {!user?.hasPassword && (
+          <>
+            <EditableInput name="password" label="Set Password"/>
+          </>
+        )}
       </AppForm>
     </div>
   );

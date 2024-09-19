@@ -34,7 +34,7 @@ const ArticleGrid = ({ data, error, isLoading, page, setPage, perPage }: Props) 
 
   const renderArticleCards = () => (
     data?.items.map((article) => {
-      const articleLikeCount = data.likes.find(item => item.article_id === article.id)?.count || 0;
+      const articleLikeCount = data?.likes?.find(item => item.article_id === article.id)?.count || 0;
       return (
         <CardContainer key={article.id}>
           <ArticleCard article={article} likes={articleLikeCount} />
@@ -46,10 +46,13 @@ const ArticleGrid = ({ data, error, isLoading, page, setPage, perPage }: Props) 
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 gap-6 p-10px">
-        {isLoading ? renderSkeletons() : renderArticleCards()}
+        {isLoading ? renderSkeletons() :
+          data.items.length ?
+            renderArticleCards() :
+            <EmptyList itemType="articles" />
+        }
       </div>
       <div className="mx-auto w-max mt-4">
-        {(!data || data.items.length < 1) && <EmptyList itemType="articles" />}
         {(data && data?.items.length >= 1) && (
           <Pagination
             count={data.pagination.count}

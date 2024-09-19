@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import Article from "../entities/Article";
+import { debounce } from "lodash";
 
 interface SearchResult {
     items: {
@@ -31,11 +32,14 @@ interface SearchResult {
 }
 
 const useSearch = (searchText: string) => {
+
     return useQuery<SearchResult, Error>(
         ['search', searchText],
         async () => {
             const res = await HttpRequest.get<SearchResult>(`/v1/search/${searchText}`);
             return res.data;
+
+
         },
         {
             onError: (error) => {

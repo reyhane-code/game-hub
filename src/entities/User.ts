@@ -1,9 +1,9 @@
 export default interface User {
   id: number;
-  email?: string;
-  username?: string;
+  email: string | null;
+  username: string | null;
   phone: string;
-  firstName?: string;
-  lastName?: string;
-  password?: string;
+  first_name: string | null;
+  last_name: string | null;
+  hasPassword: boolean;
 }

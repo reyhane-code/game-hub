@@ -15,10 +15,15 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   entity,
   id,
 }) => {
+
   const [likes, setLikes] = useState(initialLikes);
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
   const { isAuthenticated, loginIfNeeded } = useAuth();
+
+  useEffect(() => {
+    setLikes(initialLikes)
+  }, [initialLikes])
 
   const checkIfLiked = async (signal?: GenericAbortSignal) => {
     if (!isAuthenticated) return;
@@ -54,13 +59,13 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     try {
       const res = isLiking
         ? await HttpRequest.post(
-            url,
-            {},
-            { headers: { "Content-Type": "application/json" } }
-          )
+          url,
+          {},
+          { headers: { "Content-Type": "application/json" } }
+        )
         : await HttpRequest.delete(url, {
-            headers: { "Content-Type": "application/json" },
-          });
+          headers: { "Content-Type": "application/json" },
+        });
 
       if (!res) {
         throw new Error("Network response was not ok");

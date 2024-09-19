@@ -56,7 +56,7 @@ export const LoginForm = () => {
   const step2ValidationSchema = Yup.object().shape({
     code: Yup.string()
       .required("Code is required")
-      .length(6, "Code must be exactly 6 characters"), // Adjust length as needed
+      .length(4, "Code must be exactly 6 characters"), // Adjust length as needed
   });
 
   return (

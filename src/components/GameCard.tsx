@@ -31,7 +31,7 @@ interface Props {
   likes?: number
 }
 
-const GameCard = ({ game, likes }: Props) => {
+const GameCard = ({ game, likes = 0 }: Props) => {
   return (
     <Link
       to={"/games/" + game.slug}
@@ -61,14 +61,11 @@ const GameCard = ({ game, likes }: Props) => {
             </div>
             <CriticScore score={game.metacritic} />
             <div className="flex items-center space-x-1">
-              {likes &&
-                <>
-                  <span className="text-sm">
-                    {likes}
-                  </span>
-                  <FaHeart className="text-md" />
-                </>
-              }
+
+              <span className="text-sm">
+                {likes}
+              </span>
+              <FaHeart className="text-md" />
             </div>
           </div>
         </div>

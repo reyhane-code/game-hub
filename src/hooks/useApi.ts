@@ -24,6 +24,19 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
     navigate({ search: qs.stringify(updatedQuery, { addQueryPrefix: true }) });
   };
 
+  const generateSetQuery = (newQuery: Partial<IPaginationQuery>) => {
+    // Create a new query object by merging the existing query with the newQuery
+    const updatedQuery = { ...query, ...newQuery } as any;
+
+    // Remove any properties from updatedQuery that are set to undefined
+    Object.keys(newQuery).forEach((key) => {
+      if ((newQuery as any)[key] == undefined) {
+        delete updatedQuery[key];
+      }
+    });
+    return qs.stringify(updatedQuery, { addQueryPrefix: true });
+  };
+
   const addArrayItemToQuery = (
     params: URLSearchParams,
     key: string,
@@ -83,7 +96,6 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
   const addItem = (item: ISearchFilterOptions, type: "filter" | "search") => {
     setTimeout(() => {
       const existingItems: () => any[] = () => (query[type] as any[]) || [];
-      console.log("addItem", query, item, existingItems());
       const itemExists = existingItems().some(
         (existingItem) =>
           existingItem.field === item.field &&
@@ -93,6 +105,26 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
 
       if (!itemExists) {
         setQuery({ [type]: [...existingItems(), item] });
+      } else {
+        console.warn(
+          `${type.charAt(0).toUpperCase() + type.slice(1)} item already exists`
+        );
+      }
+    }, 1000);
+  };
+
+  const generateRouteQuery = (item: ISearchFilterOptions, type: "filter" | "search") => {
+    setTimeout(() => {
+      const existingItems: () => any[] = () => (query[type] as any[]) || [];
+      const itemExists = existingItems().some(
+        (existingItem) =>
+          existingItem.field === item.field &&
+          existingItem.operation === item.operation &&
+          existingItem.value === item.value
+      );
+
+      if (!itemExists) {
+        return generateSetQuery({ [type]: [...existingItems(), item] });
       } else {
         console.warn(
           `${type.charAt(0).toUpperCase() + type.slice(1)} item already exists`
@@ -158,6 +190,7 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
     error,
     isLoading,
     addItem,
+    generateRouteQuery,
     removeItemsByField,
     replaceItemByField,
     setSortBy,

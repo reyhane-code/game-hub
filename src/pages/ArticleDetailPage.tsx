@@ -4,6 +4,7 @@ import LikeButton from "../components/common/LikeButton";
 import { useArticle } from "../hooks/useArticle";
 import Image from "../components/common/Image";
 import { ImageFormat } from "../enums";
+import BookmarkButton from "../components/common/BookmarkButton";
 
 const ArticleDetailPage = () => {
   const { id } = useParams()
@@ -28,6 +29,7 @@ const ArticleDetailPage = () => {
         <div className="flex justify-between items-center mb-5">
           <h1 className="text-2xl">{data?.article.title}</h1>
           <LikeButton id={data?.article.id} entity="article" initialLikes={data?.likes}></LikeButton>
+          <BookmarkButton id={data.article.id} entity="article" />
         </div>
 
         <ExpandableText>{data?.article.content}</ExpandableText>

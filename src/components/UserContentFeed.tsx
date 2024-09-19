@@ -48,6 +48,7 @@ const UserContentFeed: React.FC<UserContentFeedProps> = ({ contentType, requestT
                 isLoading={isLoading}
                 setPage={setPage}
                 page={page}
+                perPage={10}
             />
         );
     } else if (contentType === 'game') {
@@ -58,6 +59,7 @@ const UserContentFeed: React.FC<UserContentFeedProps> = ({ contentType, requestT
                 isLoading={isLoading}
                 setPage={setPage}
                 page={page}
+                perPage={10}
             />
         );
     }
