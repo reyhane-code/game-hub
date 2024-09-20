@@ -20,7 +20,6 @@ const ArticleCard = ({ article, likes }: Props) => {
       <Image
         query={{ hashKey: article.image, format: ImageFormat.WEBP, }}
         altText={article.title}
-        defaultSrc="https://uploadkon.ir/uploads/93eb02_24images.png"
         className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
       />
 

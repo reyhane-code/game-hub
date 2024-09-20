@@ -40,7 +40,6 @@ const GameCard = ({ game, likes = 0 }: Props) => {
       <Image
         query={{ hashKey: game.background_image, format: ImageFormat.WEBP }}
         altText={game.name}
-        defaultSrc="https://uploadkon.ir/uploads/93eb02_24images.png"
         className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
       />
       <div className="card-body !p-3">

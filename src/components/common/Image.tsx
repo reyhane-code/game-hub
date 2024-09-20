@@ -10,7 +10,13 @@ interface Props {
   defaultSrc?: string;
 }
 
-function Image({ query, altText = "", className = "", src, defaultSrc }: Props) {
+function Image({
+  query,
+  altText = "",
+  className = "",
+  src,
+  defaultSrc = "/default.svg",
+}: Props) {
   const [imgSrc, setImgSrc] = useState<string | undefined>(src);
   let source: string | undefined;
   if (query) {
@@ -21,9 +27,7 @@ function Image({ query, altText = "", className = "", src, defaultSrc }: Props) 
   }
 
   const handleError = () => {
-    if (defaultSrc) {
-      setImgSrc(defaultSrc);
-    }
+    setImgSrc(defaultSrc);
   };
 
   useEffect(() => {

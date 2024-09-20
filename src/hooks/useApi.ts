@@ -113,24 +113,27 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
     }, 1000);
   };
 
-  const generateRouteQuery = (item: ISearchFilterOptions, type: "filter" | "search") => {
-    setTimeout(() => {
-      const existingItems: () => any[] = () => (query[type] as any[]) || [];
-      const itemExists = existingItems().some(
-        (existingItem) =>
-          existingItem.field === item.field &&
-          existingItem.operation === item.operation &&
-          existingItem.value === item.value
-      );
+  const generateRouteQuery = (
+    item: ISearchFilterOptions,
+    type: "filter" | "search"
+  ) => {
+    const existingItems: () => any[] = () => (query[type] as any[]) || [];
+    const itemExists = existingItems().some(
+      (existingItem) =>
+        existingItem.field === item.field &&
+        existingItem.operation === item.operation &&
+        existingItem.value === item.value
+    );
 
-      if (!itemExists) {
-        return generateSetQuery({ [type]: [...existingItems(), item] });
-      } else {
-        console.warn(
-          `${type.charAt(0).toUpperCase() + type.slice(1)} item already exists`
-        );
-      }
-    }, 1000);
+    if (!itemExists) {
+      return generateSetQuery({
+        [type]: [item],
+      });
+    } else {
+      console.warn(
+        `${type.charAt(0).toUpperCase() + type.slice(1)} item already exists`
+      );
+    }
   };
 
   const removeItemsByField = (fieldName: string, type: "filter" | "search") => {
@@ -145,11 +148,17 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
     });
   };
 
-  const replaceItemByField = (fieldName: string, newItem: ISearchFilterOptions, type: "filter" | "search") => {
+  const replaceItemByField = (
+    fieldName: string,
+    newItem: ISearchFilterOptions,
+    type: "filter" | "search"
+  ) => {
     const existingItems = query[type] || [];
 
     // Check if the item to be replaced exists
-    const itemIndex = existingItems.findIndex(item => item.field === fieldName);
+    const itemIndex = existingItems.findIndex(
+      (item) => item.field === fieldName
+    );
 
     if (itemIndex !== -1) {
       // Create a new array with the item replaced
@@ -160,10 +169,9 @@ const useApi = <TData = unknown, TError = unknown>(endpoint: string) => {
         [type]: updatedItems.length ? updatedItems : undefined,
       });
     } else {
-      addItem(newItem, type)
+      addItem(newItem, type);
     }
   };
-
 
   const setSortBy = (sortBy: string) => {
     setQuery({ sortBy });
