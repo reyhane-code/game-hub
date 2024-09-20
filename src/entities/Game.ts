@@ -55,7 +55,7 @@ export interface Game {
       };
     }
   ];
-  screencshots: [
+  screenshots: [
     {
       id: number;
       hash_key: string;

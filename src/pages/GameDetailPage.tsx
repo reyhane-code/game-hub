@@ -17,7 +17,6 @@ const GameDetailPage = () => {
     console.log(error);
     throw error;
   }
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="col-start">
@@ -35,9 +34,9 @@ const GameDetailPage = () => {
         <ExpandableText>{data?.game.description}</ExpandableText>
         <GameAttributes game={data} />
       </div>
-      {data?.game?.screencshots && (
+      {data?.game?.screenshots && (
         <div>
-          <GameScreenshots screenshots={data?.game?.screencshots} />
+          <GameScreenshots screenshots={data?.game?.screenshots} />
         </div>
       )}
     </div>
