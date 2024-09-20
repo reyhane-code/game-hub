@@ -14,7 +14,7 @@ const SearchInput = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, error, isLoading } = useSearch(searchTerm);
   const navigate = useNavigate();
-  const { generateRouteQuery } = useApi<any, Error>(""); // Ensure the correct type is used
+  const { generateRouteQuery } = useApi<any, Error>("");
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -35,7 +35,7 @@ const SearchInput = () => {
         {
           field: "name",
           operation: FilterOperationEnum.ILIKE,
-          value: encodedSearchTerm,
+          value: `%${encodedSearchTerm}%`,
         },
         "search"
       );
@@ -45,11 +45,10 @@ const SearchInput = () => {
         {
           field: "title",
           operation: FilterOperationEnum.ILIKE,
-          value: encodedSearchTerm,
+          value: `%${encodedSearchTerm}%`,
         },
         "search"
       );
-      console.log("query", query);
       setTimeout(() => {
         navigate(`/articles${query}`);
       }, 100);
