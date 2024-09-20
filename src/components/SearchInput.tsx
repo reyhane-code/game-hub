@@ -1,30 +1,41 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import TextInput from "./common/TextInput";
 import { CiSearch } from "react-icons/ci";
-import debounce from "lodash.debounce";
 import useSearch from "../hooks/useSearch";
-import { Link, useNavigate } from "react-router-dom";
-import Button from "./common/Button";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { FilterOperationEnum } from "../enums";
 import OutsideClickHandler from "react-outside-click-handler";
+import * as qs from "qs";
+import { MdClose } from "react-icons/md";
 
 const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, error, isLoading } = useSearch(searchTerm);
   const navigate = useNavigate();
+  const location = useLocation();
   const { generateRouteQuery } = useApi<any, Error>("");
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const searchValue = params.get("search") || "";
-    setSearchTerm(searchValue);
+    const query = qs.parse(params.toString()) as any;
+    if (query?.["search"]?.[0]) {
+      const searchValue = query?.["search"]?.[0]?.value
+        .toString()
+        .replaceAll("%", "");
+      setSearchTerm(searchValue);
+    }
   }, [location.search]);
 
   const handleInputChange = (value: string) => {
     setSearchTerm(value);
     setIsModalOpen(true);
+  };
+  const handleInputClick = () => {
+    if (searchTerm?.length) {
+      setIsModalOpen(true);
+    }
   };
 
   const handleShowAll = (page: string) => {
@@ -49,9 +60,18 @@ const SearchInput = () => {
         },
         "search"
       );
-      setTimeout(() => {
-        navigate(`/articles${query}`);
-      }, 100);
+      navigate(`/articles${query}`);
+    }
+  };
+
+  const onClearClick = () => {
+    setSearchTerm("");
+    setIsModalOpen(false);
+    const path = location.pathname;
+    if (path.includes("/articles")) {
+      navigate("/articles");
+    } else {
+      navigate("/");
     }
   };
 
@@ -64,7 +84,17 @@ const SearchInput = () => {
           name="search"
           value={searchTerm}
           onChange={handleInputChange}
-          rightSlot={<CiSearch className="text-3xl text-gray-600" />}
+          onClick={handleInputClick}
+          rightSlot={
+            !searchTerm.length ? (
+              <CiSearch className="text-2xl text-gray-400" />
+            ) : (
+              <MdClose
+                className="text-2xl text-gray-400 transition-colors duration-200 hover:text-gray-800 cursor-pointer"
+                onClick={onClearClick}
+              />
+            )
+          }
         />
       </form>
 

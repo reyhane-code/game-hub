@@ -8,6 +8,7 @@ interface Props {
   label?: string | number;
   value?: string | number;
   onChange?: (value: string) => void;
+  onClick?: () => void;
   name: string;
   leftSlot?: ReactNode
   rightSlot?: ReactNode
@@ -21,8 +22,10 @@ function TextInput({
   children,
   value,
   onChange,
+  onClick,
   leftSlot,
-  rightSlot
+  rightSlot,
+  ...rest
 }: Props) {
   const { control, register } = useFormContext() || { control: null }; // Provide a fallback
 
@@ -46,6 +49,8 @@ function TextInput({
                 onChange(e.target.value); // Call custom onChange if provided
               }
             }}
+            onClick={onClick}
+            {...rest}
           />
           {rightSlot}
         </div>
