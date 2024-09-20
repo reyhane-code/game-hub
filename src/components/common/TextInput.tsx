@@ -10,6 +10,7 @@ interface Props {
   onChange?: (value: string) => void;
   onClick?: () => void;
   name: string;
+  className?: string;
   leftSlot?: ReactNode
   rightSlot?: ReactNode
 }
@@ -25,6 +26,7 @@ function TextInput({
   onClick,
   leftSlot,
   rightSlot,
+  className,
   ...rest
 }: Props) {
   const { control, register } = useFormContext() || { control: null }; // Provide a fallback
@@ -41,7 +43,7 @@ function TextInput({
           {leftSlot}
           <input
             type={type}
-            className="grow focus:!outline-none active:!outline-none "
+            className={`grow focus:!outline-none active:!outline-none ${className}`} 
             placeholder={placeholder}
             value={value}
             onChange={(e) => {

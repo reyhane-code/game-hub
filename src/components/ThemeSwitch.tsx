@@ -20,7 +20,7 @@ function ThemeSwitch() {
     <>
       <input
         type="checkbox"
-        className="toggle"
+        className="toggle toggle-sm lg:toggle-md"
         checked={!theme || theme === "light"}
         onClick={toggleTheme}
         readOnly

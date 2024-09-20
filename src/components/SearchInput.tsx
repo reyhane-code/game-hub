@@ -8,6 +8,7 @@ import { FilterOperationEnum } from "../enums";
 import OutsideClickHandler from "react-outside-click-handler";
 import * as qs from "qs";
 import { MdClose } from "react-icons/md";
+import CardSkeleton from "./CardSkeleton";
 
 const SearchInput = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -77,8 +78,9 @@ const SearchInput = () => {
 
   return (
     <div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()} className="w-full">
         <TextInput
+          className="w-full"
           type="text"
           placeholder="Search..."
           name="search"
@@ -87,10 +89,10 @@ const SearchInput = () => {
           onClick={handleInputClick}
           rightSlot={
             !searchTerm.length ? (
-              <CiSearch className="text-2xl text-gray-400" />
+              <CiSearch className="text-sm lg:text-2xl text-gray-400" />
             ) : (
               <MdClose
-                className="text-2xl text-gray-400 transition-colors duration-200 hover:text-gray-800 cursor-pointer"
+                className="text-sm lg:text-2xl text-gray-400 transition-colors duration-200 hover:text-gray-800 cursor-pointer"
                 onClick={onClearClick}
               />
             )
@@ -104,9 +106,12 @@ const SearchInput = () => {
             setIsModalOpen(false);
           }}
         >
-          <div className="fixed top-14 inset-x-0 flex flex-col divide-y divide-slate-400 gap-y-5 bg-white rounded-xl min-h-24 px-4 pb-2 shadow-md">
+          <div className="fixed top-14 left-[-3rem] sm:inset-x-0 min-w-[90vw] sm:min-w-[auto] flex flex-col divide-y divide-slate-400 gap-y-5 bg-white rounded-xl min-h-24 px-4 pb-2 shadow-md">
+            {isLoading && <CardSkeleton />}
             {error && <p>Error loading search results: {error.message}</p>}
-            {!data?.items.articles?.length && !data?.items.games?.length ? (
+            {!data?.items.articles?.length &&
+            !data?.items.games?.length &&
+            !isLoading ? (
               <p>No results were found!</p>
             ) : (
               <>
@@ -116,7 +121,7 @@ const SearchInput = () => {
                       <h3 className="text-base font-bold">Games</h3>
                       <div
                         onClick={() => handleShowAll("games")}
-                        className="text-sm font-medium text-primary cursor-pointer"
+                        className="text-sm font-medium text-blue-500 hover:text-blue-800 cursor-pointer"
                       >
                         Show All
                       </div>
@@ -126,7 +131,7 @@ const SearchInput = () => {
                       {data.items.games.slice(0, 3).map((game: any) => (
                         <li key={game.id}>
                           <Link
-                            className="text-base"
+                            className="text-base hover:text-blue-500"
                             to={`/games/${game.slug}`}
                           >
                             {game.name}
@@ -142,7 +147,7 @@ const SearchInput = () => {
                       <h3 className="text-base font-bold">Articles</h3>
                       <div
                         onClick={() => handleShowAll("articles")}
-                        className="text-sm font-medium text-primary cursor-pointer"
+                        className="text-sm font-medium text-blue-500 hover:text-blue-800 cursor-pointer"
                       >
                         Show All
                       </div>
@@ -151,7 +156,7 @@ const SearchInput = () => {
                       {data.items.articles.slice(0, 3).map((article: any) => (
                         <li key={article.id}>
                           <Link
-                            className="text-base"
+                            className="text-base hover:text-blue-500"
                             to={`/articles/${article.id}`}
                           >
                             {article.title}

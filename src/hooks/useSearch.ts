@@ -45,7 +45,6 @@ const useSearch = (searchText: string) => {
     try {
       setError(undefined);
 
-      setIsLoading(true);
       const response = await HttpRequest.get<SearchResult>(
         `/v1/search/${searchText}`,
         {
@@ -65,6 +64,9 @@ const useSearch = (searchText: string) => {
   let lastController: AbortController | undefined;
   useEffect(() => {
     let controller = new AbortController(); // Create an AbortController
+    setIsLoading(true);
+    setData(undefined);
+    setError(undefined);
     if (debounceValue) {
       debounceValue.cancel();
       lastController && lastController.abort();
@@ -80,9 +82,6 @@ const useSearch = (searchText: string) => {
       debounceValue();
     } else {
       debounceValue.cancel();
-      setData(undefined);
-      setError(undefined);
-      setIsLoading(false);
     }
 
     return () => {
