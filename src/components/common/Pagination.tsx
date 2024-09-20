@@ -21,8 +21,8 @@ const Pagination = ({ perPage, count, page, setPage }: Props) => {
     <div className="flex justify-between items-center">
       <Button
         color="primary"
-        disabled={page === 1}
-        onClick={() => handlePageChange(page - 1)}
+        disabled={Number(page) === 1}
+        onClick={() => handlePageChange(Number(page) - 1)}
         className="mx-5"
       >
         Previous
@@ -32,8 +32,8 @@ const Pagination = ({ perPage, count, page, setPage }: Props) => {
       </span>
       <Button
         color="primary"
-        disabled={page === totalPages}
-        onClick={() => handlePageChange(page + 1)}
+        disabled={Number(page) === totalPages}
+        onClick={() => handlePageChange(Number(page) + 1)}
         className="mx-5"
       >
         Next
