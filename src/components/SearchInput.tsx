@@ -123,7 +123,7 @@ const SearchInput = () => {
                     </div>
 
                     <ul className="flex flex-col w-full bg-base-100 rounded-box z-[1] divide-y divide-slate-200 pt-2 gap-y-1">
-                      {data.items.games.slice(0, 3).map((game) => (
+                      {data.items.games.slice(0, 3).map((game: any) => (
                         <li key={game.id}>
                           <Link
                             className="text-base"
@@ -148,7 +148,7 @@ const SearchInput = () => {
                       </div>
                     </div>
                     <ul className="flex flex-col w-full bg-base-100 rounded-box z-[1] divide-y divide-slate-200 pt-2 gap-y-1">
-                      {data.items.articles.slice(0, 3).map((article) => (
+                      {data.items.articles.slice(0, 3).map((article: any) => (
                         <li key={article.id}>
                           <Link
                             className="text-base"
