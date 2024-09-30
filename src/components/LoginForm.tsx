@@ -6,12 +6,18 @@ import AppForm from "./common/AppForm";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import useAuthStore from "../auth.store";
 
-export const LoginForm = () => {
+
+interface Props {
+  callback?: () => void
+}
+export const LoginForm = ({ callback }: Props) => {
   const [step, setStep] = useState(1);
   const [validationToken, setValidationToken] = useState("");
   const { setTokens } = useAuth();
   const navigate = useNavigate();
+  const loginCallBack = useAuthStore((s) => s.loginCallBack);
 
   const getValidationToken = async (data: any) => {
     const response = await HttpRequest.post("/v1/auth/get-validation-token", {
@@ -31,7 +37,11 @@ export const LoginForm = () => {
     if (response?.data) {
       const { accessToken, refreshToken } = response.data;
       setTokens(accessToken, refreshToken);
-      navigate("/");
+      if (typeof loginCallBack == 'function') {
+        loginCallBack()
+      }
+
+      if (typeof callback == 'function') { callback() } else navigate("/");
     }
   };
 
@@ -56,7 +66,7 @@ export const LoginForm = () => {
   const step2ValidationSchema = Yup.object().shape({
     code: Yup.string()
       .required("Code is required")
-      .length(4, "Code must be exactly 6 characters"), // Adjust length as needed
+      .length(4, "Code must be exactly 4 characters"), // Adjust length as needed
   });
 
   return (

@@ -25,7 +25,7 @@ const AuthModal = () => {
       message="Please log in or register to continue."
       id="auth-modal"
     >
-      <LoginForm />
+      <LoginForm callback={closeModal} />
     </Modal>
   );
 };
