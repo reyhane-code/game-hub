@@ -1,9 +1,12 @@
 import Comment from "../entities/Comment";
+import LikeButton from "./common/LikeButton";
 
 interface Props {
   comment: Comment;
+  likes?: number;
+
 }
-const CommentItem = ({ comment }: Props) => {
+const CommentItem = ({ comment, likes }: Props) => {
   return (
     <div className="w-full flex flex-col gap-y-4">
       <div className="flex items-center justify-between">
@@ -15,6 +18,11 @@ const CommentItem = ({ comment }: Props) => {
 
       <p className="text-sm">{comment.content}</p>
       <div className="flex justify-end w-full">
+        <LikeButton
+          id={comment.id}
+          entity="comment"
+          initialLikes={likes}
+        ></LikeButton>
         {/* replay icon */}
       </div>
     </div>
