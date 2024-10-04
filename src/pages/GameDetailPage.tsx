@@ -5,6 +5,8 @@ import useGame from "../hooks/useGame";
 import LikeButton from "../components/common/LikeButton";
 import GameScreenshots from "../components/GameScreenshots";
 import BookmarkButton from "../components/common/BookmarkButton";
+import Image from "../components/common/Image";
+import { ImageFormat } from "../enums";
 
 const GameDetailPage = () => {
   const { slug } = useParams();
@@ -18,11 +20,18 @@ const GameDetailPage = () => {
     throw error;
   }
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div className="felx flex-col items-center justify-center max-w-[90vw]">
       <div className="col-start">
+        {data.game.image && (
+          <Image
+            query={{ hashKey: data?.game.image, format: ImageFormat.WEBP, height: 720, width: 1080, quality: 100 }}
+            altText={data.game.name}
+            className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in object-cover w-[90vw] md:w-[40rem] mx-auto"
+          />
+        )}
         <div className="flex justify-between items-center mb-5">
           <h1 className="text-2xl">{data?.game.name}</h1>
-          <div className="flex items-center gap-x-3">
+          <div className="flex items-center gap-x-1">
             <LikeButton
               id={data?.game?.id}
               entity="game"

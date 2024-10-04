@@ -19,29 +19,57 @@ interface Props {
   callback?: () => void
 }
 export const LoginForm = ({ callback }: Props) => {
+  const [error, setError] = useState('')
   const [step, setStep] = useState<AuthStep>(AuthStep.PHONE);
   const [validationToken, setValidationToken] = useState("");
   const [hasPassword, setHasPassword] = useState(false)
+  const [phone, setPhone] = useState('')
+  const [tryNumber, setTryNumber] = useState(0)
+  const [forceSendSms, setForceSendSms] = useState(false)
   const { setTokens } = useAuth();
   const navigate = useNavigate();
   const loginCallBack = useAuthStore((s) => s.loginCallBack);
 
 
+  const validationRequest = async (phone: string, forceSendSms: boolean) => {
+    try {
+      const response = await HttpRequest.post("/v1/auth/get-validation-token", {
+        phone,
+        forceSendSms,
+        tryNumber
+      });
+      return response.data
+
+    } catch (error) {
+      console.log("error", error)
+    }
+  }
+
   const getValidationToken = async (data: any) => {
-    const response = await HttpRequest.post("/v1/auth/get-validation-token", {
-      phone: data.phone,
-    });
-    if (response?.data?.hasPassword == true) {
+    const res = await validationRequest(data.phone, false)
+    if (res.hasPassword == true) {
       setStep(AuthStep.PASSWORD)
       setHasPassword(true)
-    } else if (response?.data?.validationToken) {
-      setValidationToken(response.data.validationToken);
+    } else if (res.validationToken) {
+      setValidationToken(res.validationToken);
       setStep(AuthStep.CODE); // Update step based on previous state
+    } else {
+      setError('Internal server error')
     }
-    //TODO: else server error
   };
 
-  //TODO : getvalidation with forcesendsms
+  const forceSmsGetValidation = async (data: any) => {
+    const res = await validationRequest(data.phone, true)
+    if (res.hasPassword == true) {
+      setStep(AuthStep.PASSWORD)
+      setHasPassword(true)
+    } else if (res.validationToken) {
+      setValidationToken(res.validationToken);
+      setStep(AuthStep.CODE); // Update step based on previous state
+    } else {
+      setError('Internal server error')
+    }
+  }
 
 
   const loginOrRegister = async (data: any) => {
@@ -60,14 +88,38 @@ export const LoginForm = ({ callback }: Props) => {
     }
   };
 
-  const loginWithPassword = async (data: any) => { }
+  const loginWithPassword = async (data: any) => {
+    const response = await HttpRequest.post("/v1/auth/login", {
+      phone,
+      password: data.password
+    });
+    if (response?.data) {
+      const { accessToken, refreshToken } = response.data;
+      setTokens(accessToken, refreshToken);
+      if (typeof loginCallBack == 'function') {
+        loginCallBack()
+      }
+
+      if (typeof callback == 'function') { callback() } else navigate("/");
+    }
+    if (response.status == 404) {
+      setError('password is incorrect!')
+      return
+    }
+  }
 
   const onSubmit = async (data: any) => {
-    if (step == 1) {
-      getValidationToken(data);
-    } else if (step === 2) {
+    if (data.phone) setPhone(data.phone)
+
+    if (step == AuthStep.PHONE) {
+      if (forceSendSms) {
+        forceSmsGetValidation(data)
+      } else {
+        getValidationToken(data);
+      }
+    } else if (step == AuthStep.CODE) {
       loginOrRegister(data);
-    } else if (hasPassword) {
+    } else if (step == AuthStep.PASSWORD) {
       loginWithPassword(data)
     }
   };
@@ -85,7 +137,7 @@ export const LoginForm = ({ callback }: Props) => {
   const step2ValidationSchema = Yup.object().shape({
     code: Yup.string()
       .required("Code is required")
-      .length(4, "Code must be exactly 4 characters"), // Adjust length as needed
+      .length(4, "Code must be exactly 4 characters"),
   });
 
   const passwordValidationSchema = Yup.object().shape({
@@ -94,34 +146,76 @@ export const LoginForm = ({ callback }: Props) => {
 
   return (
     <div
-      className="w-1/2 flex justify-center items-center mx-auto my-5"
+      className="w-[90vw] sm:w-[30rem] flex justify-center items-center mx-auto my-5"
       key={step}
     >
       <AppForm
         onSubmit={onSubmit}
         validationSchema={
-          step == 1 ? step1ValidationSchema : step2ValidationSchema
+          step == AuthStep.PHONE ? step1ValidationSchema :
+            step == AuthStep.CODE ? step2ValidationSchema : passwordValidationSchema
         }
       >
-        {step == 1 ? (
-          <TextInput
-            name="phone"
-            type="text"
-            placeholder="Enter your phone number"
-          />
-        ) : (
-          //TODO: show phone - edit phone 
-          <TextInput
-            name="code"
-            type="text"
-            placeholder="Enter the given code"
-          />
-        )}
-        <Button color="primary" type="submit">
-          Confirm
-        </Button>
+
+        <div className="flex flex-col gap-y-2">
+          {step == AuthStep.PHONE ? (
+            <TextInput
+              name="phone"
+              type="text"
+              placeholder="Enter your phone number"
+            />
+          ) :
+            step == AuthStep.CODE ?
+              (
+                <>
+                  <div className="flex items-center justify-between">
+                    <p className="py-3 text-lg">The code was sent to {phone}</p>
+                    <button
+                      className="text-blue-500 rounded px-4 py-2 mx-4"
+                      onClick={() => {
+                        setTryNumber((prev) => prev + 1)
+                        setStep(AuthStep.PHONE)
+                      }}>Edit number</button>
+                  </div>
+                  <div className="flex w-full items-center">
+                    <TextInput
+                      name="code"
+                      type="text"
+                      placeholder="Enter the given code"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <p className="py-3 text-lg">You are loging in with {phone}</p>
+                    <button
+                      className="text-blue-500 rounded px-4 py-2 mx-4"
+                      onClick={() => {
+                        setTryNumber((prev) => prev + 1)
+                        setStep(AuthStep.PHONE)
+                      }}>Edit number</button>
+                  </div>
+
+                  <TextInput
+                    name="password"
+                    type="passowrd"
+                    placeholder="Enter your password"
+                  />
+
+                </>
+              )}
+          <Button color="primary" type="submit">
+            Confirm
+          </Button>
+          {(step == AuthStep.CODE && hasPassword) && <p className="text-blue-500 cursor-pointer w-1/2 mt-2 text-sm" onClick={() => setStep(AuthStep.PASSWORD)}>Use password to Login</p>}
+          {step == AuthStep.PASSWORD && <p className="text-blue-500 cursor-pointer w-1/2 mt-2 text-sm" onClick={() => {
+            setForceSendSms(true)
+            setStep(AuthStep.CODE)
+          }}>Use Code to Login</p>}
+        </div>
+
       </AppForm>
-      //TODO: login with code and login with password (based on haspassword)
     </div>
   );
 };
