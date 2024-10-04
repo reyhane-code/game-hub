@@ -9,25 +9,40 @@ import * as Yup from "yup";
 import useAuthStore from "../auth.store";
 
 
+enum AuthStep {
+  PHONE = 1,
+  CODE = 2,
+  PASSWORD = 3
+}
+
 interface Props {
   callback?: () => void
 }
 export const LoginForm = ({ callback }: Props) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<AuthStep>(AuthStep.PHONE);
   const [validationToken, setValidationToken] = useState("");
+  const [hasPassword, setHasPassword] = useState(false)
   const { setTokens } = useAuth();
   const navigate = useNavigate();
   const loginCallBack = useAuthStore((s) => s.loginCallBack);
+
 
   const getValidationToken = async (data: any) => {
     const response = await HttpRequest.post("/v1/auth/get-validation-token", {
       phone: data.phone,
     });
-    if (response?.data?.validationToken) {
+    if (response?.data?.hasPassword == true) {
+      setStep(AuthStep.PASSWORD)
+      setHasPassword(true)
+    } else if (response?.data?.validationToken) {
       setValidationToken(response.data.validationToken);
-      setStep((prevStep) => prevStep + 1); // Update step based on previous state
+      setStep(AuthStep.CODE); // Update step based on previous state
     }
+    //TODO: else server error
   };
+
+  //TODO : getvalidation with forcesendsms
+
 
   const loginOrRegister = async (data: any) => {
     const response = await HttpRequest.post("/v1/auth/login-or-register", {
@@ -45,11 +60,15 @@ export const LoginForm = ({ callback }: Props) => {
     }
   };
 
+  const loginWithPassword = async (data: any) => { }
+
   const onSubmit = async (data: any) => {
     if (step == 1) {
       getValidationToken(data);
-    } else {
+    } else if (step === 2) {
       loginOrRegister(data);
+    } else if (hasPassword) {
+      loginWithPassword(data)
     }
   };
 
@@ -69,6 +88,10 @@ export const LoginForm = ({ callback }: Props) => {
       .length(4, "Code must be exactly 4 characters"), // Adjust length as needed
   });
 
+  const passwordValidationSchema = Yup.object().shape({
+    password: Yup.string().required('Password is required')
+  })
+
   return (
     <div
       className="w-1/2 flex justify-center items-center mx-auto my-5"
@@ -87,6 +110,7 @@ export const LoginForm = ({ callback }: Props) => {
             placeholder="Enter your phone number"
           />
         ) : (
+          //TODO: show phone - edit phone 
           <TextInput
             name="code"
             type="text"
@@ -97,6 +121,7 @@ export const LoginForm = ({ callback }: Props) => {
           Confirm
         </Button>
       </AppForm>
+      //TODO: login with code and login with password (based on haspassword)
     </div>
   );
 };

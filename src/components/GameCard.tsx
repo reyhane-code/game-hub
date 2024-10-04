@@ -11,7 +11,7 @@ interface Props {
     name: string;
     slug: string;
     description: string;
-    background_image: string;
+    image: string;
     metacritic: number;
     rating_top: number;
     platforms: {
@@ -38,7 +38,7 @@ const GameCard = ({ game, likes = 0 }: Props) => {
       className="group card w-full bg-base-300 cursor-pointer"
     >
       <Image
-        query={{ hashKey: game.background_image, format: ImageFormat.WEBP }}
+        query={{ hashKey: game.image, format: ImageFormat.WEBP }}
         altText={game.name}
         className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in bg-cover"
       />

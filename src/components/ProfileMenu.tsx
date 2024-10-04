@@ -45,7 +45,7 @@ const ProfileMenu = ({ onMenuItemSelect }: Props) => {
       {menuItems.map((item) => (
         <Button
           key={item.link}
-          className="text-lg my-3 py-3 px-4 pt-2 pb-3 flex items-center justify-center space-x-3"
+          className="text-lg my-3 py-3 px-4 pt-2 pb-3 flex items-start justify-start space-x-3"
           color="primary"
           onClick={() => {
             onMenuItemSelect(item.link); // Call the parent function with the selected link

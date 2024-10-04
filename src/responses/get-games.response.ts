@@ -7,7 +7,7 @@ export interface IGetGamesResponse {
         name: string;
         slug: string;
         description: string;
-        background_image: string;
+        image: string;
         metacritic: number;
         rating_top: number;
         platforms: {

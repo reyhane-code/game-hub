@@ -9,6 +9,7 @@ import User from "../entities/User";
 import AppForm from "./common/AppForm";
 import { ObjectSchema } from "yup";
 import * as yup from "yup";
+import PasswordForm from "./PasswordForm";
 
 
 
@@ -18,7 +19,6 @@ function UserInfoForm() {
   const setIdentity = useAuthStore((s) => s.setIdentity);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   if (error) {
     return <Alert text="An error occurred!" />;
@@ -31,11 +31,12 @@ function UserInfoForm() {
   }
 
   const handleUpdateUser = async (data: any) => {
+    console.log('fist,last name', data.firstName)
     const updateData = {
       username: data.username,
       email: data.email,
-      first_name: data.firstName,
-      last_name: data.lastName,
+      first_name: data.firstName ?? null,
+      last_name: data.lastName ?? null,
     };
 
     setIsUpdating(true);
@@ -52,12 +53,12 @@ function UserInfoForm() {
   const validationSchema: ObjectSchema<any> = yup.object().shape({
     username: yup.string().required("Username is required"),
     email: yup.string().email("Invalid email").required("Email is required"),
-    // firstName: yup.string().required("First name is required"),
-    // lastName: yup.string().required("Last name is required"),
+    firstName: yup.string(),
+    lastName: yup.string()
   });
 
   return (
-    <div className="flex w-2/3 py-4 px-6">
+    <div className="gird grid-cols-1 lg:grid-cols-2 gap-2 py-4 px-6">
       {updateError && <Alert text={updateError} />}
       <AppForm
         onSubmit={handleUpdateUser}
@@ -73,36 +74,24 @@ function UserInfoForm() {
         }}
       >
         <EditableInput name="username" label="Username" />
-        {<EditableInput name="phone" label="Phone" disabled={true} />}
+        {<EditableInput name="phone" label="Phone" disabled={true} value={phone} />}
         <EditableInput name="email" label="Email" />
         <EditableInput name="firstName" label="First Name" />
         <EditableInput name="lastName" label="Last Name" />
-        <Button
-          type="submit"
-          color="primary"
-          className="text-lg m-2 text-blue-500"
-          disabled={isUpdating} // Disable button while updating
-        >
-          {isUpdating ? "Saving..." : "Save Changes"}
-        </Button>
+        <div className="flex gap-x-3 items-center">
+          <Button
+            type="submit"
+            color="primary"
+            className="text-lg m-2 text-blue-500"
+            disabled={isUpdating} // Disable button while updating
+          >
+            {isUpdating ? "Saving..." : "Save Changes"}
+          </Button>
 
-        {user.hasPassword &&
-          <div>
-            <EditableInput name="password" label="" />
+        </div>
 
-            <Button color="primary" className="text-lg m-2 text-blue-500" onClick={() => setIsChangingPassword(true)}>
-              Change Password
-            </Button>
-          </div>
-
-        }
-
-        {!user?.hasPassword && (
-          <>
-            <EditableInput name="password" label="Set Password"/>
-          </>
-        )}
       </AppForm>
+      <PasswordForm hasPassword={user.hasPassword} />
     </div>
   );
 }
