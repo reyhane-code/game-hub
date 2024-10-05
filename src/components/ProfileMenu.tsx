@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { HttpRequest } from "../helpers/http-request-class.helper";
 import Button from "./common/Button";
 import { useState } from "react";
@@ -7,9 +7,6 @@ import { FaRegUser, FaRegHeart, FaRegBookmark } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import useAuth from "../hooks/useAuth";
 
-interface Props {
-  onMenuItemSelect: (link: string) => void;
-}
 
 interface MenuItem {
   label: string;
@@ -17,14 +14,14 @@ interface MenuItem {
   icon: any
 }
 
-const ProfileMenu = ({ onMenuItemSelect }: Props) => {
+const ProfileMenu = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const { logout } = useAuth()
   const menuItems: MenuItem[] = [
-    { label: "User Information", link: "user", icon: <FaRegUser className="text-lg" /> },
-    { label: "Bookmarks", link: "bookmarks", icon: <FaRegBookmark className="text-lg" /> },
-    { label: "Likes", link: "likes", icon: <FaRegHeart className="text-lg" /> },
+    { label: "User Information", link: "user", icon: <FaRegUser className="text-xl" /> },
+    { label: "Bookmarks", link: "bookmarks", icon: <FaRegBookmark className="text-xl" /> },
+    { label: "Likes", link: "likes", icon: <FaRegHeart className="text-xl" /> },
   ];
 
   const handleLogout = async () => {
@@ -42,32 +39,37 @@ const ProfileMenu = ({ onMenuItemSelect }: Props) => {
   return (
     <>
       {error && <Alert text={error} />}
-      {menuItems.map((item) => (
-        <Button
-          key={item.link}
-          className="text-lg my-3 py-3 px-4 pt-2 pb-3 flex items-start justify-start space-x-3"
-          color="primary"
-          onClick={() => {
-            onMenuItemSelect(item.link); // Call the parent function with the selected link
-          }}
+      <div className="flex flex-col justify-center items-sterch w-80 max-w-250 me-8 mx-5 space-y-4 shadow-md rounded-lg">
+        {menuItems.map((item, index) => (
+          <NavLink
+            key={index}
+            to={`/profile/${item.link}`}
+            className={({ isActive, isPending }) =>
+              isActive ? "bg-gray-100" : ""
+            }
+          >
+            <div className="text-lg my-3 py-3 px-4 pt-2 pb-3 flex items-center justify-center space-x-3">
+              <div className={`w-full flex items-center gap-x-2`}>
+                {item.icon}
+                {item.link}
+              </div>
+            </div>
+          </NavLink>
+        ))}
+
+        <button
+          onClick={handleLogout}
         >
-          <div className="w-full flex items-center justify-between">
-            {item.label}{item.icon}
+          <div className="text-lg my-3 py-3 px-4 pt-2 pb-3 flex items-center justify-center space-x-3">
+            <div className={`w-full flex items-center gap-x-2`}>
+              <span>
+                Logout
+              </span>
+              <MdLogout className="text-xl text-red-500" />
+            </div>
           </div>
-        </Button>
-      ))}
-      <Button
-        color="primary"
-        className="text-red-700 text-lg w-full p-my-3 py-3 px-4"
-        onClick={handleLogout}
-      >
-        <div className="w-full flex items-center justify-between">
-          <span>
-            Logout
-          </span>
-          <MdLogout className="text-lg" />
-        </div>
-      </Button>
+        </button>
+      </div>
     </>
   );
 };

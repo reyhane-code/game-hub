@@ -9,6 +9,8 @@ import PrivateRoutes from "./components/PrivateRoutes";
 import ArticlesPage from "./pages/ArticlesPage";
 import ArticleDetailPage from "./pages/ArticleDetailPage";
 import RouterLayout from "./components/layouts/RouterLayout";
+import UserBookmarksPage from "./pages/UserBookmarksPage";
+import UserLikesPage from "./pages/UserLikesPage";
 
 // const routeBuilder = (routes: any[]) => {
 //   console.log('ry', typeof Object.values(routes),  Object.values(routes))
@@ -94,6 +96,28 @@ const router = createBrowserRouter([
         element: (
           <RouterLayout>
             <ProfilePage />
+          </RouterLayout>
+        ),
+      }, {
+        path: "profile/user",
+        element: (
+          <RouterLayout>
+            <ProfilePage />
+          </RouterLayout>
+        ),
+      }, {
+        path: "profile/likes",
+        element: (
+          <RouterLayout>
+            <UserLikesPage />
+          </RouterLayout>
+        ),
+      },
+      {
+        path: "profile/bookmarks",
+        element: (
+          <RouterLayout>
+            <UserBookmarksPage />
           </RouterLayout>
         ),
       },

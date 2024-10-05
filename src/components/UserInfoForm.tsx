@@ -31,7 +31,6 @@ function UserInfoForm() {
   }
 
   const handleUpdateUser = async (data: any) => {
-    console.log('fist,last name', data.firstName)
     const updateData = {
       username: data.username,
       email: data.email,
