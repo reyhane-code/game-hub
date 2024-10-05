@@ -38,10 +38,11 @@ const GameCard = ({ game, likes = 0 }: Props) => {
       className="group card w-full bg-base-300 cursor-pointer"
     >
       <Image
-        query={{ hashKey: game.image, format: ImageFormat.WEBP, height:500 }}
+        query={{ hashKey: game.image, format: ImageFormat.WEBP, height: 500, width: 500, quality: 100 }}
         altText={game.name}
-        className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in object-cover max-h-[25rem]"
+        className="transform group-hover:scale-[1.05] transition-all duration-300 ease-in object-cover w-[90vw] md:w-[40rem] mx-auto"
       />
+
       <div className="card-body !p-3">
         <div className="h-full flex flex-col justify-between w-full">
           <h2 className="card-title text-base lg:text-lg">{game.name}</h2>
