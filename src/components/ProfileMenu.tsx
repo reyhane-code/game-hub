@@ -19,9 +19,9 @@ const ProfileMenu = () => {
   const [error, setError] = useState<string | null>(null);
   const { logout } = useAuth()
   const menuItems: MenuItem[] = [
-    { label: "User Information", link: "user", icon: <FaRegUser className="text-xl" /> },
-    { label: "Bookmarks", link: "bookmarks", icon: <FaRegBookmark className="text-xl" /> },
-    { label: "Likes", link: "likes", icon: <FaRegHeart className="text-xl" /> },
+    { label: "User Information", link: "profile", icon: <FaRegUser className="text-xl" /> },
+    { label: "Bookmarks", link: "profile/bookmarks", icon: <FaRegBookmark className="text-xl" /> },
+    { label: "Likes", link: "profile/likes", icon: <FaRegHeart className="text-xl" /> },
   ];
 
   const handleLogout = async () => {
@@ -43,7 +43,8 @@ const ProfileMenu = () => {
         {menuItems.map((item, index) => (
           <NavLink
             key={index}
-            to={`/profile/${item.link}`}
+            end
+            to={`/${item.link}`}
             className={({ isActive, isPending }) =>
               isActive ? "bg-gray-100" : ""
             }
@@ -51,7 +52,7 @@ const ProfileMenu = () => {
             <div className="text-lg my-3 py-3 px-4 pt-2 pb-3 flex items-center justify-center space-x-3">
               <div className={`w-full flex items-center gap-x-2`}>
                 {item.icon}
-                {item.link}
+                {item.label}
               </div>
             </div>
           </NavLink>
