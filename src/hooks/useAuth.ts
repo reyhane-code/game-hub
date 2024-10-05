@@ -15,14 +15,13 @@ export default function useAuth() {
   const setIdentity = useAuthStore((s) => s.setIdentity);
   const openLoginDialog = useAuthStore((s) => s.openLoginDialog);
 
-  const readAndSetTokensToStore = () => {
-    const tokens = HttpRequest.getTokens;
-    if (!tokens) return false;
-
-    HttpRequest.setTokens = {
-      data: tokens,
-      key: "tokens",
-    };
+  const readAndSetTokensToStore = async () => {
+    return new Promise((resolve) => {
+      const tokens = HttpRequest.getTokens;
+      if (!tokens) resolve(true);
+      setTokensToStore(tokens!)
+      resolve(true)
+    })
   };
   const setUserIdentityIfLoggedIn = async (signal?: GenericAbortSignal) => {
     if (!isAuthenticated) return;
@@ -40,8 +39,8 @@ export default function useAuth() {
     }
   };
   const initAuth = async (signal?: GenericAbortSignal) => {
+    await readAndSetTokensToStore();
     await setUserIdentityIfLoggedIn(signal);
-    readAndSetTokensToStore();
   };
   const loginIfNeeded = (callback: () => void) => {
     if (isAuthenticated) {

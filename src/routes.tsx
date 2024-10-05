@@ -99,13 +99,6 @@ const router = createBrowserRouter([
           </RouterLayout>
         ),
       }, {
-        path: "profile/user",
-        element: (
-          <RouterLayout>
-            <ProfilePage />
-          </RouterLayout>
-        ),
-      }, {
         path: "profile/likes",
         element: (
           <RouterLayout>

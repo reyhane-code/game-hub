@@ -7,15 +7,14 @@ import axios from "axios";
 import { HttpRequest } from "./http-request-class.helper";
 
 export function interceptorResponse(response: AxiosResponse) {
-  // console.log(response);
   return response;
 }
 
 let isRefreshing: boolean = false;
 const requestList: Array<InternalAxiosRequestConfig> = [];
 function processQueue(requests: Array<InternalAxiosRequestConfig>) {
+  const tokens = HttpRequest.getTokens;
   requests.forEach((request: InternalAxiosRequestConfig) => {
-    const tokens = HttpRequest.getTokens;
     request.headers.Authorization = `Bearer ${tokens?.accessToken}`;
 
     return new Promise((resolve) => {
