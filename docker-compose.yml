@@ -3,18 +3,11 @@ services:
   client:
     container_name: gamehub-client-container
     build: .
-    # x-develop:
-    #   watch:
-    #     - action: sync
-    #       path: ./
-    #       target: /
-    #     - action: rebuild
-    #       path: package.json
     restart: always
     ports:
-      - 6500:6500
+      - 3002:3002
     environment:
       STAGE: 'dev'
       NODE_ENV: 'development'
-      PORT: '6500'
+      PORT: '3002'
     

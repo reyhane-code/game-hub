@@ -10,6 +10,6 @@ RUN yarn install
 
 COPY ./ ./
 
-EXPOSE 6500
+EXPOSE 3002
 
 CMD npm run dev 
