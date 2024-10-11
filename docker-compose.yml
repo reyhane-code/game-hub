@@ -1,13 +1,18 @@
 version: '3.8'
 services:
   client:
+    image: gamehub-client:latest
     container_name: gamehub-client-container
-    build: .
     restart: always
     ports:
-      - 3002:3002
+      - "3002"
     environment:
       STAGE: 'dev'
       NODE_ENV: 'development'
       PORT: '3002'
-    
+    networks:
+      - gamehub-network # Use the overlay network
+
+networks:
+  gamehub-network:
+    external: true
